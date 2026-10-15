@@ -74,13 +74,12 @@ struct ToolbarView: View {
     case itemOptions
   }
 
-  private var shouldUnpin: Bool {
-    return appState.navigator.selection.items.allSatisfy { $0.isPinned }
+  private var allSelectedAreFavorites: Bool {
+    return appState.navigator.selection.items.allSatisfy { $0.item.board?.isFavorites == true }
   }
 
-  private var pinActionDisabled: Bool {
-    return appState.navigator.selection.items.contains { $0.isPinned }
-      && appState.navigator.selection.items.contains { !$0.isPinned }
+  private var favoriteActionDisabled: Bool {
+    return appState.navigator.selection.items.isEmpty
   }
 
   private var selectedImageItem: HistoryItemDecorator? {
@@ -134,19 +133,13 @@ struct ToolbarView: View {
             appState.togglePin()
           }
         } label: {
-          if (appState.navigator.selection.items.allSatisfy { $0.isPinned }) {
-            Image(systemName: "pin.slash.fill")
-          } else {
-            Image(systemName: "pin")
-          }
+          Image(systemName: allSelectedAreFavorites ? "star.fill" : "star")
         }
         .shortcutKeyHelp(
-          name: .pin,
-          key: shouldUnpin ? "UnpinKey" : "PinKey",
-          tableName: "PreviewItemView",
-          replacementKey: "pinKey"
+          key: allSelectedAreFavorites ? "history_item_unfavorite_action" : "history_item_favorite_action",
+          tableName: "Sorap"
         )
-        .disabled(pinActionDisabled)
+        .disabled(favoriteActionDisabled)
 
         ToolbarButton {
           appState.isEditingItem = true
