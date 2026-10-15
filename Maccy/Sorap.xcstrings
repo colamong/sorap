@@ -40,6 +40,12 @@
     "board.delete" : { "localizations" : {
       "en" : { "stringUnit" : { "state" : "translated", "value" : "Delete board" } },
       "ko" : { "stringUnit" : { "state" : "translated", "value" : "보드 삭제" } } } },
+    "board.delete.title" : { "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Delete board “%@”?" } },
+      "ko" : { "stringUnit" : { "state" : "translated", "value" : "보드 “%@”를 삭제할까요?" } } } },
+    "board.delete.message" : { "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Its %lld items move back to History." } },
+      "ko" : { "stringUnit" : { "state" : "translated", "value" : "항목 %lld개는 기록으로 돌아갑니다." } } } },
     "board.moveLeft" : { "localizations" : {
       "en" : { "stringUnit" : { "state" : "translated", "value" : "Move left" } },
       "ko" : { "stringUnit" : { "state" : "translated", "value" : "왼쪽으로" } } } },

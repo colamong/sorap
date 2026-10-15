@@ -3,6 +3,7 @@ import SwiftUI
 struct BoardChipsView: View {
   @Environment(AppState.self) private var appState
   private var boardStore = BoardStore.shared
+  @State private var pendingDeletion: Board?
 
   var body: some View {
     ScrollView(.horizontal, showsIndicators: false) {
@@ -36,7 +37,9 @@ struct BoardChipsView: View {
             }
             if !board.isFavorites {
               Button(String(localized: "board.delete", table: "Sorap"), role: .destructive) {
-                try? appState.history.deleteBoard(board)
+                // The panel closes on resign-key, so keep it open while the dialog is up.
+                appState.isEditingItem = true
+                pendingDeletion = board
               }
             }
           }
@@ -56,6 +59,36 @@ struct BoardChipsView: View {
       }
       .padding(.vertical, 2)
     }
+    .confirmationDialog(
+      deletionTitle,
+      isPresented: Binding(
+        get: { pendingDeletion != nil },
+        set: { if !$0 { dismissDeletionDialog() } }
+      ),
+      titleVisibility: .visible,
+      presenting: pendingDeletion
+    ) { board in
+      Button(String(localized: "item.delete", table: "Sorap"), role: .destructive) {
+        // A failed delete leaves the board and its items untouched.
+        try? appState.history.deleteBoard(board)
+        dismissDeletionDialog()
+      }
+      Button(String(localized: "common.cancel", table: "Sorap"), role: .cancel) {
+        dismissDeletionDialog()
+      }
+    } message: { board in
+      let count = appState.history.boardItems.filter { $0.item.board == board }.count
+      Text(String(format: String(localized: "board.delete.message", table: "Sorap"), count))
+    }
+  }
+
+  private var deletionTitle: String {
+    String(format: String(localized: "board.delete.title", table: "Sorap"), pendingDeletion?.name ?? "")
+  }
+
+  private func dismissDeletionDialog() {
+    pendingDeletion = nil
+    appState.isEditingItem = false
   }
 
   private func chip(title: String, symbol: String, selected: Bool, action: @escaping () -> Void) -> some View {
