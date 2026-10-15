@@ -47,6 +47,7 @@ struct ImageGridView: View {
         .accessibilityLabel(item.accessibilityLabel)
         .accessibilityAddTraits(item.isSelected ? .isSelected : [])
         .itemContextMenu(item)
+        .hoverSelectionId(item.id)
         .onAppear { item.ensureThumbnailImage() }
       }
     }
