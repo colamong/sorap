@@ -5,6 +5,7 @@ import SwiftData
 @MainActor
 final class BoardStoreTests: XCTestCase {
   let store = BoardStore.shared
+  let defaultName = String(localized: "board.defaultName", table: "Sorap")
 
   override func setUp() {
     super.setUp()
@@ -23,23 +24,36 @@ final class BoardStoreTests: XCTestCase {
   }
 
   func testCreateAppendsInOrder() throws {
-    let sql = try store.create(name: "SQL", symbol: "cylinder")
-    let phrases = try store.create(name: "Phrases", symbol: "text.quote")
+    let sql = store.create(name: "SQL", symbol: "cylinder")
+    let phrases = store.create(name: "Phrases", symbol: "text.quote")
     XCTAssertEqual(store.boards.map(\.name), [store.favorites.name, "SQL", "Phrases"])
     XCTAssertLessThan(sql.order, phrases.order)
   }
 
-  func testCreateRejectsBlankName() {
-    XCTAssertThrowsError(try store.create(name: "  ", symbol: "folder")) { error in
-      XCTAssertEqual(error as? BoardError, .emptyName)
-    }
+  func testCreateWithBlankNameUsesDefault() {
+    let board = store.create(name: "  ", symbol: "folder")
+    XCTAssertEqual(board.name, defaultName)
   }
 
-  func testRenameTrimsAndRejectsBlank() throws {
-    let board = try store.create(name: "SQL", symbol: "cylinder")
-    try store.rename(board, to: "  Queries ")
+  func testCreateDefaultNameIsUniquified() {
+    let first = store.create(name: "", symbol: "folder")
+    let second = store.create(name: " ", symbol: "folder")
+    let third = store.create(name: "", symbol: "folder")
+    XCTAssertEqual(first.name, defaultName)
+    XCTAssertEqual(second.name, "\(defaultName) 2")
+    XCTAssertEqual(third.name, "\(defaultName) 3")
+  }
+
+  func testRenameTrimsName() {
+    let board = store.create(name: "SQL", symbol: "cylinder")
+    store.rename(board, to: "  Queries ")
     XCTAssertEqual(board.name, "Queries")
-    XCTAssertThrowsError(try store.rename(board, to: ""))
+  }
+
+  func testRenameWithBlankKeepsName() {
+    let board = store.create(name: "SQL", symbol: "cylinder")
+    store.rename(board, to: "  ")
+    XCTAssertEqual(board.name, "SQL")
   }
 
   func testFavoritesCannotBeRemoved() {
@@ -49,14 +63,14 @@ final class BoardStoreTests: XCTestCase {
   }
 
   func testRemoveDeletesBoard() throws {
-    let board = try store.create(name: "SQL", symbol: "cylinder")
+    let board = store.create(name: "SQL", symbol: "cylinder")
     try store.remove(board)
     XCTAssertFalse(store.boards.contains(board))
   }
 
   func testMoveReordersAndRenumbers() throws {
-    _ = try store.create(name: "A", symbol: "folder")
-    _ = try store.create(name: "B", symbol: "folder")
+    _ = store.create(name: "A", symbol: "folder")
+    _ = store.create(name: "B", symbol: "folder")
     store.move(fromOffsets: IndexSet(integer: 2), toOffset: 1)
     XCTAssertEqual(store.boards.map(\.name).suffix(2), ["B", "A"])
     XCTAssertEqual(store.boards.map(\.order), Array(0..<store.boards.count))

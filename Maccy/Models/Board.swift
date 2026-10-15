@@ -20,6 +20,5 @@ final class Board {
 }
 
 enum BoardError: Error, Equatable {
-  case emptyName
   case cannotDeleteFavorites
 }

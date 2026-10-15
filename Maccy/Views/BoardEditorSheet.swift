@@ -19,7 +19,6 @@ struct BoardEditorSheet: View {
   @Environment(\.dismiss) private var dismiss
   @State private var name: String
   @State private var symbol: String
-  @State private var showsNameError = false
 
   init(request: BoardEditorRequest) {
     self.request = request
@@ -35,16 +34,9 @@ struct BoardEditorSheet: View {
 
   var body: some View {
     VStack(alignment: .leading, spacing: 14) {
-      TextField(String(localized: "board.name", table: "Sorap"), text: $name)
+      TextField(BoardStore.defaultName, text: $name)
         .textFieldStyle(.roundedBorder)
-        .onChange(of: name) { showsNameError = false }
         .onSubmit(save)
-
-      if showsNameError {
-        Text("board.name.required", tableName: "Sorap")
-          .font(.caption)
-          .foregroundStyle(.red)
-      }
 
       LazyVGrid(columns: Array(repeating: GridItem(.fixed(32)), count: 6), spacing: 8) {
         ForEach(BoardStore.symbolChoices, id: \.self) { choice in
@@ -76,18 +68,14 @@ struct BoardEditorSheet: View {
   }
 
   private func save() {
-    do {
-      switch request {
-      case .create:
-        let board = try BoardStore.shared.create(name: name, symbol: symbol)
-        AppState.shared.history.scope = .board(board)
-      case .edit(let board):
-        try BoardStore.shared.rename(board, to: name)
-        BoardStore.shared.setSymbol(board, to: symbol)
-      }
-      dismiss()
-    } catch {
-      showsNameError = true
+    switch request {
+    case .create:
+      let board = BoardStore.shared.create(name: name, symbol: symbol)
+      AppState.shared.history.scope = .board(board)
+    case .edit(let board):
+      BoardStore.shared.rename(board, to: name)
+      BoardStore.shared.setSymbol(board, to: symbol)
     }
+    dismiss()
   }
 }

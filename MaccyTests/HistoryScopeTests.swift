@@ -37,7 +37,7 @@ final class HistoryScopeTests: XCTestCase {
   }
 
   func testBoardScopeShowsOnlyThatBoard() throws {
-    let sql = try boards.create(name: "SQL", symbol: "cylinder")
+    let sql = boards.create(name: "SQL", symbol: "cylinder")
     let query = history.add(historyItem("select 1"))
     let fav = history.add(historyItem("fav"))
     history.move(query, to: sql)
@@ -58,7 +58,7 @@ final class HistoryScopeTests: XCTestCase {
 
   // searchQuery 는 0.2초 throttle 뒤에 결과를 갱신하므로 기다린다.
   func testSearchAndKindFilterCombineInBoard() async throws {
-    let board = try boards.create(name: "Mixed", symbol: "folder")
+    let board = boards.create(name: "Mixed", symbol: "folder")
     let target = history.add(historyItem("https://apple.com"))
     let otherLink = history.add(historyItem("https://github.com"))
     let text = history.add(historyItem("apple pie"))
@@ -90,7 +90,7 @@ final class HistoryScopeTests: XCTestCase {
   }
 
   func testHistoryItemsIgnoresScopeAndFilter() throws {
-    let board = try boards.create(name: "Intent", symbol: "folder")
+    let board = boards.create(name: "Intent", symbol: "folder")
     let plain = history.add(historyItem("plain words"))
     let inBoard = history.add(historyItem("in board"))
     history.move(inBoard, to: board)
@@ -101,7 +101,7 @@ final class HistoryScopeTests: XCTestCase {
   }
 
   func testDeletingSelectedBoardFallsBackToHistory() throws {
-    let board = try boards.create(name: "Temp", symbol: "folder")
+    let board = boards.create(name: "Temp", symbol: "folder")
     let item = history.add(historyItem("x"))
     history.move(item, to: board)
     history.scope = .board(board)
@@ -116,13 +116,13 @@ final class HistoryScopeTests: XCTestCase {
   }
 
   func testSelectPreviousBoardFromHistoryWrapsToLastBoard() throws {
-    let last = try boards.create(name: "Last", symbol: "folder")
+    let last = boards.create(name: "Last", symbol: "folder")
     history.selectPreviousBoard()
     XCTAssertEqual(history.scope, .board(last))
   }
 
   func testSelectNextBoardFromLastBoardWrapsToHistory() throws {
-    let last = try boards.create(name: "Last", symbol: "folder")
+    let last = boards.create(name: "Last", symbol: "folder")
     history.scope = .board(last)
     history.selectNextBoard()
     XCTAssertEqual(history.scope, .history)

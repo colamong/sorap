@@ -108,7 +108,7 @@ final class HistoryBoardTests: XCTestCase {
   }
 
   func testDeleteBoardReturnsItemsToHistory() throws {
-    let board = try boards.create(name: "SQL", symbol: "cylinder")
+    let board = boards.create(name: "SQL", symbol: "cylinder")
     let item = history.add(historyItem("select 1"))
     history.move(item, to: board)
     try history.deleteBoard(board)
@@ -122,7 +122,7 @@ final class HistoryBoardTests: XCTestCase {
   }
 
   func testRemovingBoardDirectlyKeepsItemsWithNilBoard() throws {
-    let board = try boards.create(name: "Temp", symbol: "folder")
+    let board = boards.create(name: "Temp", symbol: "folder")
     let item = history.add(historyItem("kept"))
     history.move(item, to: board)
     try boards.remove(board)
@@ -133,7 +133,7 @@ final class HistoryBoardTests: XCTestCase {
   }
 
   func testCreateSnippetLandsInBoard() throws {
-    let board = try boards.create(name: "Phrases", symbol: "text.quote")
+    let board = boards.create(name: "Phrases", symbol: "text.quote")
     let snippet = history.createSnippet(in: board, text: "Thanks!")
     XCTAssertEqual(snippet.item.board, board)
     XCTAssertEqual(snippet.item.text, "Thanks!")
@@ -150,7 +150,7 @@ final class HistoryBoardTests: XCTestCase {
   }
 
   func testPendingSnippetIsDeletedWhenEmptyAndKeptWhenFilled() throws {
-    let board = try boards.create(name: "Work", symbol: "folder")
+    let board = boards.create(name: "Work", symbol: "folder")
     let appState = AppState.shared
 
     appState.startSnippet(in: board)

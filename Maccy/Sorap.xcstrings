@@ -60,12 +60,9 @@
     "board.moveRight" : { "localizations" : {
       "en" : { "stringUnit" : { "state" : "translated", "value" : "Move right" } },
       "ko" : { "stringUnit" : { "state" : "translated", "value" : "오른쪽으로" } } } },
-    "board.name" : { "localizations" : {
-      "en" : { "stringUnit" : { "state" : "translated", "value" : "Board name" } },
-      "ko" : { "stringUnit" : { "state" : "translated", "value" : "보드 이름" } } } },
-    "board.name.required" : { "localizations" : {
-      "en" : { "stringUnit" : { "state" : "translated", "value" : "Enter a board name" } },
-      "ko" : { "stringUnit" : { "state" : "translated", "value" : "보드 이름을 입력하세요" } } } },
+    "board.defaultName" : { "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "New board" } },
+      "ko" : { "stringUnit" : { "state" : "translated", "value" : "새 보드" } } } },
     "common.save" : { "localizations" : {
       "en" : { "stringUnit" : { "state" : "translated", "value" : "Save" } },
       "ko" : { "stringUnit" : { "state" : "translated", "value" : "저장" } } } },

@@ -12,6 +12,8 @@ final class BoardStore {
     "link", "photo", "envelope", "person", "briefcase", "tag", "bookmark"
   ]
 
+  static var defaultName: String { String(localized: "board.defaultName", table: "Sorap") }
+
   private(set) var boards: [Board] = []
 
   var favorites: Board {
@@ -39,17 +41,23 @@ final class BoardStore {
   }
 
   @discardableResult
-  func create(name: String, symbol: String) throws -> Board {
-    let trimmed = try validated(name)
-    let board = Board(name: trimmed, symbol: symbol, order: boards.count)
+  func create(name: String, symbol: String) -> Board {
+    let trimmed = name.trimmingCharacters(in: .whitespacesAndNewlines)
+    let board = Board(
+      name: trimmed.isEmpty ? uniqueDefaultName() : trimmed,
+      symbol: symbol,
+      order: boards.count
+    )
     context.insert(board)
     boards.append(board)
     save()
     return board
   }
 
-  func rename(_ board: Board, to name: String) throws {
-    board.name = try validated(name)
+  func rename(_ board: Board, to name: String) {
+    let trimmed = name.trimmingCharacters(in: .whitespacesAndNewlines)
+    guard !trimmed.isEmpty else { return }
+    board.name = trimmed
     save()
   }
 
@@ -70,10 +78,13 @@ final class BoardStore {
     renumber()
   }
 
-  private func validated(_ name: String) throws -> String {
-    let trimmed = name.trimmingCharacters(in: .whitespacesAndNewlines)
-    guard !trimmed.isEmpty else { throw BoardError.emptyName }
-    return trimmed
+  private func uniqueDefaultName() -> String {
+    let base = Self.defaultName
+    let taken = Set(boards.map(\.name))
+    guard taken.contains(base) else { return base }
+    var number = 2
+    while taken.contains("\(base) \(number)") { number += 1 }
+    return "\(base) \(number)"
   }
 
   private func renumber() {
