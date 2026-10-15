@@ -9,17 +9,17 @@ class Storage {
   var container: ModelContainer
   var context: ModelContext { container.mainContext }
   var size: String {
-    guard let size = try? url.resourceValues(forKeys: [.fileSizeKey]).allValues.first?.value as? Int64, size > 1 else {
+    guard let size = try? Self.storeURL.resourceValues(forKeys: [.fileSizeKey]).allValues.first?.value as? Int64, size > 1 else {
       return ""
     }
 
     return ByteCountFormatter().string(fromByteCount: size)
   }
 
-  private let url = URL.applicationSupportDirectory.appending(path: "Maccy/Storage.sqlite")
+  static let storeURL = URL.applicationSupportDirectory.appending(path: "Sorap/Storage.sqlite")
 
   init() {
-    var config = ModelConfiguration(url: url)
+    var config = ModelConfiguration(url: Self.storeURL)
 
     #if DEBUG
     if AppDelegate.isTesting {

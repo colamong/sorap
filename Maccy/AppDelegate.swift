@@ -112,7 +112,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
     panel = FloatingPanel(
       contentRect: NSRect(origin: .zero, size: Defaults[.windowSize]),
-      identifier: Bundle.main.bundleIdentifier ?? "org.p0deje.Maccy",
+      identifier: Bundle.main.bundleIdentifier ?? "io.github.colamong.sorap",
       statusBarButton: statusItem.button,
       onClose: { AppState.shared.popup.reset() }
     ) {

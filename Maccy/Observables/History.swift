@@ -11,7 +11,7 @@ import SwiftData
 @Observable
 class History: ItemsContainer { // swiftlint:disable:this type_body_length
   static let shared = History()
-  let logger = Logger(label: "org.p0deje.Maccy")
+  let logger = Logger(label: "io.github.colamong.sorap")
 
   var pasteStack: PasteStack?
 

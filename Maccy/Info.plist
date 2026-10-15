@@ -4,6 +4,8 @@
 <dict>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
+	<key>CFBundleDisplayName</key>
+	<string>Sorap</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -20,6 +22,8 @@
 	<string>$(CURRENT_PROJECT_VERSION)</string>
 	<key>LSApplicationCategoryType</key>
 	<string>public.app-category.productivity</string>
+	<key>LSHasLocalizedDisplayName</key>
+	<true/>
 	<key>LSMinimumSystemVersion</key>
 	<string>$(MACOSX_DEPLOYMENT_TARGET)</string>
 	<key>LSUIElement</key>
@@ -33,12 +37,12 @@
 	<key>SUEnableInstallerLauncherService</key>
 	<true/>
 	<key>SUFeedURL</key>
-	<string>https://raw.githubusercontent.com/p0deje/Maccy/master/appcast.xml</string>
+	<string>https://raw.githubusercontent.com/colamong/sorap/master/appcast.xml</string>
 	<key>UTExportedTypeDeclarations</key>
 	<array>
 	<dict>
 		<key>UTTypeIdentifier</key>
-		<string>org.p0deje.Maccy.pin-reorder</string>
+		<string>io.github.colamong.sorap.pin-reorder</string>
 		<key>UTTypeTagSpecification</key>
 		<dict/>
 		<key>UTTypeDescription</key>

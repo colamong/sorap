@@ -13,7 +13,7 @@ nonisolated struct StorageType: Sendable {
 nonisolated extension Defaults.Keys {
 #if DEBUG
   // UI Tests bundle preferences
-  static let testingSuiteName = "\(Bundle.main.bundleIdentifier ?? "org.p0deje.Maccy").uitests"
+  static let testingSuiteName = "\(Bundle.main.bundleIdentifier ?? "io.github.colamong.sorap").uitests"
 
   // When UI tests run with the `enable-testing` argument, window and pin
   // preferences are stored in a separate xcuitest bundle
