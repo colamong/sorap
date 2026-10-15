@@ -3,7 +3,13 @@
   "strings" : {
     "board.favorites" : { "localizations" : {
       "en" : { "stringUnit" : { "state" : "translated", "value" : "Favorites" } },
-      "ko" : { "stringUnit" : { "state" : "translated", "value" : "즐겨찾기" } } } }
+      "ko" : { "stringUnit" : { "state" : "translated", "value" : "즐겨찾기" } } } },
+    "history_item_favorite_action" : { "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Add to favorites" } },
+      "ko" : { "stringUnit" : { "state" : "translated", "value" : "즐겨찾기에 추가" } } } },
+    "history_item_unfavorite_action" : { "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Remove from favorites" } },
+      "ko" : { "stringUnit" : { "state" : "translated", "value" : "즐겨찾기에서 빼기" } } } }
   },
   "version" : "1.0"
 }

@@ -62,8 +62,8 @@ struct HistoryItemView: View {
     .onAppear {
       item.ensureThumbnailImage()
     }
-    .accessibilityAction(named: Text(item.isPinned ? "history_item_unpin_action" : "history_item_pin_action")) {
-      appState.history.togglePin(item)
+    .accessibilityAction(named: Text(item.item.board == nil ? "history_item_favorite_action" : "history_item_unfavorite_action", tableName: "Sorap")) {
+      appState.history.toggleFavorite(item)
     }
     .accessibilityAction(named: Text("history_item_delete_action")) {
       appState.history.delete(item)

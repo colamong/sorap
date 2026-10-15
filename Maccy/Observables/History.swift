@@ -76,6 +76,8 @@ class History: ItemsContainer { // swiftlint:disable:this type_body_length
   private var allUnpinnedItems: [HistoryItemDecorator] = []
   private var filteredPinnedItems: [HistoryItemDecorator] = []
   private var filteredUnpinnedItems: [HistoryItemDecorator] = []
+  private(set) var boardItems: [HistoryItemDecorator] = []
+  private var filteredBoardItems: [HistoryItemDecorator] = []
 
   @ObservationIgnored
   private var sessionLog: [Int: HistoryItem] = [:]
@@ -129,10 +131,13 @@ class History: ItemsContainer { // swiftlint:disable:this type_body_length
     let descriptor = FetchDescriptor<HistoryItem>()
     let results = try Storage.shared.context.fetch(descriptor)
     let decorators = sorter.sort(results).map { HistoryItemDecorator($0) }
-    pinManager.load(from: decorators)
-    allUnpinnedItems = decorators.filter(\.isUnpinned)
+    let historyDecorators = decorators.filter { $0.item.board == nil }
+    pinManager.load(from: historyDecorators)
+    allUnpinnedItems = historyDecorators.filter(\.isUnpinned)
+    boardItems = decorators.filter { $0.item.board != nil }
     filteredPinnedItems = allPinnedItems
     filteredUnpinnedItems = allUnpinnedItems
+    filteredBoardItems = boardItems
 
     limitHistorySize(to: Defaults[.size])
 
@@ -176,6 +181,8 @@ class History: ItemsContainer { // swiftlint:disable:this type_body_length
       item.firstCopiedAt = existingHistoryItem.firstCopiedAt
       item.numberOfCopies += existingHistoryItem.numberOfCopies
       item.pin = existingHistoryItem.pin
+      item.board = existingHistoryItem.board
+      item.name = existingHistoryItem.name
       item.title = existingHistoryItem.title
       if !item.fromMaccy {
         item.application = existingHistoryItem.application
@@ -184,6 +191,8 @@ class History: ItemsContainer { // swiftlint:disable:this type_body_length
       if let existingDecorator = firstStoredItem(where: { $0.item == existingHistoryItem }) {
         cleanup(existingDecorator)
         allUnpinnedItems.removeAll { $0 == existingDecorator }
+        boardItems.removeAll { $0 == existingDecorator }
+        filteredBoardItems.removeAll { $0 == existingDecorator }
         if existingDecorator.isPinned {
           replacedPinnedItem = existingDecorator
         }
@@ -197,12 +206,15 @@ class History: ItemsContainer { // swiftlint:disable:this type_body_length
 
     // Remove exceeding items. Do this after the item is added to avoid removing something
     // if a duplicate was found as then the size already stayed the same.
-    limitHistorySize(to: item.pin == nil ? Defaults[.size] - 1 : Defaults[.size])
+    limitHistorySize(to: item.pin == nil && item.board == nil ? Defaults[.size] - 1 : Defaults[.size])
 
     sessionLog[Clipboard.shared.changeCount] = item
 
     let itemDecorator: HistoryItemDecorator
-    if let pin = item.pin {
+    if item.board != nil {
+      itemDecorator = HistoryItemDecorator(item)
+      insertBoardItem(itemDecorator)
+    } else if let pin = item.pin {
       itemDecorator = HistoryItemDecorator(item, shortcuts: KeyShortcut.create(character: pin))
       if let replacedPinnedItem {
         pinManager.replace(replacedPinnedItem, with: itemDecorator)
@@ -242,18 +254,19 @@ class History: ItemsContainer { // swiftlint:disable:this type_body_length
       allUnpinnedItems.forEach(cleanup)
       allUnpinnedItems.removeAll()
       filteredUnpinnedItems.removeAll()
-      sessionLog.removeValues { $0.pin == nil }
+      sessionLog.removeValues { $0.pin == nil && $0.board == nil }
 
-      try? Storage.shared.context.transaction {
-        try? Storage.shared.context.delete(
-          model: HistoryItem.self,
-          where: #Predicate { $0.pin == nil }
-        )
-        try? Storage.shared.context.delete(
-          model: HistoryItemContent.self,
-          where: #Predicate { $0.item?.pin == nil }
-        )
-      }
+      let doomed = try? Storage.shared.context.fetch(
+        FetchDescriptor<HistoryItem>(predicate: #Predicate { $0.pin == nil && $0.board == nil })
+      )
+      doomed?.forEach(deleteFromStorage)
+      Storage.shared.context.processPendingChanges()
+      try? Storage.shared.context.save()
+      // Contents of board items still reference their item, so only orphaned contents are removed in bulk.
+      try? Storage.shared.context.delete(
+        model: HistoryItemContent.self,
+        where: #Predicate { $0.item == nil }
+      )
       Storage.shared.context.processPendingChanges()
       try? Storage.shared.context.save()
     }
@@ -273,11 +286,20 @@ class History: ItemsContainer { // swiftlint:disable:this type_body_length
       allUnpinnedItems.removeAll()
       filteredPinnedItems.removeAll()
       filteredUnpinnedItems.removeAll()
+      boardItems.removeAll()
+      filteredBoardItems.removeAll()
       pinManager.removeAll()
       sessionLog.removeAll()
 
       do {
         let context = Storage.shared.context
+        // Bulk deletion fails on items that still hold a board relationship, so remove those one by one.
+        let boardStored = try context.fetch(
+          FetchDescriptor<HistoryItem>(predicate: #Predicate { $0.board != nil })
+        )
+        boardStored.forEach(deleteFromStorage)
+        context.processPendingChanges()
+        try context.save()
         try context.transaction {
           // Bulk deletion cannot remove children with live inverse relationships.
           try context.delete(
@@ -316,6 +338,8 @@ class History: ItemsContainer { // swiftlint:disable:this type_body_length
     allUnpinnedItems.removeAll { $0 == item }
     filteredPinnedItems.removeAll { $0 == item }
     filteredUnpinnedItems.removeAll { $0 == item }
+    boardItems.removeAll { $0 == item }
+    filteredBoardItems.removeAll { $0 == item }
     sessionLog.removeValues { $0 == item.item }
 
     updateUnpinnedShortcuts()
@@ -469,6 +493,86 @@ class History: ItemsContainer { // swiftlint:disable:this type_body_length
   }
 
   @MainActor
+  func move(_ item: HistoryItemDecorator, to board: Board?) {
+    guard item.item.board != board else { return }
+
+    if item.isPinned {
+      pinManager.remove(item)
+      item.item.pin = nil
+    }
+    let wasInBoard = item.item.board != nil
+    item.item.board = board
+
+    if wasInBoard {
+      boardItems.removeAll { $0 == item }
+      filteredBoardItems.removeAll { $0 == item }
+    } else {
+      allUnpinnedItems.removeAll { $0 == item }
+      filteredUnpinnedItems.removeAll { $0 == item }
+    }
+    if board != nil {
+      insertBoardItem(item)
+    } else {
+      insertUnpinned(item)
+    }
+
+    saveAndRefresh()
+  }
+
+  @MainActor
+  func toggleFavorite(_ item: HistoryItemDecorator?) {
+    guard let item else { return }
+    let favorites = BoardStore.shared.favorites
+    move(item, to: item.item.board == favorites ? nil : favorites)
+  }
+
+  @MainActor
+  func rename(_ item: HistoryItemDecorator, to name: String) {
+    let trimmed = name.trimmingCharacters(in: .whitespacesAndNewlines)
+    item.item.name = trimmed.isEmpty ? nil : trimmed
+    item.title = item.item.displayTitle
+    saveAndRefresh()
+  }
+
+  @MainActor
+  func deleteBoard(_ board: Board) throws {
+    guard !board.isFavorites else { throw BoardError.cannotDeleteFavorites }
+    for item in boardItems.filter({ $0.item.board == board }) {
+      move(item, to: nil)
+    }
+    try BoardStore.shared.remove(board)
+  }
+
+  @discardableResult
+  @MainActor
+  func createSnippet(in board: Board, text: String) -> HistoryItemDecorator {
+    let item = HistoryItem(contents: [
+      HistoryItemContent(type: NSPasteboard.PasteboardType.string.rawValue, value: text.data(using: .utf8))
+    ])
+    Storage.shared.context.insert(item)
+    item.application = Bundle.main.bundleIdentifier
+    item.title = item.generateTitle()
+    item.board = board
+
+    let decorator = HistoryItemDecorator(item)
+    insertBoardItem(decorator)
+    saveAndRefresh()
+    return decorator
+  }
+
+  @MainActor
+  private func saveAndRefresh() {
+    Storage.shared.context.processPendingChanges()
+    try? Storage.shared.context.save()
+    if searchQuery.isEmpty {
+      updateUnpinnedShortcuts()
+    } else {
+      updateSearchResults()
+    }
+    AppState.shared.popup.needsResize = true
+  }
+
+  @MainActor
   func togglePin(_ item: HistoryItemDecorator?) {
     guard let item else { return }
 
@@ -531,6 +635,9 @@ class History: ItemsContainer { // swiftlint:disable:this type_body_length
     filteredUnpinnedItems = filteredItems(
       from: search.search(string: searchQuery, within: allUnpinnedItems)
     )
+    filteredBoardItems = filteredItems(
+      from: search.search(string: searchQuery, within: boardItems)
+    )
 
     updateUnpinnedShortcuts()
   }
@@ -547,13 +654,21 @@ class History: ItemsContainer { // swiftlint:disable:this type_body_length
   private func firstStoredItem(
     where predicate: (HistoryItemDecorator) -> Bool
   ) -> HistoryItemDecorator? {
-    allPinnedItems.first(where: predicate) ?? allUnpinnedItems.first(where: predicate)
+    allPinnedItems.first(where: predicate)
+      ?? allUnpinnedItems.first(where: predicate)
+      ?? boardItems.first(where: predicate)
   }
 
   private func insertUnpinned(_ item: HistoryItemDecorator) {
     let sortedItems = sorter.sort(allUnpinnedItems.map(\.item) + [item.item])
     guard let index = sortedItems.firstIndex(of: item.item) else { return }
     allUnpinnedItems.insert(item, at: index)
+  }
+
+  private func insertBoardItem(_ item: HistoryItemDecorator) {
+    let sortedItems = sorter.sort(boardItems.map(\.item) + [item.item])
+    guard let index = sortedItems.firstIndex(of: item.item) else { return }
+    boardItems.insert(item, at: index)
   }
 
   private func updateShortcuts() {

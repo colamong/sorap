@@ -26,6 +26,7 @@ class HistoryItemDecorator: Identifiable, Hashable, HasVisibility {
     return selectionIndex != -1
   }
   var shortcuts: [KeyShortcut] = []
+  var kind: ItemKind
 
   var application: String? {
     if item.universalClipboard {
@@ -116,7 +117,8 @@ class HistoryItemDecorator: Identifiable, Hashable, HasVisibility {
   init(_ item: HistoryItem, shortcuts: [KeyShortcut] = []) {
     self.item = item
     self.shortcuts = shortcuts
-    self.title = item.title
+    self.title = item.displayTitle
+    self.kind = item.kind
     self.applicationImage = ApplicationImageCache.shared.getImage(item: item)
 
     synchronizeItemPin()
@@ -244,11 +246,11 @@ class HistoryItemDecorator: Identifiable, Hashable, HasVisibility {
 
   private func synchronizeItemTitle() {
     _ = withObservationTracking {
-      item.title
+      (item.title, item.name)
     } onChange: { [weak self] in
       DispatchQueue.main.async {
         guard let self else { return }
-        self.title = self.item.title
+        self.title = self.item.displayTitle
         self.synchronizeItemTitle()
       }
     }
