@@ -89,6 +89,17 @@ final class HistoryScopeTests: XCTestCase {
     XCTAssertEqual(history.items.toArray().map(\.item), [item.item])
   }
 
+  func testHistoryItemsIgnoresScopeAndFilter() throws {
+    let board = try boards.create(name: "Intent", symbol: "folder")
+    let plain = history.add(historyItem("plain words"))
+    let inBoard = history.add(historyItem("in board"))
+    history.move(inBoard, to: board)
+
+    history.scope = .board(board)
+    history.kindFilter = .link
+    XCTAssertEqual(history.historyItems, [plain])
+  }
+
   func testDeletingSelectedBoardFallsBackToHistory() throws {
     let board = try boards.create(name: "Temp", symbol: "folder")
     let item = history.add(historyItem("x"))

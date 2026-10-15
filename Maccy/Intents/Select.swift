@@ -20,7 +20,7 @@ struct Select: AppIntent, CustomIntentMigratedAppIntent {
 
   func perform() async throws -> some IntentResult & ReturnsValue<String> {
     let value = try await MainActor.run { () -> String in
-      let items = AppState.shared.history.items
+      let items = AppState.shared.history.historyItems
       let index = number - positionOffset
       guard items.count >= index else {
         throw AppIntentError.notFound

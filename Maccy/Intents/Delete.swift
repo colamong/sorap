@@ -17,7 +17,7 @@ struct Delete: AppIntent, CustomIntentMigratedAppIntent {
 
   func perform() async throws -> some IntentResult {
     try await MainActor.run {
-      let items = AppState.shared.history.items
+      let items = AppState.shared.history.historyItems
       let index = number - positionOffset
       guard items.count >= index else {
         throw AppIntentError.notFound

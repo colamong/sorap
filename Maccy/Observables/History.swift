@@ -23,6 +23,17 @@ class History: ItemsContainer { // swiftlint:disable:this type_body_length
       ConcatenatedCollection(unpinnedItems, pinnedItems)
     }
   }
+
+  /// Every pinned and unpinned History item, ignoring scope, kind filter and search (for Shortcuts intents).
+  var historyItems: [HistoryItemDecorator] {
+    switch Defaults[.pinTo] {
+    case .top:
+      allPinnedItems + allUnpinnedItems
+    case .bottom:
+      allUnpinnedItems + allPinnedItems
+    }
+  }
+
   var scope: HistoryScope = .history {
     didSet {
       guard scope != oldValue else { return }
