@@ -120,11 +120,13 @@ enum KeyChord: CaseIterable {
       self = .moveToFirst
     case (KeyChord.pinKey, KeyChord.pinModifiers):
       self = .pinOrUnpin
-    case (.tab, []):
+    case (.tab, []),
+         (.rightArrow, [.option]):
       self = .nextBoard
-    case (.tab, [.shift]):
+    case (.leftArrow, [.option]):
       self = .previousBoard
-    case (.t, [.command]):
+    case (.tab, [.shift]),
+         (.t, [.command]):
       self = .nextKindFilter
     case (.t, [.command, .shift]):
       self = .previousKindFilter

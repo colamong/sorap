@@ -31,7 +31,7 @@ struct KindFilterView: View {
         .contentShape(Rectangle())
     }
     .buttonStyle(.plain)
-    .help(kind == nil ? "\(text) (⌘T)" : text)
+    .help(kind == nil ? "\(text) (⇧⇥ / ⌘T)" : text)
     .accessibilityLabel(text)
     .accessibilityAddTraits(selected ? .isSelected : [])
   }
