@@ -23,11 +23,32 @@ class History: ItemsContainer { // swiftlint:disable:this type_body_length
       ConcatenatedCollection(unpinnedItems, pinnedItems)
     }
   }
+  var scope: HistoryScope = .history {
+    didSet {
+      guard scope != oldValue else { return }
+      visibleListChanged()
+    }
+  }
+
+  var kindFilter: ItemKind? {
+    didSet {
+      guard kindFilter != oldValue else { return }
+      visibleListChanged()
+    }
+  }
+
   var pinnedItems: [HistoryItemDecorator] {
-    searchQuery.isEmpty ? allPinnedItems : filteredPinnedItems
+    guard scope == .history else { return [] }
+    return applyKindFilter(searchQuery.isEmpty ? allPinnedItems : filteredPinnedItems)
   }
   var unpinnedItems: [HistoryItemDecorator] {
-    searchQuery.isEmpty ? allUnpinnedItems : filteredUnpinnedItems
+    switch scope {
+    case .history:
+      return applyKindFilter(searchQuery.isEmpty ? allUnpinnedItems : filteredUnpinnedItems)
+    case .board(let board):
+      let source = searchQuery.isEmpty ? boardItems : filteredBoardItems
+      return applyKindFilter(source.filter { $0.item.board == board })
+    }
   }
   var availablePins: [String] { pinManager.availablePins }
 
@@ -540,6 +561,9 @@ class History: ItemsContainer { // swiftlint:disable:this type_body_length
     for item in boardItems.filter({ $0.item.board == board }) {
       move(item, to: nil)
     }
+    if scope == .board(board) {
+      scope = .history
+    }
     try BoardStore.shared.remove(board)
   }
 
@@ -569,6 +593,18 @@ class History: ItemsContainer { // swiftlint:disable:this type_body_length
     } else {
       updateSearchResults()
     }
+    AppState.shared.popup.needsResize = true
+  }
+
+  private func applyKindFilter(_ items: [HistoryItemDecorator]) -> [HistoryItemDecorator] {
+    guard let kindFilter else { return items }
+    return items.filter { $0.kind == kindFilter }
+  }
+
+  @MainActor
+  private func visibleListChanged() {
+    updateUnpinnedShortcuts()
+    AppState.shared.navigator.select(item: firstUnpinnedItem ?? firstPinnedItem)
     AppState.shared.popup.needsResize = true
   }
 
