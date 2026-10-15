@@ -28,7 +28,7 @@ struct ItemEditorView: View {
 
   init(for item: HistoryItemDecorator) {
     self.item = item
-    self._editableTitle = State(initialValue: item.item.title)
+    self._editableTitle = State(initialValue: item.item.name ?? "")
     self._editableContent = State(initialValue: LargeTextView.EditorState(text: item.previewText.string))
     self._selectedPin = State(initialValue: item.item.pin)
 
@@ -52,7 +52,6 @@ struct ItemEditorView: View {
 
           TextField("", text: $editableTitle)
             .accessibilityLabel(Text("Alias", tableName: "PinsSettings"))
-            .disabled(item.hasImage)
             .focused($focusedField, equals: .title)
             .onSubmit(saveChanges)
         }
@@ -182,16 +181,15 @@ struct ItemEditorView: View {
   }
 
   private var hasChangesToApply: Bool {
-    let titleChanged = !item.hasImage && editableTitle != item.item.title
+    let titleChanged = editableTitle != (item.item.name ?? "")
     let pinChanged = selectedPin != nil && selectedPin != item.item.pin
     let contentChanged = (isTextContent || isRichText) && editableContent.hasChanges
     return titleChanged || pinChanged || contentChanged
   }
 
   private func applyChanges() {
-    if !item.hasImage && editableTitle != item.item.title {
-      item.item.title = editableTitle
-      item.title = editableTitle
+    if editableTitle != (item.item.name ?? "") {
+      appState.history.rename(item, to: editableTitle)
     }
 
     if let selectedPin {

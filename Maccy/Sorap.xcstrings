@@ -16,6 +16,15 @@
     "filter.other" : { "localizations" : {
       "en" : { "stringUnit" : { "state" : "translated", "value" : "Other" } },
       "ko" : { "stringUnit" : { "state" : "translated", "value" : "기타" } } } },
+    "item.name" : { "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Rename" } },
+      "ko" : { "stringUnit" : { "state" : "translated", "value" : "이름 붙이기" } } } },
+    "item.move" : { "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Move to" } },
+      "ko" : { "stringUnit" : { "state" : "translated", "value" : "보드로 이동" } } } },
+    "item.delete" : { "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Delete" } },
+      "ko" : { "stringUnit" : { "state" : "translated", "value" : "삭제" } } } },
     "board.history" : { "localizations" : {
       "en" : { "stringUnit" : { "state" : "translated", "value" : "History" } },
       "ko" : { "stringUnit" : { "state" : "translated", "value" : "기록" } } } },

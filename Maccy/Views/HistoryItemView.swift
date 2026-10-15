@@ -1,4 +1,5 @@
 import Defaults
+import SwiftData
 import SwiftUI
 
 struct HistoryItemView: View {
@@ -30,6 +31,19 @@ struct HistoryItemView: View {
     return ColorImage.from(item.title)
   }
 
+  private var isFavorite: Bool { item.item.board?.isFavorites == true }
+
+  private var favoriteButton: some View {
+    Button {
+      appState.history.toggleFavorite(item)
+    } label: {
+      Image(systemName: isFavorite ? "star.fill" : "star")
+        .foregroundStyle(isFavorite ? Color.yellow : (item.isSelected ? Color.white : .secondary))
+    }
+    .buttonStyle(.plain)
+    .help(String(localized: isFavorite ? "history_item_unfavorite_action" : "history_item_favorite_action", table: "Sorap"))
+  }
+
   private func performSelect() {
     if NSEvent.modifierFlags.contains(.command) && appState.multiSelectionEnabled {
       appState.navigator.addToSelection(item: item)
@@ -53,11 +67,34 @@ struct HistoryItemView: View {
       isSelected: item.isSelected,
       selectionIndex: item.multiSelectionIndex,
       selectionAppearance: selectionAppearance,
-      accessibilityLabel: item.accessibilityLabel
+      accessibilityLabel: item.accessibilityLabel,
+      leadingSymbol: item.kind.symbol,
+      trailingAccessory: AnyView(favoriteButton)
     ) {
       Text(verbatim: item.title)
     }
     .accessibilityIdentifier("copy-history-item")
+    .contextMenu {
+      Button(String(localized: "item.name", table: "Sorap")) {
+        appState.requestEdit(item)
+      }
+      Menu(String(localized: "item.move", table: "Sorap")) {
+        Button(String(localized: "board.history", table: "Sorap")) {
+          appState.history.move(item, to: nil)
+        }
+        .disabled(item.item.board == nil)
+        ForEach(BoardStore.shared.boards, id: \.persistentModelID) { board in
+          Button(board.name) {
+            appState.history.move(item, to: board)
+          }
+          .disabled(item.item.board == board)
+        }
+      }
+      Divider()
+      Button(String(localized: "item.delete", table: "Sorap"), role: .destructive) {
+        appState.history.delete(item)
+      }
+    }
     .buttonAction(performSelect)
     .onAppear {
       item.ensureThumbnailImage()

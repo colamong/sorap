@@ -42,6 +42,8 @@ struct ListItemView<Title: View, ID: Hashable>: View {
   var selectionAppearance: SelectionAppearance = .none
   // Complete description used when the row's visual content is hidden from accessibility.
   var accessibilityLabel: String = ""
+  var leadingSymbol: String?
+  var trailingAccessory: AnyView?
   @ViewBuilder var title: () -> Title
 
   @Default(.showApplicationIcons) private var showIcons
@@ -74,6 +76,16 @@ struct ListItemView<Title: View, ID: Hashable>: View {
           .accessibilityHidden(true)
           .padding(.trailing, 5)
           .padding(.vertical, 5)
+      }
+
+      if image == nil, let leadingSymbol {
+        Image(systemName: leadingSymbol)
+          .font(.system(size: 12))
+          .frame(width: 24, height: 24)
+          .background(.quaternary.opacity(0.5), in: RoundedRectangle(cornerRadius: 6))
+          .foregroundStyle(isSelected ? Color.white : .secondary)
+          .accessibilityHidden(true)
+          .padding(.trailing, 8)
       }
 
       if let image {
@@ -115,17 +127,22 @@ struct ListItemView<Title: View, ID: Hashable>: View {
             }
           }
         }
+
+        if let trailingAccessory {
+          trailingAccessory
+        }
       }
       .padding(.trailing, 10)
     }
     .frame(minHeight: Popup.itemHeight)
+    .padding(.vertical, 2)
     .id(id)
     .frame(maxWidth: .infinity, alignment: .leading)
     .foregroundStyle(isSelected ? Color.white : .primary)
     // macOS 26 broke hovering if no background is present.
     // The slight opcaity white background is a workaround
     .background(
-      isSelected ? Color.accentColor.opacity(0.8) : .white.opacity(0.001),
+      isSelected ? Color.accentColor.opacity(0.8) : Color.primary.opacity(0.04),
       in: selectionAppearance.rect(cornerRadius: Popup.cornerRadius)
     )
     .accessibilityElement(children: .ignore)
