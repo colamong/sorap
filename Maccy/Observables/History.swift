@@ -547,6 +547,16 @@ class History: ItemsContainer { // swiftlint:disable:this type_body_length
     move(item, to: item.item.board == favorites ? nil : favorites)
   }
 
+  // Uniform toggle: all favorites -> remove them all; otherwise add the rest.
+  @MainActor
+  func toggleFavorites(_ items: [HistoryItemDecorator]) {
+    let favorites = BoardStore.shared.favorites
+    let allFavorites = items.allSatisfy { $0.item.board == favorites }
+    for item in items {
+      move(item, to: allFavorites ? nil : favorites)
+    }
+  }
+
   @MainActor
   func rename(_ item: HistoryItemDecorator, to name: String) {
     let trimmed = name.trimmingCharacters(in: .whitespacesAndNewlines)

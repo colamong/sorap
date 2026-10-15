@@ -37,6 +37,31 @@ final class HistoryBoardTests: XCTestCase {
     XCTAssertTrue(history.unpinnedItems.contains(item))
   }
 
+  func testToggleFavoritesMixedSelectionAddsAll() {
+    let fav = history.add(historyItem("fav"))
+    let plain = history.add(historyItem("plain"))
+    history.toggleFavorite(fav)
+
+    history.toggleFavorites([fav, plain])
+
+    XCTAssertEqual(fav.item.board, boards.favorites)
+    XCTAssertEqual(plain.item.board, boards.favorites)
+  }
+
+  func testToggleFavoritesAllFavoritesRemovesAll() {
+    let first = history.add(historyItem("first"))
+    let second = history.add(historyItem("second"))
+    history.toggleFavorite(first)
+    history.toggleFavorite(second)
+
+    history.toggleFavorites([first, second])
+
+    XCTAssertNil(first.item.board)
+    XCTAssertNil(second.item.board)
+    XCTAssertTrue(history.unpinnedItems.contains(first))
+    XCTAssertTrue(history.unpinnedItems.contains(second))
+  }
+
   func testBoardItemsSurviveSizeLimit() {
     let kept = history.add(historyItem("keep"))
     history.toggleFavorite(kept)

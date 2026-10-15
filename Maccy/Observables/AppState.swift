@@ -121,9 +121,7 @@ class AppState: Sendable {
   @MainActor
   func togglePin() {
     withTransaction(Transaction()) {
-      navigator.selection.forEach { _, item in
-        history.toggleFavorite(item)
-      }
+      history.toggleFavorites(Array(navigator.selection.items))
     }
   }
 
