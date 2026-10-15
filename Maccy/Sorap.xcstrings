@@ -46,6 +46,12 @@
     "board.delete.message" : { "localizations" : {
       "en" : { "stringUnit" : { "state" : "translated", "value" : "Its %lld items move back to History." } },
       "ko" : { "stringUnit" : { "state" : "translated", "value" : "항목 %lld개는 기록으로 돌아갑니다." } } } },
+    "settings.favorite" : { "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Favorite" } },
+      "ko" : { "stringUnit" : { "state" : "translated", "value" : "즐겨찾기" } } } },
+    "settings.favorite.tooltip" : { "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Add to or remove from Favorites" } },
+      "ko" : { "stringUnit" : { "state" : "translated", "value" : "즐겨찾기에 넣거나 뺍니다" } } } },
     "board.moveLeft" : { "localizations" : {
       "en" : { "stringUnit" : { "state" : "translated", "value" : "Move left" } },
       "ko" : { "stringUnit" : { "state" : "translated", "value" : "왼쪽으로" } } } },

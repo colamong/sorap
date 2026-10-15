@@ -46,10 +46,11 @@ struct GeneralSettingsPane: View {
           .accessibilityLabel(Text("Open", tableName: "GeneralSettings"))
       }
 
-      Settings.Section(label: { Text("Pin", tableName: "GeneralSettings") }) {
+      // The stored shortcut is still named .pin; it now toggles Favorites.
+      Settings.Section(label: { Text("settings.favorite", tableName: "Sorap") }) {
         KeyboardShortcuts.Recorder(for: .pin)
-          .help(Text("PinTooltip", tableName: "GeneralSettings"))
-          .accessibilityLabel(Text("Pin", tableName: "GeneralSettings"))
+          .help(Text("settings.favorite.tooltip", tableName: "Sorap"))
+          .accessibilityLabel(Text("settings.favorite", tableName: "Sorap"))
       }
       Settings.Section(label: { Text("Delete", tableName: "GeneralSettings") }
       ) {
