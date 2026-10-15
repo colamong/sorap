@@ -78,7 +78,7 @@ struct BoardChipsView: View {
       }
     } message: { board in
       let count = appState.history.boardItems.filter { $0.item.board == board }.count
-      Text(String(format: String(localized: "board.delete.message", table: "Sorap"), count))
+      Text(String(localized: "board.delete.message \(count)", table: "Sorap"))
     }
   }
 
