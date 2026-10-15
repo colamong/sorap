@@ -12,7 +12,7 @@ struct HeaderView: View {
   }
 
   var body: some View {
-    VStack(alignment: .leading, spacing: 6) {
+    VStack(alignment: .leading, spacing: 0) {
       HStack(alignment: .top, spacing: 0) {
         HStack(alignment: .center, spacing: 0) {
           ListHeaderView(
@@ -44,14 +44,17 @@ struct HeaderView: View {
         .accessibilityHidden(!appState.searchVisible)
         .layoutPriority(1)
       }
+      // Only the search row collapses; the chip row stays and is counted in popup.headerHeight.
+      .frame(maxHeight: !appState.searchVisible ? 0 : nil, alignment: .top)
+
       BoardChipsView()
+        .padding(.top, appState.searchVisible ? 6 : 0)
         .padding(.horizontal, Popup.horizontalPadding)
     }
     .padding(.top, Popup.verticalPadding)
     .padding(.horizontal, 10)
     .animation(.default.speed(3), value: appState.navigator.leadSelection)
     .background(.clear)
-    .frame(maxHeight: !appState.searchVisible ? 0 : nil, alignment: .top)
     .readHeight(appState, into: \.popup.headerHeight)
   }
 }
