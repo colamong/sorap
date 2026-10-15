@@ -18,6 +18,8 @@ class AppState: Sendable {
   var preview: SlideoutController
 
   var isEditingItem: Bool = false
+  var editingItem: HistoryItemDecorator?
+  var boardEditorRequest: BoardEditorRequest?
   var suppressPopupAutoClose: Bool {
     return navigator.isDragAndDropInProgress || isEditingItem
   }
@@ -54,6 +56,25 @@ class AppState: Sendable {
       })
     preview.contentWidth = Defaults[.windowSize].width
     preview.slideoutWidth = Defaults[.previewWidth]
+  }
+
+  @MainActor
+  func requestEdit(_ item: HistoryItemDecorator) {
+    isEditingItem = true
+    editingItem = item
+  }
+
+  @MainActor
+  func requestBoardEditor(_ request: BoardEditorRequest) {
+    isEditingItem = true
+    boardEditorRequest = request
+  }
+
+  @MainActor
+  func finishEditing() {
+    editingItem = nil
+    boardEditorRequest = nil
+    isEditingItem = false
   }
 
   @MainActor

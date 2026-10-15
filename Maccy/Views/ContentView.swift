@@ -53,6 +53,7 @@ struct ContentView: View {
       }
       .frame(maxWidth: .infinity, alignment: .leading)
       .task {
+        BoardStore.shared.load()
         try? await appState.history.load()
       }
     }
@@ -60,6 +61,13 @@ struct ContentView: View {
     .environment(appState)
     .environment(modifierFlags)
     .environment(\.scenePhase, scenePhase)
+    .sheet(item: $appState.editingItem, onDismiss: { appState.finishEditing() }) { item in
+      ItemEditorView(for: item)
+        .environment(appState)
+    }
+    .sheet(item: $appState.boardEditorRequest, onDismiss: { appState.finishEditing() }) { request in
+      BoardEditorSheet(request: request)
+    }
     .onChange(of: appState.isEditingItem) { _, isEditingItem in
       // A sheet's text controls otherwise remain the logical focus target after
       // dismissal, preventing the popup's key handler from receiving shortcuts.

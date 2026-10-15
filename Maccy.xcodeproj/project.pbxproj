@@ -174,6 +174,9 @@
 		F18F166970893C503065D056 /* View+ButtonAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB2945CD7912BE7C7D330C27 /* View+ButtonAction.swift */; };
 		FFFC00000000000000000001 /* String+UnsafeForTitleLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFFC00000000000000000002 /* String+UnsafeForTitleLayout.swift */; };
 		FFFC00000000000000000003 /* UnsafeForTitleLayoutTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFFC00000000000000000004 /* UnsafeForTitleLayoutTests.swift */; };
+		4E876EF8A113016A87D95942 /* KindFilterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D715EB5A6342B9E42B73C180 /* KindFilterView.swift */; };
+		7D244D5F50CA30AE382A3546 /* BoardChipsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66A1C31D7114688E9782D1AC /* BoardChipsView.swift */; };
+		313E07FD5DBFB4572C0A3A48 /* BoardEditorSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 158DFEF169CE09AA2B8F64A1 /* BoardEditorSheet.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -628,6 +631,9 @@
 		F2E5FA9061DA4866BCFAFE90 /* km */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = km; path = km.lproj/AppearanceSettings.strings; sourceTree = "<group>"; };
 		FFFC00000000000000000002 /* String+UnsafeForTitleLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+UnsafeForTitleLayout.swift"; sourceTree = "<group>"; };
 		FFFC00000000000000000004 /* UnsafeForTitleLayoutTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UnsafeForTitleLayoutTests.swift; sourceTree = "<group>"; };
+		D715EB5A6342B9E42B73C180 /* KindFilterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KindFilterView.swift; sourceTree = "<group>"; };
+		66A1C31D7114688E9782D1AC /* BoardChipsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoardChipsView.swift; sourceTree = "<group>"; };
+		158DFEF169CE09AA2B8F64A1 /* BoardEditorSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoardEditorSheet.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -761,6 +767,9 @@
 				DAA072DC2C41C61F006DDFD2 /* FooterItemView.swift */,
 				DAA072E02C41C6E8006DDFD2 /* FooterView.swift */,
 				DA1969192C3F369800258481 /* HeaderView.swift */,
+				158DFEF169CE09AA2B8F64A1 /* BoardEditorSheet.swift */,
+				66A1C31D7114688E9782D1AC /* BoardChipsView.swift */,
+				D715EB5A6342B9E42B73C180 /* KindFilterView.swift */,
 				2F0EC7782E7727E3003E2EA9 /* HeightReaderModifier.swift */,
 				DA1969112C3F0DD200258481 /* HistoryItemView.swift */,
 				DAA072D42C40AC52006DDFD2 /* HistoryListView.swift */,
@@ -1309,6 +1318,9 @@
 				2AAC4058862BBD3DEE03206C /* Board.swift in Sources */,
 				A75B4CE29AE414AC637F1C56 /* BoardStore.swift in Sources */,
 				5D2642718ADC67DB3F509402 /* HistoryScope.swift in Sources */,
+				4E876EF8A113016A87D95942 /* KindFilterView.swift in Sources */,
+				7D244D5F50CA30AE382A3546 /* BoardChipsView.swift in Sources */,
+				313E07FD5DBFB4572C0A3A48 /* BoardEditorSheet.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
