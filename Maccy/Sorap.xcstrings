@@ -1,0 +1,9 @@
+{
+  "sourceLanguage" : "en",
+  "strings" : {
+    "board.favorites" : { "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Favorites" } },
+      "ko" : { "stringUnit" : { "state" : "translated", "value" : "즐겨찾기" } } } }
+  },
+  "version" : "1.0"
+}

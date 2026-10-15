@@ -80,6 +80,8 @@ class HistoryItem {
   var numberOfCopies: Int = 1
   var pin: String?
   var title = ""
+  var name: String?
+  var board: Board?
 
   @Relationship(deleteRule: .cascade, inverse: \HistoryItemContent.item)
   var contents: [HistoryItemContent] = []
@@ -283,4 +285,6 @@ extension HistoryItem {
   var kind: ItemKind {
     ItemKind.classify(hasImage: imageData != nil, text: text, fileURLs: fileURLs)
   }
+
+  var displayTitle: String { name ?? title }
 }
