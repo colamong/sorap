@@ -41,6 +41,7 @@ struct HeaderView: View {
           .padding(.trailing, Popup.horizontalPadding)
         }
         .opacity(appState.searchVisible ? 1 : 0)
+        .allowsHitTesting(appState.searchVisible)
         .accessibilityHidden(!appState.searchVisible)
         .layoutPriority(1)
       }
