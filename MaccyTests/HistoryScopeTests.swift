@@ -110,6 +110,24 @@ final class HistoryScopeTests: XCTestCase {
     XCTAssertEqual(history.items.toArray(), [item])
   }
 
+  func testSelectNextBoardFromHistoryGoesToFavorites() {
+    history.selectNextBoard()
+    XCTAssertEqual(history.scope, .board(boards.favorites))
+  }
+
+  func testSelectPreviousBoardFromHistoryWrapsToLastBoard() throws {
+    let last = try boards.create(name: "Last", symbol: "folder")
+    history.selectPreviousBoard()
+    XCTAssertEqual(history.scope, .board(last))
+  }
+
+  func testSelectNextBoardFromLastBoardWrapsToHistory() throws {
+    let last = try boards.create(name: "Last", symbol: "folder")
+    history.scope = .board(last)
+    history.selectNextBoard()
+    XCTAssertEqual(history.scope, .history)
+  }
+
   private func historyItem(_ value: String) -> HistoryItem {
     let item = HistoryItem()
     Storage.shared.context.insert(item)

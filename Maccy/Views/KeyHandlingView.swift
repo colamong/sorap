@@ -79,6 +79,12 @@ struct KeyHandlingView<Content: View>: View {
           }
 
           return .handled
+        case .nextBoard:
+          appState.history.selectNextBoard()
+          return .handled
+        case .previousBoard:
+          appState.history.selectPreviousBoard()
+          return .handled
         case .moveToNext:
           guard NSApp.characterPickerWindow == nil else {
             return .ignored

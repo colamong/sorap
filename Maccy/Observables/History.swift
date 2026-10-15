@@ -576,6 +576,20 @@ class History: ItemsContainer { // swiftlint:disable:this type_body_length
     saveAndRefresh()
   }
 
+  /// Chip order: History, then every board (Favorites first). Wraps around.
+  @MainActor
+  func selectNextBoard() { stepScope(by: 1) }
+
+  @MainActor
+  func selectPreviousBoard() { stepScope(by: -1) }
+
+  @MainActor
+  private func stepScope(by offset: Int) {
+    let scopes: [HistoryScope] = [.history] + BoardStore.shared.boards.map { HistoryScope.board($0) }
+    let current = scopes.firstIndex(of: scope) ?? 0
+    scope = scopes[(current + offset + scopes.count) % scopes.count]
+  }
+
   @MainActor
   func deleteBoard(_ board: Board) throws {
     guard !board.isFavorites else { throw BoardError.cannotDeleteFavorites }
