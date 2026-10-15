@@ -52,6 +52,8 @@ extension ItemContextMenu {
     panel.level = NSWindow.Level(rawValue: NSWindow.Level.statusBar.rawValue + 1)
 
     appState.isEditingItem = true
+    // LSUIElement app + non-activating popup: without activation the panel is not key.
+    NSApp.activate(ignoringOtherApps: true)
     panel.begin { response in
       Task { @MainActor in
         defer {
@@ -66,6 +68,8 @@ extension ItemContextMenu {
         } catch {
           let alert = NSAlert(error: error)
           alert.alertStyle = .warning
+          alert.window.level = NSWindow.Level(rawValue: NSWindow.Level.statusBar.rawValue + 1)
+          NSApp.activate(ignoringOtherApps: true)
           alert.runModal()
         }
       }
