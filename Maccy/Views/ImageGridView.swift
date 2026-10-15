@@ -1,4 +1,5 @@
 import SwiftUI
+import UniformTypeIdentifiers
 
 struct ImageGridView: View {
   let items: [HistoryItemDecorator]
@@ -46,11 +47,24 @@ struct ImageGridView: View {
         .buttonStyle(.plain)
         .accessibilityLabel(item.accessibilityLabel)
         .accessibilityAddTraits(item.isSelected ? .isSelected : [])
+        .onDrag { dragProvider(for: item) }
         .itemContextMenu(item)
         .hoverSelectionId(item.id)
         .onAppear { item.ensureThumbnailImage() }
       }
     }
     .padding(.horizontal, Popup.horizontalPadding)
+  }
+
+  /// Dropping on Finder or the Desktop creates a PNG file named after the item.
+  private func dragProvider(for item: HistoryItemDecorator) -> NSItemProvider {
+    let provider = NSItemProvider()
+    guard let data = item.item.pngData() else { return provider }
+    provider.suggestedName = (item.item.suggestedImageFileName() as NSString).deletingPathExtension
+    provider.registerDataRepresentation(for: UTType.png, visibility: .all) { completion in
+      completion(data, nil)
+      return nil
+    }
+    return provider
   }
 }
