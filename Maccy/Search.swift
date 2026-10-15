@@ -56,7 +56,14 @@ class Search {
   private func fuzzySearch(string: String, within: [Searchable]) -> [SearchResult] {
     let pattern = fuse.createPattern(from: string)
     let searchResults: [SearchResult] = within.compactMap { item in
-      fuzzySearch(for: pattern, in: item.title, of: item)
+      if let result = fuzzySearch(for: pattern, in: item.title, of: item) {
+        return result
+      }
+      // A renamed item must still be found by what it contains; its ranges would not fit the shown name.
+      guard item.item.name != nil else { return nil }
+      guard var result = fuzzySearch(for: pattern, in: item.item.title, of: item) else { return nil }
+      result.ranges = []
+      return result
     }
     let sortedResults = searchResults.sorted(by: { ($0.score ?? 0) < ($1.score ?? 0) })
     return sortedResults
@@ -96,7 +103,16 @@ class Search {
     within: [Searchable],
     options: NSString.CompareOptions
   ) -> [SearchResult] {
-    return within.compactMap { simpleSearch(for: string, in: $0.title, of: $0, options: options) }
+    return within.compactMap { item in
+      if let result = simpleSearch(for: string, in: item.title, of: item, options: options) {
+        return result
+      }
+      // A renamed item must still be found by what it contains; its ranges would not fit the shown name.
+      guard item.item.name != nil else { return nil }
+      guard var result = simpleSearch(for: string, in: item.item.title, of: item, options: options) else { return nil }
+      result.ranges = []
+      return result
+    }
   }
 
   private func simpleSearch(

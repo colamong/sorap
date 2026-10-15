@@ -80,6 +80,15 @@ final class HistoryScopeTests: XCTestCase {
     XCTAssertEqual(history.items.toArray().map(\.item), [item.item])
   }
 
+  func testSearchMatchesContentOfRenamedItem() async throws {
+    let item = history.add(historyItem("SELECT * FROM users"))
+    history.rename(item, to: "유저 쿼리")
+    history.add(historyItem("other"))
+    history.searchQuery = "users"
+    try await Task.sleep(for: .milliseconds(500))
+    XCTAssertEqual(history.items.toArray().map(\.item), [item.item])
+  }
+
   func testDeletingSelectedBoardFallsBackToHistory() throws {
     let board = try boards.create(name: "Temp", symbol: "folder")
     let item = history.add(historyItem("x"))
