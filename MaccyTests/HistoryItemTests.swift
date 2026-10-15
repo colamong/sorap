@@ -150,6 +150,13 @@ class HistoryItemTests: XCTestCase {
     XCTAssertEqual(item2.pin, "")
   }
 
+  func testReplacingTextRegeneratesTitle() {
+    let item = historyItem("old text")
+    item.replaceText(with: "new text".data(using: .utf8)!)
+    XCTAssertEqual(item.title, "new text")
+    XCTAssertEqual(item.text, "new text")
+  }
+
   private func historyItem(_ value: String?) -> HistoryItem {
     let contents = [
       HistoryItemContent(

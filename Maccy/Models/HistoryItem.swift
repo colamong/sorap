@@ -104,6 +104,20 @@ class HistoryItem {
       }
   }
 
+  /// Replaces the item's content with edited plain text and refreshes the title (`name` is untouched).
+  @MainActor
+  func replaceText(with data: Data) {
+    let stringType = NSPasteboard.PasteboardType.string.rawValue
+    contents.removeAll { $0.type != stringType }
+
+    if let index = contents.firstIndex(where: { $0.type == stringType }) {
+      contents[index].value = data
+    } else {
+      contents.append(HistoryItemContent(type: stringType, value: data))
+    }
+    title = generateTitle()
+  }
+
   @MainActor
   func generateTitle() -> String {
     let pasteboardImageData = contentData(Self.imageTypes)
