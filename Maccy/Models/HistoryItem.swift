@@ -302,3 +302,30 @@ extension HistoryItem {
 
   var displayTitle: String { name ?? title }
 }
+
+extension HistoryItem {
+  /// PNG encoding of `imageData` (whatever format the pasteboard delivered), or nil when the item has no image.
+  func pngData() -> Data? {
+    guard let data = imageData,
+          let rep = NSBitmapImageRep(data: data) ?? NSImage(data: data)?.tiffRepresentation.flatMap(NSBitmapImageRep.init(data:))
+    else {
+      return nil
+    }
+    return rep.representation(using: .png, properties: [:])
+  }
+
+  func suggestedImageFileName(now: Date = .now) -> String {
+    let cleaned = (name ?? "")
+      .replacingOccurrences(of: "/", with: "")
+      .replacingOccurrences(of: ":", with: "")
+      .trimmingCharacters(in: .whitespacesAndNewlines)
+    if !cleaned.isEmpty {
+      return "\(cleaned).png"
+    }
+
+    let formatter = DateFormatter()
+    formatter.locale = Locale(identifier: "en_US_POSIX")
+    formatter.dateFormat = "yyyy-MM-dd HH.mm.ss"
+    return "Sorap \(formatter.string(from: now)).png"
+  }
+}

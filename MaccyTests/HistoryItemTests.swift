@@ -157,6 +157,43 @@ class HistoryItemTests: XCTestCase {
     XCTAssertEqual(item.text, "new text")
   }
 
+  func testPNGDataFromTIFFBackedItem() throws {
+    let source = NSImage(size: NSSize(width: 7, height: 5), flipped: false) { rect in
+      NSColor.red.setFill()
+      rect.fill()
+      return true
+    }
+    let item = historyItem(source)
+    let png = try XCTUnwrap(item.pngData())
+    XCTAssertEqual(Array(png.prefix(4)), [0x89, 0x50, 0x4E, 0x47])
+    let rep = try XCTUnwrap(NSBitmapImageRep(data: png))
+    XCTAssertEqual(rep.pixelsWide, 7)
+    XCTAssertEqual(rep.pixelsHigh, 5)
+  }
+
+  func testPNGDataIsNilForTextItem() {
+    XCTAssertNil(historyItem("foo").pngData())
+  }
+
+  func testSuggestedImageFileNameUsesName() {
+    let item = historyItem("foo")
+    item.name = "a/b:c"
+    XCTAssertEqual(item.suggestedImageFileName(), "abc.png")
+  }
+
+  func testSuggestedImageFileNameFallsBackToTimestamp() {
+    let item = historyItem("foo")
+    var components = DateComponents()
+    components.year = 2026
+    components.month = 10
+    components.day = 16
+    components.hour = 9
+    components.minute = 5
+    components.second = 3
+    let date = Calendar.current.date(from: components)!
+    XCTAssertEqual(item.suggestedImageFileName(now: date), "Sorap 2026-10-16 09.05.03.png")
+  }
+
   private func historyItem(_ value: String?) -> HistoryItem {
     let contents = [
       HistoryItemContent(
