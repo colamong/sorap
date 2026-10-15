@@ -277,3 +277,10 @@ class HistoryItem {
       .joined(separator: "\n")
   }
 }
+
+extension HistoryItem {
+  @MainActor
+  var kind: ItemKind {
+    ItemKind.classify(hasImage: imageData != nil, text: text, fileURLs: fileURLs)
+  }
+}
