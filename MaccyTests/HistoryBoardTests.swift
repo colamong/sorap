@@ -124,6 +124,26 @@ final class HistoryBoardTests: XCTestCase {
     XCTAssertEqual(history.unpinnedItems.map(\.item.title), ["other"])
   }
 
+  func testPendingSnippetIsDeletedWhenEmptyAndKeptWhenFilled() throws {
+    let board = try boards.create(name: "Work", symbol: "folder")
+    let appState = AppState.shared
+
+    appState.startSnippet(in: board)
+    XCTAssertEqual(history.boardItems.count, 1)
+    appState.finishEditing()
+    XCTAssertTrue(history.boardItems.isEmpty)
+
+    appState.startSnippet(in: board)
+    let snippet = try XCTUnwrap(appState.editingItem)
+    let stringType = NSPasteboard.PasteboardType.string.rawValue
+    let content = try XCTUnwrap(snippet.item.contents.first { $0.type == stringType })
+    content.value = "Hello".data(using: .utf8)
+    appState.finishEditing()
+    XCTAssertEqual(history.boardItems, [snippet])
+    XCTAssertEqual(snippet.item.title, "Hello")
+    XCTAssertEqual(snippet.kind, .text)
+  }
+
   private func historyItem(_ value: String) -> HistoryItem {
     let item = HistoryItem()
     Storage.shared.context.insert(item)

@@ -70,8 +70,27 @@ class AppState: Sendable {
     boardEditorRequest = request
   }
 
+  // sheet(item:) clears editingItem before onDismiss runs, so the new snippet is kept separately.
+  private var pendingSnippet: HistoryItemDecorator?
+
+  @MainActor
+  func startSnippet(in board: Board) {
+    let snippet = history.createSnippet(in: board, text: "")
+    pendingSnippet = snippet
+    requestEdit(snippet)
+  }
+
   @MainActor
   func finishEditing() {
+    if let snippet = pendingSnippet {
+      pendingSnippet = nil
+      if (snippet.item.text ?? "").isEmpty {
+        history.delete(snippet)
+      } else {
+        snippet.item.title = snippet.item.generateTitle()
+        snippet.kind = snippet.item.kind
+      }
+    }
     editingItem = nil
     boardEditorRequest = nil
     isEditingItem = false

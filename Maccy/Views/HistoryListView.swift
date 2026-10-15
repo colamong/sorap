@@ -75,6 +75,21 @@ struct HistoryListView: View {
     let scrollBottomPadding = bottomSeparatorVisible ? Popup.verticalSeparatorPadding : bottomPadding
 
     VStack(spacing: 0) {
+      if case .board(let board) = appState.history.scope {
+        Button {
+          appState.startSnippet(in: board)
+        } label: {
+          Label(String(localized: "item.new", table: "Sorap"), systemImage: "plus")
+            .font(.system(size: 12))
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .padding(.horizontal, 10)
+            .padding(.vertical, 6)
+            .background(.quaternary.opacity(0.3), in: RoundedRectangle(cornerRadius: Popup.cornerRadius))
+        }
+        .buttonStyle(.plain)
+        .padding(.top, Popup.verticalSeparatorPadding)
+      }
+
       if let stack = appState.history.pasteStack,
          !stack.items.isEmpty {
         PasteStackView(stack: stack)
@@ -100,8 +115,14 @@ struct HistoryListView: View {
 
     ScrollView {
       ScrollViewReader { proxy in
-        MultipleSelectionListView(items: unpinnedItems) { previous, item, next, index in
-          HistoryItemView(item: item, previous: previous, next: next, index: index)
+        Group {
+          if appState.history.kindFilter == .image {
+            ImageGridView(items: unpinnedItems)
+          } else {
+            MultipleSelectionListView(items: unpinnedItems) { previous, item, next, index in
+              HistoryItemView(item: item, previous: previous, next: next, index: index)
+            }
+          }
         }
         .padding(.top, scrollTopPadding)
         .padding(.bottom, scrollBottomPadding)

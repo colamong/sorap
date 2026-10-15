@@ -44,6 +44,7 @@
 		2FD4993E2FFBA57800149F02 /* PinManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FD4993D2FFBA57400149F02 /* PinManager.swift */; };
 		2FD499452FFC489400149F02 /* MovableByWindowBackgroundModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FD499442FFC487F00149F02 /* MovableByWindowBackgroundModifier.swift */; };
 		2FD499472FFC4AEF00149F02 /* ItemEditorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FD499462FFC4AEF00149F02 /* ItemEditorView.swift */; };
+		2FD499492FFC4C0100149F02 /* ImageGridView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FD499482FFC4C0100149F02 /* ImageGridView.swift */; };
 		2FD5DE512FFE6DD50023FF60 /* LegacyReorderableContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FD5DE502FFE6DCE0023FF60 /* LegacyReorderableContainer.swift */; };
 		2FF2E94E2E774B5B0093D72C /* NavigationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FF2E94D2E774B570093D72C /* NavigationManager.swift */; };
 		2FF2E9502E7808470093D72C /* AppImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FF2E94F2E7808420093D72C /* AppImageView.swift */; };
@@ -249,6 +250,7 @@
 		2FD4993D2FFBA57400149F02 /* PinManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PinManager.swift; sourceTree = "<group>"; };
 		2FD499442FFC487F00149F02 /* MovableByWindowBackgroundModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovableByWindowBackgroundModifier.swift; sourceTree = "<group>"; };
 		2FD499462FFC4AEF00149F02 /* ItemEditorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemEditorView.swift; sourceTree = "<group>"; };
+		2FD499482FFC4C0100149F02 /* ImageGridView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageGridView.swift; sourceTree = "<group>"; };
 		2FD5DE502FFE6DCE0023FF60 /* LegacyReorderableContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LegacyReorderableContainer.swift; sourceTree = "<group>"; };
 		2FF2E94D2E774B570093D72C /* NavigationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationManager.swift; sourceTree = "<group>"; };
 		2FF2E94F2E7808420093D72C /* AppImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppImageView.swift; sourceTree = "<group>"; };
@@ -785,6 +787,7 @@
 				2F162E7F2F1E7B28001FBAFF /* PasteStackPreviewView.swift */,
 				2F0EC7842E77407C003E2EA9 /* PasteStackView.swift */,
 				2FD499462FFC4AEF00149F02 /* ItemEditorView.swift */,
+				2FD499482FFC4C0100149F02 /* ImageGridView.swift */,
 				2F0EC77A2E772899003E2EA9 /* PinsView.swift */,
 				DA5E627E2C39E53F00F4C710 /* PreviewItemView.strings */,
 				DA1969132C3F11D600258481 /* PreviewItemView.swift */,
@@ -1213,6 +1216,7 @@
 				DA5078992CF2676B00215488 /* MouseMovedViewModifer.swift in Sources */,
 				DA19690E2C3EEFA900258481 /* KeyboardShortcutView.swift in Sources */,
 				2FD499472FFC4AEF00149F02 /* ItemEditorView.swift in Sources */,
+				2FD499492FFC4C0100149F02 /* ImageGridView.swift in Sources */,
 				DA243D122C2F64830012A27F /* ContentView.swift in Sources */,
 				DAD665662898A1C000975096 /* KeyChord.swift in Sources */,
 				DA689FC42C1CF0F00009B887 /* AppearanceSettingsPane.swift in Sources */,

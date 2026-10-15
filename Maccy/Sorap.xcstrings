@@ -16,6 +16,9 @@
     "filter.other" : { "localizations" : {
       "en" : { "stringUnit" : { "state" : "translated", "value" : "Other" } },
       "ko" : { "stringUnit" : { "state" : "translated", "value" : "기타" } } } },
+    "item.new" : { "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "New item" } },
+      "ko" : { "stringUnit" : { "state" : "translated", "value" : "새 항목" } } } },
     "item.name" : { "localizations" : {
       "en" : { "stringUnit" : { "state" : "translated", "value" : "Rename" } },
       "ko" : { "stringUnit" : { "state" : "translated", "value" : "이름 붙이기" } } } },
