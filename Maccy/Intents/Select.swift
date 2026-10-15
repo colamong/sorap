@@ -16,13 +16,10 @@ struct Select: AppIntent, CustomIntentMigratedAppIntent {
   @Parameter(title: "Number", default: 1, requestValueDialog: "What is the number of the item?")
   var number: Int
 
-  private let positionOffset = 1
-
   func perform() async throws -> some IntentResult & ReturnsValue<String> {
     let value = try await MainActor.run { () -> String in
       let items = AppState.shared.history.historyItems
-      let index = number - positionOffset
-      guard items.count >= index else {
+      guard let index = History.index(forNumber: number, count: items.count) else {
         throw AppIntentError.notFound
       }
 

@@ -24,8 +24,6 @@ struct Get: AppIntent, CustomIntentMigratedAppIntent {
   @Parameter(title: "Number", default: 1)
   var number: Int
 
-  private let positionOffset = 1
-
   static var parameterSummary: some ParameterSummary {
     When(\.$selected, .equalTo, false) {
       Summary {
@@ -45,9 +43,9 @@ struct Get: AppIntent, CustomIntentMigratedAppIntent {
       if selected {
         item = AppState.shared.navigator.selection.first?.item
       } else {
-        let index = number - positionOffset
-        if AppState.shared.history.historyItems.count >= index {
-          item = AppState.shared.history.historyItems[index].item
+        let items = AppState.shared.history.historyItems
+        if let index = History.index(forNumber: number, count: items.count) {
+          item = items[index].item
         }
       }
 

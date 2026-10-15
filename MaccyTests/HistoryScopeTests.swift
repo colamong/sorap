@@ -144,6 +144,15 @@ final class HistoryScopeTests: XCTestCase {
     XCTAssertEqual(history.kindFilter, .link)
   }
 
+  func testIntentItemIndexBounds() {
+    XCTAssertNil(History.index(forNumber: 0, count: 3))
+    XCTAssertNil(History.index(forNumber: -1, count: 3))
+    XCTAssertEqual(History.index(forNumber: 1, count: 3), 0)
+    XCTAssertEqual(History.index(forNumber: 3, count: 3), 2)
+    XCTAssertNil(History.index(forNumber: 4, count: 3))
+    XCTAssertNil(History.index(forNumber: 1, count: 0))
+  }
+
   private func historyItem(_ value: String) -> HistoryItem {
     let item = HistoryItem()
     Storage.shared.context.insert(item)

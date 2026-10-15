@@ -576,6 +576,12 @@ class History: ItemsContainer { // swiftlint:disable:this type_body_length
     saveAndRefresh()
   }
 
+  /// Maps a 1-based Shortcuts item number to an array index, or nil when it is out of range.
+  static func index(forNumber number: Int, count: Int) -> Int? {
+    let index = number - 1
+    return index >= 0 && index < count ? index : nil
+  }
+
   /// nil (all) → text → link → image → nil; reversed when `forward` is false.
   @MainActor
   func cycleKindFilter(forward: Bool) {
