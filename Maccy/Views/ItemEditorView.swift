@@ -119,7 +119,7 @@ struct ItemEditorView: View {
     .accessibilityLabel(Text("EditItem", tableName: "PreviewItemView"))
     .onAppear {
       availablePins = appState.history.availablePins
-      focusedField = item.hasImage ? .pin : .title
+      focusedField = (item.hasImage && item.isPinned) ? .pin : .title
     }
     .onExitCommand { dismiss() }
   }
