@@ -10,7 +10,10 @@ struct ImageGridView: View {
     LazyVGrid(columns: columns, spacing: 6) {
       ForEach(items) { item in
         Button {
-          appState.history.select(item, flags: [])
+          let flags = NSEvent.ModifierFlags.currentModifierFlags
+          Task {
+            appState.history.select(item, flags: flags)
+          }
         } label: {
           ZStack(alignment: .bottomLeading) {
             RoundedRectangle(cornerRadius: 8)
@@ -39,6 +42,8 @@ struct ImageGridView: View {
         }
         .buttonStyle(.plain)
         .accessibilityLabel(item.accessibilityLabel)
+        .accessibilityAddTraits(item.isSelected ? .isSelected : [])
+        .itemContextMenu(item)
         .onAppear { item.ensureThumbnailImage() }
       }
     }
