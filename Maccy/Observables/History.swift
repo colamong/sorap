@@ -576,6 +576,15 @@ class History: ItemsContainer { // swiftlint:disable:this type_body_length
     saveAndRefresh()
   }
 
+  /// nil (all) → text → link → image → nil; reversed when `forward` is false.
+  @MainActor
+  func cycleKindFilter(forward: Bool) {
+    let order: [ItemKind?] = [nil] + ItemKind.filters
+    let current = order.firstIndex(of: kindFilter) ?? 0
+    let offset = forward ? 1 : -1
+    kindFilter = order[(current + offset + order.count) % order.count]
+  }
+
   /// Chip order: History, then every board (Favorites first). Wraps around.
   @MainActor
   func selectNextBoard() { stepScope(by: 1) }

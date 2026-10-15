@@ -79,6 +79,12 @@ struct KeyHandlingView<Content: View>: View {
           }
 
           return .handled
+        case .nextKindFilter:
+          appState.history.cycleKindFilter(forward: true)
+          return .handled
+        case .previousKindFilter:
+          appState.history.cycleKindFilter(forward: false)
+          return .handled
         case .nextBoard:
           appState.history.selectNextBoard()
           return .handled

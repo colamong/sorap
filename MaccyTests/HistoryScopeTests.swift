@@ -128,6 +128,22 @@ final class HistoryScopeTests: XCTestCase {
     XCTAssertEqual(history.scope, .history)
   }
 
+  func testCycleKindFilterForward() {
+    var seen: [ItemKind?] = []
+    for _ in 0..<4 {
+      history.cycleKindFilter(forward: true)
+      seen.append(history.kindFilter)
+    }
+    XCTAssertEqual(seen, [.text, .link, .image, nil])
+  }
+
+  func testCycleKindFilterBackwardFromAllGoesToImage() {
+    history.cycleKindFilter(forward: false)
+    XCTAssertEqual(history.kindFilter, .image)
+    history.cycleKindFilter(forward: false)
+    XCTAssertEqual(history.kindFilter, .link)
+  }
+
   private func historyItem(_ value: String) -> HistoryItem {
     let item = HistoryItem()
     Storage.shared.context.insert(item)

@@ -27,6 +27,8 @@ enum KeyChord: CaseIterable {
   case deleteOneCharFromSearch
   case deleteLastWordFromSearch
   case ignored
+  case nextKindFilter
+  case previousKindFilter
   case nextBoard
   case previousBoard
   case moveToNext
@@ -122,6 +124,10 @@ enum KeyChord: CaseIterable {
       self = .nextBoard
     case (.tab, [.shift]):
       self = .previousBoard
+    case (.t, [.command]):
+      self = .nextKindFilter
+    case (.t, [.command, .shift]):
+      self = .previousKindFilter
     case (.comma, [.command]):
       self = .openPreferences
     case (.return, _),
