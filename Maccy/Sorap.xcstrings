@@ -28,6 +28,9 @@
     "item.delete" : { "localizations" : {
       "en" : { "stringUnit" : { "state" : "translated", "value" : "Delete" } },
       "ko" : { "stringUnit" : { "state" : "translated", "value" : "삭제" } } } },
+    "item.saveImage" : { "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Save Image…" } },
+      "ko" : { "stringUnit" : { "state" : "translated", "value" : "이미지 저장…" } } } },
     "board.history" : { "localizations" : {
       "en" : { "stringUnit" : { "state" : "translated", "value" : "History" } },
       "ko" : { "stringUnit" : { "state" : "translated", "value" : "기록" } } } },

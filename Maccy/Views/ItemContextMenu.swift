@@ -1,5 +1,6 @@
 import SwiftData
 import SwiftUI
+import UniformTypeIdentifiers
 
 struct ItemContextMenu: ViewModifier {
   let item: HistoryItemDecorator
@@ -22,9 +23,51 @@ struct ItemContextMenu: ViewModifier {
           .disabled(item.item.board == board)
         }
       }
+      if item.item.imageData != nil {
+        Button(String(localized: "item.saveImage", table: "Sorap")) {
+          saveImage()
+        }
+      }
       Divider()
       Button(String(localized: "item.delete", table: "Sorap"), role: .destructive) {
         appState.history.delete(item)
+      }
+    }
+  }
+}
+
+extension ItemContextMenu {
+  /// Uses the non-modal `begin` so no nested run loop starts inside the SwiftUI action.
+  /// The panel and the FloatingPanel both sit above normal windows, so raise the save panel
+  /// and hold the popup open via `isEditingItem` while it is up.
+  private func saveImage() {
+    guard let data = item.item.pngData() else { return }
+    let fileName = item.item.suggestedImageFileName()
+    let hostWindow = NSApp.keyWindow
+
+    let panel = NSSavePanel()
+    panel.allowedContentTypes = [.png]
+    panel.directoryURL = FileManager.default.urls(for: .downloadsDirectory, in: .userDomainMask).first
+    panel.nameFieldStringValue = fileName
+    panel.level = NSWindow.Level(rawValue: NSWindow.Level.statusBar.rawValue + 1)
+
+    appState.isEditingItem = true
+    panel.begin { response in
+      Task { @MainActor in
+        defer {
+          AppState.shared.isEditingItem = false
+          if hostWindow?.isVisible == true {
+            hostWindow?.makeKeyAndOrderFront(nil)
+          }
+        }
+        guard response == .OK, let url = panel.url else { return }
+        do {
+          try data.write(to: url, options: .atomic)
+        } catch {
+          let alert = NSAlert(error: error)
+          alert.alertStyle = .warning
+          alert.runModal()
+        }
       }
     }
   }
