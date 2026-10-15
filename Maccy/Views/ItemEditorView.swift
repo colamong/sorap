@@ -213,6 +213,7 @@ struct ItemEditorView: View {
         HistoryItemContent(type: stringType, value: data)
       )
     }
+    item.kind = historyItem.kind
   }
 
   private func saveChanges() {
