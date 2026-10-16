@@ -25,12 +25,18 @@ struct ImageGridView: View {
                 Image(nsImage: image)
                   .resizable()
                   .scaledToFill()
+              } else if let fileURL = fileURLWithoutImage(item) {
+                // Finder-copied image files carry no image data; the icon works without file read access.
+                Image(nsImage: NSWorkspace.shared.icon(forFile: fileURL.path))
+                  .resizable()
+                  .scaledToFit()
+                  .padding(18)
               }
             }
             .clipShape(RoundedRectangle(cornerRadius: 8))
             .overlay(alignment: .bottomLeading) {
-              if item.item.name != nil {
-                Text(item.title)
+              if let label = pillText(for: item) {
+                Text(label)
                   .font(.caption2)
                   .lineLimit(1)
                   .padding(.horizontal, 5)
@@ -54,6 +60,15 @@ struct ImageGridView: View {
       }
     }
     .padding(.horizontal, Popup.horizontalPadding)
+  }
+
+  private func fileURLWithoutImage(_ item: HistoryItemDecorator) -> URL? {
+    item.item.imageData == nil ? item.item.fileURLs.first : nil
+  }
+
+  private func pillText(for item: HistoryItemDecorator) -> String? {
+    if item.item.name != nil { return item.title }
+    return fileURLWithoutImage(item)?.lastPathComponent
   }
 
   /// Dropping on Finder or the Desktop creates a PNG file named after the item.
