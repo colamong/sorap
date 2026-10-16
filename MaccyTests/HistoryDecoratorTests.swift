@@ -145,6 +145,35 @@ class HistoryItemDecoratorTests: XCTestCase {
     XCTAssertEqual(itemDecorator.attributedTitle, nil)
   }
 
+  func testGridThumbnailIsDownsampledOffMainThread() async {
+    let itemDecorator = historyItemDecorator(solidImage(width: 3000, height: 2000))
+    itemDecorator.ensureGridThumbnailImage()
+    _ = await itemDecorator.gridThumbnailImageGenerationTask?.result
+    guard let cgImage = itemDecorator.gridThumbnailImage?.cgImage(forProposedRect: nil, context: nil, hints: nil) else {
+      return XCTFail("grid thumbnail was not generated")
+    }
+    XCTAssertEqual(max(cgImage.width, cgImage.height), 320)
+    XCTAssertEqual(cgImage.width, 320)
+    XCTAssertEqual(cgImage.height, 213, accuracy: 1)
+
+    itemDecorator.cleanupImages()
+    XCTAssertNil(itemDecorator.gridThumbnailImage)
+    itemDecorator.ensureGridThumbnailImage()
+    _ = await itemDecorator.gridThumbnailImageGenerationTask?.result
+    XCTAssertNotNil(itemDecorator.gridThumbnailImage)
+  }
+
+  private func solidImage(width: Int, height: Int) -> NSImage {
+    let rep = NSBitmapImageRep(
+      bitmapDataPlanes: nil, pixelsWide: width, pixelsHigh: height, bitsPerSample: 8,
+      samplesPerPixel: 4, hasAlpha: true, isPlanar: false, colorSpaceName: .deviceRGB,
+      bytesPerRow: 0, bitsPerPixel: 0
+    )!
+    let image = NSImage(size: NSSize(width: width, height: height))
+    image.addRepresentation(rep)
+    return image
+  }
+
   private func historyItemDecorator(
     _ value: String?,
     application: String? = "com.apple.finder"

@@ -1,6 +1,7 @@
 import AppKit.NSWorkspace
 import Defaults
 import Foundation
+import ImageIO
 import Observation
 import Sauce
 
@@ -13,6 +14,8 @@ class HistoryItemDecorator: Identifiable, Hashable, HasVisibility {
   }
 
   static var previewImageSize: NSSize { NSScreen.forPopup?.visibleFrame.size ?? NSSize(width: 2048, height: 1536) }
+  /// Longer side in pixels: twice the ~140 pt grid tile.
+  nonisolated static let gridThumbnailMaxPixelSize = 320
   static var thumbnailImageSize: NSSize { NSSize(width: 340, height: Defaults[.imageMaxHeight]) }
 
   let id = UUID()
@@ -52,6 +55,8 @@ class HistoryItemDecorator: Identifiable, Hashable, HasVisibility {
   var previewImage: NSImage?
   private(set) var previewText = SizedString("")
   var thumbnailImage: NSImage?
+  var gridThumbnailImageGenerationTask: Task<(), Never>?
+  var gridThumbnailImage: NSImage?
   var applicationImage: ApplicationImage
 
   @ObservationIgnored
@@ -142,6 +147,41 @@ class HistoryItemDecorator: Identifiable, Hashable, HasVisibility {
     }
   }
 
+  /// Grid tiles are larger than list thumbnails, so they get their own downsampled image.
+  /// Decoding happens off the main thread; only the finished image is assigned back here.
+  @MainActor
+  func ensureGridThumbnailImage() {
+    guard gridThumbnailImage == nil, gridThumbnailImageGenerationTask == nil,
+      let data = item.imageData
+    else {
+      return
+    }
+    gridThumbnailImageGenerationTask = Task { [weak self] in
+      let cgImage = await Task.detached(priority: .utility) {
+        Self.downsampledImage(from: data, maxPixelSize: Self.gridThumbnailMaxPixelSize)
+      }.value
+      guard !Task.isCancelled, let cgImage else {
+        return
+      }
+      // Pixels are twice the tile's point size to stay sharp on Retina displays.
+      let pointSize = NSSize(width: cgImage.width / 2, height: cgImage.height / 2)
+      self?.gridThumbnailImage = NSImage(cgImage: cgImage, size: pointSize)
+    }
+  }
+
+  nonisolated private static func downsampledImage(from data: Data, maxPixelSize: Int) -> CGImage? {
+    let sourceOptions = [kCGImageSourceShouldCache: false] as CFDictionary
+    guard let source = CGImageSourceCreateWithData(data as CFData, sourceOptions) else {
+      return nil
+    }
+    let thumbnailOptions = [
+      kCGImageSourceCreateThumbnailFromImageAlways: true,
+      kCGImageSourceCreateThumbnailWithTransform: true,
+      kCGImageSourceThumbnailMaxPixelSize: maxPixelSize
+    ] as CFDictionary
+    return CGImageSourceCreateThumbnailAtIndex(source, 0, thumbnailOptions)
+  }
+
   @MainActor
   func ensurePreviewImage() {
     guard item.image != nil else {
@@ -174,10 +214,13 @@ class HistoryItemDecorator: Identifiable, Hashable, HasVisibility {
     previewImageGenerationTask?.cancel()
     thumbnailImage?.recache()
     previewImage?.recache()
+    gridThumbnailImageGenerationTask?.cancel()
     thumbnailImageGenerationTask = nil
     previewImageGenerationTask = nil
+    gridThumbnailImageGenerationTask = nil
     thumbnailImage = nil
     previewImage = nil
+    gridThumbnailImage = nil
     item.clearDecodedImageCache()
   }
 

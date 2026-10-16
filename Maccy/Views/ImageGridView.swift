@@ -21,7 +21,7 @@ struct ImageGridView: View {
             .frame(maxWidth: .infinity)
             .background(RoundedRectangle(cornerRadius: 8).fill(.quaternary.opacity(0.5)))
             .overlay {
-              if let image = item.thumbnailImage {
+              if let image = item.gridThumbnailImage {
                 Image(nsImage: image)
                   .resizable()
                   .scaledToFill()
@@ -56,7 +56,7 @@ struct ImageGridView: View {
         .onDrag { dragProvider(for: item) }
         .itemContextMenu(item)
         .hoverSelectionId(item.id)
-        .onAppear { item.ensureThumbnailImage() }
+        .onAppear { item.ensureGridThumbnailImage() }
       }
     }
     .padding(.horizontal, Popup.horizontalPadding)
