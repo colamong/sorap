@@ -58,8 +58,8 @@ struct BoardChipsView: View {
             .background(.quaternary.opacity(0.6), in: Circle())
         }
         .buttonStyle(.plain)
-        .help(String(localized: "board.new", table: "Sorap"))
-        .accessibilityLabel(String(localized: "board.new", table: "Sorap"))
+        .help(String(localized: "board.new.tooltip", table: "Sorap"))
+        .accessibilityLabel(String(localized: "board.new.tooltip", table: "Sorap"))
       }
       .padding(.vertical, 2)
     }
