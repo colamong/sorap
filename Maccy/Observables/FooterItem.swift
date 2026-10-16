@@ -23,6 +23,7 @@ class FooterItem: Equatable, Identifiable, HasVisibility {
   var showConfirmation: Bool = false
   var suppressConfirmation: Binding<Bool>?
   var isVisible: Bool = true
+  var tint: Color?
   /// Replaces the localized title while the item's meaning depends on app state.
   var titleOverride: () -> String? = { nil }
   var isEnabled: () -> Bool = { true }
