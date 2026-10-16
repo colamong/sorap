@@ -68,6 +68,24 @@ struct ContentView: View {
     .sheet(item: $appState.boardEditorRequest, onDismiss: { appState.finishEditing() }) { request in
       BoardEditorSheet(request: request)
     }
+    .confirmationDialog(
+      emptyBoardTitle,
+      isPresented: Binding(
+        get: { appState.pendingBoardToEmpty != nil },
+        set: { if !$0 { appState.cancelEmptyBoard() } }
+      ),
+      titleVisibility: .visible,
+      presenting: appState.pendingBoardToEmpty
+    ) { _ in
+      Button(String(localized: "board.empty.confirm", table: "Sorap"), role: .destructive) {
+        appState.confirmEmptyBoard()
+      }
+      Button(String(localized: "common.cancel", table: "Sorap"), role: .cancel) {
+        appState.cancelEmptyBoard()
+      }
+    } message: { board in
+      Text(String(localized: "board.empty.message \(appState.history.boardItemCount(in: board))", table: "Sorap"))
+    }
     .onChange(of: appState.isEditingItem) { _, isEditingItem in
       // A sheet's text controls otherwise remain the logical focus target after
       // dismissal, preventing the popup's key handler from receiving shortcuts.
@@ -92,6 +110,13 @@ struct ContentView: View {
         scenePhase = .background
       }
     }
+  }
+}
+
+private extension ContentView {
+  var emptyBoardTitle: String {
+    guard let board = appState.pendingBoardToEmpty else { return "" }
+    return String(format: String(localized: "board.empty.title", table: "Sorap"), board.name)
   }
 }
 

@@ -39,7 +39,12 @@ class Footer: ItemsContainer {
         suppressConfirmation: suppressClearAlert
       ) {
         Task { @MainActor in
-          AppState.shared.history.clear()
+          let history = AppState.shared.history
+          if case .board(let board) = history.scope {
+            AppState.shared.requestEmptyBoard(board)
+          } else {
+            history.clearCurrentScope()
+          }
         }
       },
       FooterItem(
@@ -64,5 +69,24 @@ class Footer: ItemsContainer {
         AppState.shared.quit()
       }
     ]
+    configureClearItem(items[0])
+  }
+
+  /// The clear item follows the view: wipes history there, empties the board in a board view.
+  private func configureClearItem(_ clear: FooterItem) {
+    clear.titleOverride = {
+      guard case .board(let board) = AppState.shared.history.scope else { return nil }
+      return String(format: String(localized: "board.empty.named", table: "Sorap"), board.name)
+    }
+    clear.isEnabled = {
+      let history = AppState.shared.history
+      guard case .board(let board) = history.scope else { return true }
+      return history.boardItemCount(in: board) > 0
+    }
+    // A board always asks, with its own count, so the "don't ask again" history toggle does not apply.
+    clear.confirmsItself = {
+      if case .board = AppState.shared.history.scope { return true }
+      return false
+    }
   }
 }

@@ -30,14 +30,8 @@ struct KeyHandlingView<Content: View>: View {
 
         switch KeyChord(NSApp.currentEvent) {
         case .clearHistory:
-          if let item = appState.footer.items.first(where: { $0.title == "clear" }),
-             item.confirmation != nil,
-             let suppressConfirmation = item.suppressConfirmation {
-            if suppressConfirmation.wrappedValue {
-              item.action()
-            } else {
-              item.showConfirmation = true
-            }
+          if let item = appState.footer.items.first(where: { $0.title == "clear" }) {
+            item.trigger()
             return .handled
           } else {
             return .ignored

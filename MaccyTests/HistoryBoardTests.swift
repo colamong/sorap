@@ -131,6 +131,87 @@ final class HistoryBoardTests: XCTestCase {
     XCTAssertEqual(contents.count, 2)
   }
 
+  func testClearCurrentScopeInHistoryKeepsBoardItems() {
+    let kept = history.add(historyItem("keep"))
+    history.toggleFavorite(kept)
+    let loose = history.add(historyItem("loose"))
+    history.scope = .history
+
+    history.clearCurrentScope()
+
+    XCTAssertFalse(history.unpinnedItems.contains(loose))
+    XCTAssertEqual(history.boardItems, [kept])
+  }
+
+  func testClearCurrentScopeInBoardEmptiesOnlyThatBoard() {
+    let sql = boards.create(name: "SQL", symbol: "cylinder")
+    let other = boards.create(name: "Other", symbol: "folder")
+    let inSQL = history.add(historyItem("select 1"))
+    let inOther = history.add(historyItem("other"))
+    let plain = history.add(historyItem("plain"))
+    history.move(inSQL, to: sql)
+    history.move(inOther, to: other)
+    history.scope = .board(sql)
+    defer { history.scope = .history }
+
+    history.clearCurrentScope()
+
+    history.scope = .history
+    XCTAssertFalse(history.boardItems.contains(inSQL))
+    XCTAssertTrue(history.boardItems.contains(inOther))
+    XCTAssertTrue(history.unpinnedItems.contains(plain))
+  }
+
+  func testEmptyBoardRequestKeepsPopupOpenUntilResolved() {
+    let appState = AppState.shared
+    let board = boards.create(name: "SQL", symbol: "cylinder")
+    let item = history.add(historyItem("select 1"))
+    history.move(item, to: board)
+
+    appState.requestEmptyBoard(board)
+    XCTAssertEqual(appState.pendingBoardToEmpty, board)
+    XCTAssertTrue(appState.isEditingItem)
+
+    appState.cancelEmptyBoard()
+    XCTAssertNil(appState.pendingBoardToEmpty)
+    XCTAssertFalse(appState.isEditingItem)
+    XCTAssertTrue(history.boardItems.contains(item))
+
+    appState.requestEmptyBoard(board)
+    appState.confirmEmptyBoard()
+    XCTAssertNil(appState.pendingBoardToEmpty)
+    XCTAssertFalse(appState.isEditingItem)
+    XCTAssertFalse(history.boardItems.contains(item))
+  }
+
+  func testFooterClearFollowsScope() async throws {
+    let appState = AppState.shared
+    let clear = try XCTUnwrap(appState.footer.items.first { $0.title == "clear" })
+    let board = boards.create(name: "SQL", symbol: "cylinder")
+    history.scope = .board(board)
+    defer {
+      history.scope = .history
+      appState.cancelEmptyBoard()
+    }
+
+    XCTAssertEqual(clear.titleOverride(), String(format: String(localized: "board.empty.named", table: "Sorap"), "SQL"))
+    XCTAssertFalse(clear.isEnabled())
+    clear.trigger()
+    await Task.yield()
+    XCTAssertNil(appState.pendingBoardToEmpty)
+
+    let item = history.add(historyItem("select 1"))
+    history.move(item, to: board)
+    XCTAssertTrue(clear.isEnabled())
+    clear.trigger()
+    await Task.yield()
+    XCTAssertEqual(appState.pendingBoardToEmpty, board)
+    XCTAssertFalse(clear.showConfirmation)
+
+    history.scope = .history
+    XCTAssertNil(clear.titleOverride())
+  }
+
   func testEmptyFavoritesKeepsTheBoard() {
     let item = history.add(historyItem("fav"))
     history.toggleFavorite(item)

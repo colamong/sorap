@@ -23,6 +23,11 @@ class FooterItem: Equatable, Identifiable, HasVisibility {
   var showConfirmation: Bool = false
   var suppressConfirmation: Binding<Bool>?
   var isVisible: Bool = true
+  /// Replaces the localized title while the item's meaning depends on app state.
+  var titleOverride: () -> String? = { nil }
+  var isEnabled: () -> Bool = { true }
+  /// True when the action asks for its own confirmation, so the item's dialog is skipped.
+  var confirmsItself: () -> Bool = { false }
   var action: () -> Void
 
   init(
@@ -39,5 +44,15 @@ class FooterItem: Equatable, Identifiable, HasVisibility {
     self.confirmation = confirmation
     self.suppressConfirmation = suppressConfirmation
     self.action = action
+  }
+
+  /// The one entry point for mouse, Return and the item's shortcut.
+  func trigger() {
+    guard isEnabled() else { return }
+    if confirmation != nil, !confirmsItself(), suppressConfirmation?.wrappedValue != true {
+      showConfirmation = true
+    } else {
+      action()
+    }
   }
 }

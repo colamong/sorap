@@ -628,6 +628,19 @@ class History: ItemsContainer { // swiftlint:disable:this type_body_length
     }
   }
 
+  func boardItemCount(in board: Board) -> Int {
+    boardItems.filter { $0.item.board == board }.count
+  }
+
+  /// What the popup's clear button does: wipe loose history, or empty the board being viewed.
+  @MainActor
+  func clearCurrentScope() {
+    switch scope {
+    case .history: clear()
+    case .board(let board): emptyBoard(board)
+    }
+  }
+
   @discardableResult
   @MainActor
   func createSnippet(in board: Board, text: String) -> HistoryItemDecorator {

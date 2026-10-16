@@ -20,6 +20,7 @@ class AppState: Sendable {
   var isEditingItem: Bool = false
   var editingItem: HistoryItemDecorator?
   var boardEditorRequest: BoardEditorRequest?
+  var pendingBoardToEmpty: Board?
   var suppressPopupAutoClose: Bool {
     return navigator.isDragAndDropInProgress || isEditingItem
   }
@@ -70,6 +71,28 @@ class AppState: Sendable {
     boardEditorRequest = request
   }
 
+  /// Shared by the board chip menu and the footer's clear button so both ask the same question.
+  @MainActor
+  func requestEmptyBoard(_ board: Board) {
+    // The panel closes on resign-key, so keep it open while the dialog is up.
+    isEditingItem = true
+    pendingBoardToEmpty = board
+  }
+
+  @MainActor
+  func confirmEmptyBoard() {
+    if let board = pendingBoardToEmpty {
+      history.emptyBoard(board)
+    }
+    cancelEmptyBoard()
+  }
+
+  @MainActor
+  func cancelEmptyBoard() {
+    pendingBoardToEmpty = nil
+    isEditingItem = false
+  }
+
   // sheet(item:) clears editingItem before onDismiss runs, so the new snippet is kept separately.
   private var pendingSnippet: HistoryItemDecorator?
 
@@ -106,12 +129,7 @@ class AppState: Sendable {
         history.select(navigator.selection.first, flags: modifierFlags)
       }
     } else if let item = footer.selectedItem {
-      // TODO: Use item.suppressConfirmation, but it's not updated!
-      if item.confirmation != nil, Defaults[.suppressClearAlert] == false {
-        item.showConfirmation = true
-      } else {
-        item.action()
-      }
+      item.trigger()
     } else {
       Clipboard.shared.copyInMaccy(history.searchQuery)
       history.searchQuery = ""

@@ -11,10 +11,15 @@ struct FooterItemView: View {
         selectionId: item.id,
         shortcuts: item.shortcuts,
         isSelected: item.isSelected,
-        accessibilityLabel: NSLocalizedString(item.title, comment: "")
+        accessibilityLabel: item.titleOverride() ?? NSLocalizedString(item.title, comment: "")
       ) {
-        Text(LocalizedStringKey(item.title))
+        if let title = item.titleOverride() {
+          Text(verbatim: title)
+        } else {
+          Text(LocalizedStringKey(item.title))
+        }
       }
+      .opacity(item.isEnabled() ? 1 : 0.4)
     }
     .onHover { hovering in
       if hovering && appState.preview.state.isOpen {

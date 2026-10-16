@@ -3,18 +3,7 @@ import SwiftUI
 struct BoardChipsView: View {
   @Environment(AppState.self) private var appState
   private var boardStore = BoardStore.shared
-  @State private var pendingAction: PendingAction?
-
-  private enum PendingAction {
-    case delete(Board)
-    case empty(Board)
-
-    var board: Board {
-      switch self {
-      case .delete(let board), .empty(let board): return board
-      }
-    }
-  }
+  @State private var boardToDelete: Board?
 
   var body: some View {
     ScrollView(.horizontal, showsIndicators: false) {
@@ -48,15 +37,13 @@ struct BoardChipsView: View {
             }
             Divider()
             Button(String(localized: "board.empty", table: "Sorap"), role: .destructive) {
-              // The panel closes on resign-key, so keep it open while the dialog is up.
-              appState.isEditingItem = true
-              pendingAction = .empty(board)
+              appState.requestEmptyBoard(board)
             }
-            .disabled(itemCount(in: board) == 0)
+            .disabled(appState.history.boardItemCount(in: board) == 0)
             if !board.isFavorites {
               Button(String(localized: "board.delete", table: "Sorap"), role: .destructive) {
                 appState.isEditingItem = true
-                pendingAction = .delete(board)
+                boardToDelete = board
               }
             }
           }
@@ -79,54 +66,32 @@ struct BoardChipsView: View {
     .confirmationDialog(
       dialogTitle,
       isPresented: Binding(
-        get: { pendingAction != nil },
+        get: { boardToDelete != nil },
         set: { if !$0 { dismissDialog() } }
       ),
       titleVisibility: .visible,
-      presenting: pendingAction
-    ) { action in
-      switch action {
-      case .delete(let board):
-        Button(String(localized: "item.delete", table: "Sorap"), role: .destructive) {
-          // A failed delete leaves the board and its items untouched.
-          try? appState.history.deleteBoard(board)
-          dismissDialog()
-        }
-      case .empty(let board):
-        Button(String(localized: "board.empty.confirm", table: "Sorap"), role: .destructive) {
-          appState.history.emptyBoard(board)
-          dismissDialog()
-        }
+      presenting: boardToDelete
+    ) { board in
+      Button(String(localized: "item.delete", table: "Sorap"), role: .destructive) {
+        // A failed delete leaves the board and its items untouched.
+        try? appState.history.deleteBoard(board)
+        dismissDialog()
       }
       Button(String(localized: "common.cancel", table: "Sorap"), role: .cancel) {
         dismissDialog()
       }
-    } message: { action in
-      let count = itemCount(in: action.board)
-      switch action {
-      case .delete: Text(String(localized: "board.delete.message \(count)", table: "Sorap"))
-      case .empty: Text(String(localized: "board.empty.message \(count)", table: "Sorap"))
-      }
+    } message: { board in
+      Text(String(localized: "board.delete.message \(appState.history.boardItemCount(in: board))", table: "Sorap"))
     }
   }
 
   private var dialogTitle: String {
-    switch pendingAction {
-    case .delete(let board):
-      String(format: String(localized: "board.delete.title", table: "Sorap"), board.name)
-    case .empty(let board):
-      String(format: String(localized: "board.empty.title", table: "Sorap"), board.name)
-    case nil:
-      ""
-    }
-  }
-
-  private func itemCount(in board: Board) -> Int {
-    appState.history.boardItems.filter { $0.item.board == board }.count
+    guard let board = boardToDelete else { return "" }
+    return String(format: String(localized: "board.delete.title", table: "Sorap"), board.name)
   }
 
   private func dismissDialog() {
-    pendingAction = nil
+    boardToDelete = nil
     appState.isEditingItem = false
   }
 
