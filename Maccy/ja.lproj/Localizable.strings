@@ -6,10 +6,10 @@
 "about" = "Sorapについて";
 "quit" = "終了";
 "preferences" = "設定…";
-"clear_alert_message" = "履歴をクリアしますか？";
+"clear_alert_message" = "履歴を消去しますか？";
 "clear_alert_comment" = "ボードに入れた項目は消去されません。このアクションは元に戻すことができません。";
 "clear_alert_cancel" = "キャンセル";
-"clear_alert_confirm" = "クリア";
+"clear_alert_confirm" = "消去";
 "key_used_error" = "キーが既に使用中です。";
 "active_screen" = "アクティブスクリーン";
 "screen" = "画面";
