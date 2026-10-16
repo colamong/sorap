@@ -12,6 +12,18 @@ APP="$OUT_DIR/Build/Products/Release/Sorap.app"
 
 die() { echo "error: $*" >&2; exit 1; }
 
+find_sparkle_tool() {
+  local tool="$1" found=""
+  if [ -d "$OUT_DIR/SourcePackages" ]; then
+    found="$(find "$OUT_DIR/SourcePackages" -type f -path "*/sparkle/Sparkle/bin/$tool" 2>/dev/null | head -1)"
+  fi
+  if [ -z "$found" ] && [ -d "$HOME/Library/Developer/Xcode/DerivedData" ]; then
+    found="$(find "$HOME/Library/Developer/Xcode/DerivedData" -type f -path "*/sparkle/Sparkle/bin/$tool" 2>/dev/null | head -1)"
+  fi
+  [ -n "$found" ] || die "Sparkle's $tool not found under $OUT_DIR/SourcePackages or ~/Library/Developer/Xcode/DerivedData"
+  echo "$found"
+}
+
 # --- 1. Preflight -----------------------------------------------------------
 
 VERSION="${1:-}"
@@ -29,6 +41,12 @@ security find-identity -v -p codesigning | grep -Fq "\"$IDENTITY\"" \
 
 /usr/libexec/PlistBuddy -c "Print :SUPublicEDKey" "$INFO_PLIST" >/dev/null 2>&1 \
   || die "SUPublicEDKey is missing in $INFO_PLIST; run scripts/set-sparkle-key.sh first"
+
+# generate_keys -p prints the public key of the EdDSA private key in the login keychain.
+# generate_appcast signs the zip with that private key, so a missing key fails late and obscurely.
+GENERATE_KEYS="$(find_sparkle_tool generate_keys)"
+"$GENERATE_KEYS" -p >/dev/null 2>&1 \
+  || die "no Sparkle EdDSA private key in the login keychain ('$GENERATE_KEYS -p' failed); restore it before releasing, or the update feed cannot be signed"
 
 BUILD_NUMBER="$(git rev-list --count HEAD)"
 ZIP="$OUT_DIR/Sorap-$VERSION.zip"
@@ -63,12 +81,25 @@ echo "Sparkle authority: ${SPARKLE_AUTH:-<none>}"
 
 if [ "$APP_AUTH" != "$IDENTITY" ] || [ "$SPARKLE_AUTH" != "$IDENTITY" ]; then
   echo "==> Signer mismatch; re-signing Sparkle.framework and the app with '$IDENTITY'"
-  codesign --force --deep --sign "$IDENTITY" "$SPARKLE"
-  codesign --force --sign "$IDENTITY" --preserve-metadata=identifier,entitlements,requirements,flags "$APP"
+  # Sign nested code deepest first (never --deep), keeping each item's own entitlements and flags.
+  # `requirements` is deliberately not preserved: the old designated requirement names the old signer.
+  PRESERVE="entitlements,flags,runtime"
+  # Longest path first guarantees children are signed before the bundle that contains them.
+  while IFS= read -r nested; do
+    codesign --force --sign "$IDENTITY" --preserve-metadata="$PRESERVE" "$nested"
+  done < <({ find "$SPARKLE" -type d \( -name '*.xpc' -o -name '*.app' \)
+             find "$SPARKLE" -type f -name Autoupdate; } \
+           | awk '{ print length($0) "\t" $0 }' | sort -rn | cut -f2-)
+  codesign --force --sign "$IDENTITY" --preserve-metadata="$PRESERVE" "$SPARKLE"
+  codesign --force --sign "$IDENTITY" --preserve-metadata="identifier,$PRESERVE" "$APP"
   codesign --verify --deep --strict "$APP" || die "codesign verification still fails after re-signing"
   [ "$(authority "$APP")" = "$IDENTITY" ] && [ "$(authority "$SPARKLE")" = "$IDENTITY" ] \
     || die "signer is still not '$IDENTITY' after re-signing"
 fi
+
+FINAL_AUTH="$(authority "$APP")"
+echo "==> Final signer: Authority=${FINAL_AUTH:-<none>}"
+[ "$FINAL_AUTH" = "$IDENTITY" ] || die "app Authority is '${FINAL_AUTH:-<none>}', expected '$IDENTITY'; refusing to release"
 
 # --- 4. Zip -----------------------------------------------------------------
 
@@ -79,18 +110,6 @@ SHA256="$(shasum -a 256 "$ZIP" | awk '{print $1}')"
 echo "sha256: $SHA256"
 
 # --- 5. Appcast -------------------------------------------------------------
-
-find_sparkle_tool() {
-  local tool="$1" found=""
-  if [ -d "$OUT_DIR/SourcePackages" ]; then
-    found="$(find "$OUT_DIR/SourcePackages" -type f -path "*/sparkle/Sparkle/bin/$tool" 2>/dev/null | head -1)"
-  fi
-  if [ -z "$found" ] && [ -d "$HOME/Library/Developer/Xcode/DerivedData" ]; then
-    found="$(find "$HOME/Library/Developer/Xcode/DerivedData" -type f -path "*/sparkle/Sparkle/bin/$tool" 2>/dev/null | head -1)"
-  fi
-  [ -n "$found" ] || die "Sparkle's $tool not found under $OUT_DIR/SourcePackages or ~/Library/Developer/Xcode/DerivedData"
-  echo "$found"
-}
 
 GENERATE_APPCAST="$(find_sparkle_tool generate_appcast)"
 APPCAST_DIR="$OUT_DIR/appcast"
@@ -117,6 +136,6 @@ Release $VERSION is ready.
 Next steps:
   1. git add appcast.xml && git commit -m "chore: release $VERSION"
   2. gh release create v$VERSION "$ZIP" --repo $REPO_SLUG --title "Sorap $VERSION" --notes "<release notes>"
-  3. Push appcast.xml to the branch that SUFeedURL points at.
+  3. Merge sorap-v1 into master, then push appcast.xml to master (the branch SUFeedURL points at).
   4. Update the Homebrew cask: version "$VERSION", sha256 "$SHA256"
 NEXT
