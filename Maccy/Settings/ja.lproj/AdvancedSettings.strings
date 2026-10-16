@@ -4,7 +4,7 @@
 "TurnOffShellScript" = "defaults write io.github.colamong.sorap ignoreEvents true\n# データコピー\ndefaults write io.github.colamong.sorap ignoreEvents false";
 "TurnOffViaMenuIconDescription" = "⌥ を押したままメニュー アイコンをクリックすることもできます。\n次のコピーだけを無視するには、⌥⇧でクリックします。";
 "TurnOffNextShellScript" = "defaults write io.github.colamong.sorap ignoreOnlyNextEvent true\n# データコピー";
-"ClearHistoryOnQuit" = "終了時、履歴をクリアする";
+"ClearHistoryOnQuit" = "終了時、履歴を消去する";
 "ClearHistoryOnQuitTooltip" = "アプリケーションを終了する前に、ボードに入れていない項目をすべて自動的に削除します。";
 "ClearSystemClipboard" = "システムのクリップボードもクリア";
 "ClearSystemClipboardTooltip" = "有効にすると、履歴をクリアすると現在のシステム クリップボードもクリアされます。";
