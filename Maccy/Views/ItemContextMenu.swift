@@ -23,6 +23,11 @@ struct ItemContextMenu: ViewModifier {
           .disabled(item.item.board == board)
         }
       }
+      if let paths = item.item.filePathsText {
+        Button(String(localized: "item.copyPath", table: "Sorap")) {
+          Clipboard.shared.copyInMaccy(paths)
+        }
+      }
       if item.item.imageData != nil {
         Button(String(localized: "item.saveImage", table: "Sorap")) {
           saveImage()

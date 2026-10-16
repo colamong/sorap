@@ -194,6 +194,29 @@ class HistoryItemTests: XCTestCase {
     XCTAssertEqual(item.suggestedImageFileName(now: date), "Sorap 2026-10-16 09.05.03.png")
   }
 
+  func testFilePathsTextSingleFile() {
+    let item = fileItem(["file:///tmp/a.pdf"])
+    XCTAssertEqual(item.filePathsText, "/tmp/a.pdf")
+  }
+
+  func testFilePathsTextJoinsSeveralFilesWithNewline() {
+    let item = fileItem(["file:///tmp/a.pdf", "file:///tmp/My%20Docs/b.txt"])
+    XCTAssertEqual(item.filePathsText, "/tmp/a.pdf\n/tmp/My Docs/b.txt")
+  }
+
+  func testFilePathsTextIsNilWithoutFiles() {
+    XCTAssertNil(historyItem("just text").filePathsText)
+  }
+
+  private func fileItem(_ urls: [String]) -> HistoryItem {
+    let item = HistoryItem()
+    Storage.shared.context.insert(item)
+    item.contents = urls.map {
+      HistoryItemContent(type: NSPasteboard.PasteboardType.fileURL.rawValue, value: $0.data(using: .utf8))
+    }
+    return item
+  }
+
   private func historyItem(_ value: String?) -> HistoryItem {
     let contents = [
       HistoryItemContent(

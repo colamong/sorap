@@ -181,6 +181,13 @@ class HistoryItem {
       .compactMap { URL(dataRepresentation: $0, relativeTo: nil, isAbsolute: true) }
   }
 
+  /// POSIX paths of the copied files, one per line; nil when the item holds no files.
+  var filePathsText: String? {
+    let urls = fileURLs
+    guard !urls.isEmpty else { return nil }
+    return urls.map(\.path).joined(separator: "\n")
+  }
+
   var htmlData: Data? { contentData([.html]) }
   var html: NSAttributedString? {
     guard let data = htmlData else {
