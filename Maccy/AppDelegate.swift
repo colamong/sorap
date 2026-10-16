@@ -110,6 +110,13 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     migrateUserDefaults()
     disableUnusedGlobalHotkeys()
 
+    // Carbon hotkeys are exclusive across processes and KeyboardShortcuts does not retry a failed
+    // registration, so after a relaunch the popup hotkey must wait for the old instance to quit.
+    Task {
+      _ = await Self.waitForOtherInstances()
+      AppState.shared.popup.registerHotKey()
+    }
+
     panel = FloatingPanel(
       contentRect: NSRect(origin: .zero, size: Defaults[.windowSize]),
       identifier: Bundle.main.bundleIdentifier ?? "io.github.colamong.sorap",
@@ -117,6 +124,27 @@ class AppDelegate: NSObject, NSApplicationDelegate {
       onClose: { AppState.shared.popup.reset() }
     ) {
       ContentView()
+    }
+  }
+
+  /// Returns true once no other instance with this bundle identifier is running,
+  /// false if one is still there after `timeout`. Returns immediately when there is none.
+  static func waitForOtherInstances(
+    bundleIdentifier: String? = Bundle.main.bundleIdentifier,
+    processIdentifier: pid_t = ProcessInfo.processInfo.processIdentifier,
+    timeout: Duration = .seconds(5),
+    pollInterval: Duration = .milliseconds(100)
+  ) async -> Bool {
+    guard let bundleIdentifier else { return true }
+
+    let clock = ContinuousClock()
+    let deadline = clock.now + timeout
+    while true {
+      let others = NSRunningApplication.runningApplications(withBundleIdentifier: bundleIdentifier)
+        .filter { $0.processIdentifier != processIdentifier && !$0.isTerminated }
+      if others.isEmpty { return true }
+      if clock.now >= deadline { return false }
+      try? await Task.sleep(for: pollInterval)
     }
   }
 

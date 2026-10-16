@@ -54,8 +54,13 @@ class Popup {
   private var state: PopupState = .toggle
 
   init() {
-    KeyboardShortcuts.onKeyDown(for: .popup, action: handleFirstKeyDown)
     initEventsMonitor()
+  }
+
+  /// Registers the global popup hotkey. Separate from `init` so a relaunched app can
+  /// wait for the previous instance to let go of the key first (see `AppDelegate`).
+  func registerHotKey() {
+    KeyboardShortcuts.onKeyDown(for: .popup, action: handleFirstKeyDown)
   }
 
   isolated deinit {
