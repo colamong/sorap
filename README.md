@@ -50,26 +50,29 @@ macOS 14 이상에서 동작합니다. 무료이고 소스가 공개돼 있습�
 
 ## 설치
 
-### Homebrew
+### Homebrew (권장)
 
 ```sh
 brew install --cask colamong/tap/sorap
 ```
 
+Homebrew로 설치하면 바로 열립니다. Sorap은 Apple 공증을 받지 않은 앱이라, 설치 과정에서 macOS의 "인터넷에서 받은 파일" 표시를 지워 첫 실행 경고가 뜨지 않게 합니다.
+
 ### 직접 내려받기
 
-[GitHub 릴리스](https://github.com/colamong/sorap/releases)에서 최신 zip을 받아 압축을 풉니다.
-`Sorap.app`을 `응용 프로그램` 폴더로 옮기면 끝입니다.
+[GitHub 릴리스](https://github.com/colamong/sorap/releases)에서 최신 zip을 받아 압축을 풀고, `Sorap.app`을 `응용 프로그램` 폴더로 옮깁니다.
 
-### 처음 실행할 때
+이 방법으로 받으면 처음 열 때 "'서랍'을(를) 열지 않음" 창이 뜹니다. **휴지통으로 이동**을 누르면 앱이 지워지니 주의하세요.
 
-Sorap은 Apple 공증을 받지 않았습니다. 그래서 처음 열면 "확인되지 않은 개발자" 경고가 뜹니다.
-
-1. 경고 창을 닫습니다.
+1. 경고 창에서 **완료**를 누릅니다.
 2. **시스템 설정 → 개인정보 보호 및 보안**을 엽니다.
-3. 아래쪽 보안 항목에서 Sorap 옆의 **그래도 열기**를 누릅니다.
+3. 아래쪽 보안 항목에서 '서랍' 옆의 **그래도 열기**를 누릅니다.
 
 한 번 열고 나면 다음부터는 경고가 뜨지 않습니다.
+
+### 메뉴 막대 아이콘이 안 보이면
+
+macOS 26부터는 메뉴 막대 아이콘을 앱마다 허용합니다. **시스템 설정 → 메뉴 막대 → 메뉴 막대에서 허용**에서 **서랍**을 켜세요. 아이콘이 보이지 않아도 `⇧⌘C`로 열 수 있습니다.
 
 ### 접근성 권한
 
@@ -152,10 +155,12 @@ On a Korean Mac it shows up as **서랍** ("drawer"). It runs on macOS 14 or lat
 brew install --cask colamong/tap/sorap
 ```
 
-Or download the latest zip from [GitHub Releases](https://github.com/colamong/sorap/releases) and move `Sorap.app` to Applications.
+Homebrew is recommended: Sorap is not notarized, and the cask clears macOS's download quarantine flag after install so the app opens without a Gatekeeper warning.
 
-Sorap is not notarized, so macOS warns about an unidentified developer on first launch.
-Close the warning, open **System Settings → Privacy & Security**, and click **Open Anyway** next to Sorap.
+Or download the latest zip from [GitHub Releases](https://github.com/colamong/sorap/releases) and move `Sorap.app` to Applications.
+On first launch macOS says it can't verify the app — click **Done** (not **Move to Trash**, which deletes it), then open **System Settings → Privacy & Security** and click **Open Anyway** next to Sorap.
+
+If the menu bar icon doesn't appear (macOS 26 and later), turn Sorap on in **System Settings → Menu Bar → Allow in the Menu Bar**. `⇧⌘C` opens Sorap either way.
 
 To paste straight into the app you were using, Sorap sends `⌘V` for you. That needs Accessibility permission
 (**System Settings → Privacy & Security → Accessibility**). Copying works without it.
