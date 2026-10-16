@@ -2,7 +2,7 @@
 "clear_tooltip" = "履歴の項目を消去します。\nボードに入れた項目は消去されません。";
 "about_tooltip" = "アプリケーションについての詳細を表示します。";
 "quit_tooltip" = "アプリケーションを終了します。";
-"clear" = "履歴をすべて消去";
+"clear" = "履歴をすべて消去…";
 "about" = "Sorapについて";
 "quit" = "終了";
 "preferences" = "設定…";

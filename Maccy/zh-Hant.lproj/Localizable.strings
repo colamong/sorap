@@ -2,7 +2,7 @@
 "clear_tooltip" = "清除歷史記錄中的項目。\n已放入分組的項目不會被清除。";
 "about_tooltip" = "了解應用程式詳情。";
 "quit_tooltip" = "退出應用程式。";
-"clear" = "清除所有歷史記錄";
+"clear" = "清除所有歷史記錄…";
 "about" = "關於 Sorap";
 "quit" = "結束";
 "preferences" = "偏好設定…";

@@ -261,7 +261,7 @@ class MaccyUITests: XCTestCase {
     popUpWithMouse()
     scrollIntoViewIfNeeded(items[copy2].firstMatch)
     pin(copy2)
-    hoverAndClick(app.buttons["Clear History"].firstMatch)
+    hoverAndClick(app.buttons["Clear History…"].firstMatch)
     confirmClear()
     popUpWithMouse()
     assertNotExists(items[copy1])
@@ -271,7 +271,7 @@ class MaccyUITests: XCTestCase {
   func testClearDuringSearch() {
     popUpWithMouse()
     search(copy2)
-    hoverAndClick(app.buttons["Clear History"].firstMatch)
+    hoverAndClick(app.buttons["Clear History…"].firstMatch)
     confirmClear()
     popUpWithMouse()
     assertNotExists(items[copy1])

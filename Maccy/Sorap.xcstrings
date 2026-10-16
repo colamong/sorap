@@ -206,37 +206,37 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "New item"
+            "value" : "New item…"
           }
         },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "새 항목"
+            "value" : "새 항목…"
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "新規項目"
+            "value" : "新規項目…"
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "新建项目"
+            "value" : "新建项目…"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "新增項目"
+            "value" : "新增項目…"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Nuevo elemento"
+            "value" : "Nuevo elemento…"
           }
         }
       }
@@ -246,37 +246,37 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Rename"
+            "value" : "Rename…"
           }
         },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "이름 붙이기"
+            "value" : "이름 붙이기…"
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "名前を付ける"
+            "value" : "名前を付ける…"
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "重命名"
+            "value" : "重命名…"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "重新命名"
+            "value" : "重新命名…"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Cambiar nombre"
+            "value" : "Cambiar nombre…"
           }
         }
       }
@@ -446,37 +446,37 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "New board"
+            "value" : "New board…"
           }
         },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "새 보드"
+            "value" : "새 보드…"
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "新規ボード"
+            "value" : "新規ボード…"
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "新建分组"
+            "value" : "新建分组…"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "新增分組"
+            "value" : "新增分組…"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Nuevo tablero"
+            "value" : "Nuevo tablero…"
           }
         }
       }
@@ -486,37 +486,37 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Edit board"
+            "value" : "Edit board…"
           }
         },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "보드 편집"
+            "value" : "보드 편집…"
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "ボードを編集"
+            "value" : "ボードを編集…"
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "编辑分组"
+            "value" : "编辑分组…"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "編輯分組"
+            "value" : "編輯分組…"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Editar tablero"
+            "value" : "Editar tablero…"
           }
         }
       }
@@ -526,37 +526,37 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Delete board"
+            "value" : "Delete board…"
           }
         },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "보드 삭제"
+            "value" : "보드 삭제…"
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "ボードを削除"
+            "value" : "ボードを削除…"
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "删除分组"
+            "value" : "删除分组…"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "刪除分組"
+            "value" : "刪除分組…"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Eliminar tablero"
+            "value" : "Eliminar tablero…"
           }
         }
       }
@@ -688,37 +688,37 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Empty Board"
+            "value" : "Empty Board…"
           }
         },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "보드 비우기"
+            "value" : "보드 비우기…"
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "ボードを空にする"
+            "value" : "ボードを空にする…"
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "清空分组"
+            "value" : "清空分组…"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "清空分組"
+            "value" : "清空分組…"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Vaciar tablero"
+            "value" : "Vaciar tablero…"
           }
         }
       }
@@ -850,37 +850,37 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Empty “%@”"
+            "value" : "Empty “%@”…"
           }
         },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "“%@” 비우기"
+            "value" : "“%@” 비우기…"
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "「%@」を空にする"
+            "value" : "「%@」を空にする…"
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "清空「%@」"
+            "value" : "清空「%@」…"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "清空「%@」"
+            "value" : "清空「%@」…"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Vaciar «%@»"
+            "value" : "Vaciar «%@»…"
           }
         }
       }

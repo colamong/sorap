@@ -2,7 +2,7 @@
 "clear_tooltip" = "Clear history items.\nItems in boards are kept.";
 "about_tooltip" = "Read more about the application.";
 "quit_tooltip" = "Quit application.";
-"clear" = "Clear History";
+"clear" = "Clear History…";
 "about" = "About Sorap";
 "quit" = "Quit";
 "preferences" = "Preferences…";

@@ -2,7 +2,7 @@
 "clear_tooltip" = "Borrar los elementos del historial.\nLos elementos de los tableros se conservan.";
 "about_tooltip" = "Leer más sobre la aplicación.";
 "quit_tooltip" = "Cerrar la aplicación.";
-"clear" = "Borrar historial";
+"clear" = "Borrar historial…";
 "about" = "Acerca de Sorap";
 "quit" = "Salir";
 "preferences" = "Preferencias…";
