@@ -44,8 +44,6 @@ struct ListItemView<Title: View, ID: Hashable>: View {
   var accessibilityLabel: String = ""
   var leadingSymbol: String?
   var trailingAccessory: AnyView?
-  // Colors the text, and swaps the selection fill for a light wash of the same color.
-  var tint: Color?
   @ViewBuilder var title: () -> Title
 
   @Default(.showApplicationIcons) private var showIcons
@@ -55,10 +53,6 @@ struct ListItemView<Title: View, ID: Hashable>: View {
   // Use the same selection number for the visible badge and accessibility value.
   private var displaySelectionIndex: String? {
     selectionIndex.map { "\($0 + 1)" }
-  }
-
-  private var selectionFill: Color {
-    tint?.opacity(0.18) ?? Color.accentColor.opacity(0.8)
   }
 
   var body: some View {
@@ -144,11 +138,11 @@ struct ListItemView<Title: View, ID: Hashable>: View {
     .padding(.vertical, 2)
     .id(id)
     .frame(maxWidth: .infinity, alignment: .leading)
-    .foregroundStyle(tint ?? (isSelected ? Color.white : .primary))
+    .foregroundStyle(isSelected ? Color.white : .primary)
     // macOS 26 broke hovering if no background is present.
     // The slight opcaity white background is a workaround
     .background(
-      isSelected ? selectionFill : Color.primary.opacity(0.04),
+      isSelected ? Color.accentColor.opacity(0.8) : Color.primary.opacity(0.04),
       in: selectionAppearance.rect(cornerRadius: Popup.cornerRadius)
     )
     .accessibilityElement(children: .ignore)

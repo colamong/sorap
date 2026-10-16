@@ -11,8 +11,7 @@ struct FooterItemView: View {
         selectionId: item.id,
         shortcuts: item.shortcuts,
         isSelected: item.isSelected,
-        accessibilityLabel: item.titleOverride() ?? NSLocalizedString(item.title, comment: ""),
-        tint: item.tint
+        accessibilityLabel: item.titleOverride() ?? NSLocalizedString(item.title, comment: "")
       ) {
         if let title = item.titleOverride() {
           Text(verbatim: title)

@@ -74,7 +74,6 @@ class Footer: ItemsContainer {
 
   /// The clear item follows the view: wipes history there, empties the board in a board view.
   private func configureClearItem(_ clear: FooterItem) {
-    clear.tint = .red
     clear.titleOverride = {
       guard case .board(let board) = AppState.shared.history.scope else { return nil }
       return String(format: String(localized: "board.empty.named", table: "Sorap"), board.name)
