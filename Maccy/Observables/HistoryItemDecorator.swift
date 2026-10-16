@@ -174,6 +174,8 @@ class HistoryItemDecorator: Identifiable, Hashable, HasVisibility {
     previewImageGenerationTask?.cancel()
     thumbnailImage?.recache()
     previewImage?.recache()
+    thumbnailImageGenerationTask = nil
+    previewImageGenerationTask = nil
     thumbnailImage = nil
     previewImage = nil
     item.clearDecodedImageCache()

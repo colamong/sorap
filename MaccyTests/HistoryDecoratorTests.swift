@@ -76,6 +76,20 @@ class HistoryItemDecoratorTests: XCTestCase {
     XCTAssertEqual(itemDecorator.thumbnailImage!.size, NSSize(width: 40, height: 40))
   }
 
+  func testThumbnailRegeneratesAfterCleanup() async {
+    let itemDecorator = historyItemDecorator(NSImage(named: "NSApplicationIcon")!)
+    itemDecorator.ensureThumbnailImage()
+    _ = await itemDecorator.thumbnailImageGenerationTask?.result
+    XCTAssertNotNil(itemDecorator.thumbnailImage)
+
+    itemDecorator.cleanupImages()
+    XCTAssertNil(itemDecorator.thumbnailImage)
+
+    itemDecorator.ensureThumbnailImage()
+    _ = await itemDecorator.thumbnailImageGenerationTask?.result
+    XCTAssertNotNil(itemDecorator.thumbnailImage)
+  }
+
   func testFile() {
     let url = URL(fileURLWithPath: "/tmp/foo.bar")
     let itemDecorator = historyItemDecorator(url)
