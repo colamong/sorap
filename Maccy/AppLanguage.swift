@@ -29,11 +29,14 @@ enum AppLanguage: String, CaseIterable, Identifiable {
     }
   }
 
-  /// Only an exact match counts: the system's own list holds region-qualified codes
-  /// ("ko-KR"), so an unset app domain reads as `.system` even though the lookup falls through to it.
-  static func current(defaults: UserDefaults = .standard) -> AppLanguage {
-    guard let first = (defaults.array(forKey: defaultsKey) as? [String])?.first else { return .system }
-    return AppLanguage(rawValue: first) ?? .system
+  /// The app's own defaults domain. `UserDefaults.standard` writes there, and reading only that domain
+  /// keeps the system's AppleLanguages (global domain) from showing up as a choice.
+  static var appDomain: String { Bundle.main.bundleIdentifier ?? "" }
+
+  /// For a suite other than `.standard`, pass the suite name as `domain`.
+  static func current(defaults: UserDefaults = .standard, domain: String = appDomain) -> AppLanguage {
+    let stored = defaults.persistentDomain(forName: domain)?[defaultsKey] as? [String]
+    return stored?.first.flatMap(AppLanguage.init(rawValue:)) ?? .system
   }
 
   func apply(defaults: UserDefaults = .standard) {

@@ -35,16 +35,22 @@ final class AppLanguageTests: XCTestCase {
   func testCurrentRoundTripsEveryCase() {
     for language in AppLanguage.allCases {
       language.apply(defaults: defaults)
-      XCTAssertEqual(AppLanguage.current(defaults: defaults), language)
+      XCTAssertEqual(AppLanguage.current(defaults: defaults, domain: suiteName), language)
     }
   }
 
+  func testCurrentIgnoresValuesMergedFromOtherDomains() {
+    // `array(forKey:)` on a suite also sees the global domain; the app-domain read must not.
+    XCTAssertNotNil(defaults.array(forKey: "AppleLanguages"))
+    XCTAssertEqual(AppLanguage.current(defaults: defaults, domain: suiteName), .system)
+  }
+
   func testCurrentWithNothingStoredIsSystem() {
-    XCTAssertEqual(AppLanguage.current(defaults: defaults), .system)
+    XCTAssertEqual(AppLanguage.current(defaults: defaults, domain: suiteName), .system)
   }
 
   func testUnknownStoredCodeFallsBackToSystem() {
     defaults.set(["xx"], forKey: "AppleLanguages")
-    XCTAssertEqual(AppLanguage.current(defaults: defaults), .system)
+    XCTAssertEqual(AppLanguage.current(defaults: defaults, domain: suiteName), .system)
   }
 }
