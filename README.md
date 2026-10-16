@@ -123,7 +123,7 @@ On a Korean Mac it shows up as **서랍** ("drawer"). It runs on macOS 14 or lat
 - **Boards** — The first chip is the built-in History view, followed by the fixed Favorites board; add as many boards as you like. A board left unnamed is called "New board".
 - **Star** an item to move it into Favorites.
 - **Right-click** an item to name it, move it to another board, save an image, or delete it. Right-click a board chip for **Empty Board**, which always asks first.
-- **Clearing** — the bottom button (`⌥⌘⌫`) follows the view you are in. In **History** it is **Clear History…** and removes only items not saved in a board. It asks for confirmation first; choose "don't ask again" to skip it, and turn it back on in Settings. In a board it becomes **Empty “<name>”…** and empties that board. That always asks first and shows the item count. To delete a single item, right-click → **Delete** or press `⌥⌫`.
+- **Clearing** — the bottom button (`⌥⌘⌫`) follows the view you are in. In **History** it is **Clear History…** and removes only items not saved in a board. It asks for confirmation first; choose "don't ask again" to skip it, and turn it back on in Settings. In a board it becomes **Empty “&lt;name&gt;”…** and empties that board. That always asks first and shows the item count. To delete a single item, right-click → **Delete** or press `⌥⌫`.
 - **Snippets** — write your own items with "+ New item" inside a board.
 - **Kind filter** — All, Text, Links, or Images. Images show as a sharp thumbnail grid, and image files copied from Finder show their file icon.
 - **Save images** from the context menu, or drag a grid tile to Finder.
@@ -138,7 +138,7 @@ On a Korean Mac it shows up as **서랍** ("drawer"). It runs on macOS 14 or lat
 | `⌘1`–`⌘9` | Paste the item with that number |
 | `⌥P` | Add to / remove from Favorites (configurable) |
 | `⌥⌫` | Delete item (configurable) |
-| `⌥⌘⌫` | **Clear History…** in History (board items are kept); **Empty “<name>”…** in a board |
+| `⌥⌘⌫` | **Clear History…** in History (board items are kept); **Empty “&lt;name&gt;”…** in a board |
 | `⌘Y` | Preview (configurable) |
 | `Tab` | Next board |
 | `⌥←` / `⌥→` | Previous / next board |
