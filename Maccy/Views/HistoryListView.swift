@@ -75,7 +75,7 @@ struct HistoryListView: View {
     let scrollBottomPadding = bottomSeparatorVisible ? Popup.verticalSeparatorPadding : bottomPadding
 
     VStack(spacing: 0) {
-      // A new snippet is text, so the image and link filters would hide it right away.
+      // A new snippet is text, so any filter other than All or Text would hide it right away.
       if case .board(let board) = appState.history.scope,
          appState.history.kindFilter == nil || appState.history.kindFilter == .text {
         Button {
