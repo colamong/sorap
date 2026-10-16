@@ -54,11 +54,16 @@ enum ItemKind: String, CaseIterable, Identifiable {
 
   private static let maxPathLength = 1024
 
-  /// A lone absolute or home-relative path such as Finder's ⌥⌘C produces. Spaces are allowed
-  /// because paths contain them; a newline means the text is prose or a list, not one path.
+  /// A lone path such as Finder's ⌥⌘C produces. Spaces are allowed because paths contain them;
+  /// a newline means prose or a list. An absolute path needs a second segment ("/Users/me"),
+  /// so slash commands like "/compact" or "/help me" stay text.
   private static func isSinglePath(_ string: String) -> Bool {
-    guard string.hasPrefix("/") || string.hasPrefix("~/") else { return false }
-    return !string.contains(where: \.isNewline) && string.count <= maxPathLength
+    guard !string.contains(where: \.isNewline), string.count <= maxPathLength else { return false }
+    if string.hasPrefix("~/") { return true }
+    guard string.hasPrefix("/") else { return false }
+    let afterRoot = string.dropFirst()
+    guard let separator = afterRoot.firstIndex(of: "/") else { return false }
+    return separator != afterRoot.startIndex
   }
 
   private static func isSingleLink(_ string: String) -> Bool {

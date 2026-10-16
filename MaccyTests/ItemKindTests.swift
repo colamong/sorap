@@ -49,9 +49,16 @@ final class ItemKindTests: XCTestCase {
     XCTAssertEqual(ItemKind.classify(hasImage: false, text: "file:///tmp/a", fileURLs: []), .file)
   }
 
-  /// A lone "/" is the root directory, a valid path, so it counts as a file path.
-  func testRootSlashIsFile() {
-    XCTAssertEqual(ItemKind.classify(hasImage: false, text: "/", fileURLs: []), .file)
+  func testMultiSegmentPathsAreFile() {
+    XCTAssertEqual(ItemKind.classify(hasImage: false, text: "/tmp/a", fileURLs: []), .file)
+    XCTAssertEqual(ItemKind.classify(hasImage: false, text: "/Users/me/My Folder/a.txt", fileURLs: []), .file)
+    XCTAssertEqual(ItemKind.classify(hasImage: false, text: "~/x", fileURLs: []), .file)
+  }
+
+  func testSlashCommandsAndBareSlashesAreText() {
+    for text in ["/", "//", "/compact", "/help me", "//x/y"] {
+      XCTAssertEqual(ItemKind.classify(hasImage: false, text: text, fileURLs: []), .text, text)
+    }
   }
 
   func testPathInsideSentenceIsText() {
