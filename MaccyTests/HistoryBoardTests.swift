@@ -107,6 +107,38 @@ final class HistoryBoardTests: XCTestCase {
     XCTAssertTrue(history.unpinnedItems.isEmpty)
   }
 
+  func testEmptyBoardDeletesOnlyThatBoardsItems() throws {
+    let sql = boards.create(name: "SQL", symbol: "cylinder")
+    let other = boards.create(name: "Other", symbol: "folder")
+    let inSQL = history.add(historyItem("select 1"))
+    let alsoInSQL = history.add(historyItem("select 2"))
+    let inOther = history.add(historyItem("other"))
+    let plain = history.add(historyItem("plain"))
+    history.move(inSQL, to: sql)
+    history.move(alsoInSQL, to: sql)
+    history.move(inOther, to: other)
+
+    history.emptyBoard(sql)
+
+    XCTAssertFalse(history.boardItems.contains(inSQL))
+    XCTAssertFalse(history.boardItems.contains(alsoInSQL))
+    XCTAssertTrue(history.boardItems.contains(inOther))
+    XCTAssertTrue(history.unpinnedItems.contains(plain))
+    XCTAssertTrue(boards.boards.contains(sql))
+    let stored = try Storage.shared.context.fetch(FetchDescriptor<HistoryItem>())
+    XCTAssertEqual(Set(stored.map(\.title)), ["other", "plain"])
+    let contents = try Storage.shared.context.fetch(FetchDescriptor<HistoryItemContent>())
+    XCTAssertEqual(contents.count, 2)
+  }
+
+  func testEmptyFavoritesKeepsTheBoard() {
+    let item = history.add(historyItem("fav"))
+    history.toggleFavorite(item)
+    history.emptyBoard(boards.favorites)
+    XCTAssertFalse(history.boardItems.contains(item))
+    XCTAssertTrue(boards.boards.contains(boards.favorites))
+  }
+
   func testDeleteBoardReturnsItemsToHistory() throws {
     let board = boards.create(name: "SQL", symbol: "cylinder")
     let item = history.add(historyItem("select 1"))

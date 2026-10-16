@@ -42,19 +42,6 @@ struct KeyHandlingView<Content: View>: View {
           } else {
             return .ignored
           }
-        case .clearHistoryAll:
-          if let item = appState.footer.items.first(where: { $0.title == "clear_all" }),
-             item.confirmation != nil,
-             let suppressConfirmation = item.suppressConfirmation {
-            if suppressConfirmation.wrappedValue {
-              item.action()
-            } else {
-              item.showConfirmation = true
-            }
-            return .handled
-          } else {
-            return .ignored
-          }
         case .clearSearch:
           searchQuery = ""
           return .handled

@@ -3,7 +3,18 @@ import SwiftUI
 struct BoardChipsView: View {
   @Environment(AppState.self) private var appState
   private var boardStore = BoardStore.shared
-  @State private var pendingDeletion: Board?
+  @State private var pendingAction: PendingAction?
+
+  private enum PendingAction {
+    case delete(Board)
+    case empty(Board)
+
+    var board: Board {
+      switch self {
+      case .delete(let board), .empty(let board): return board
+      }
+    }
+  }
 
   var body: some View {
     ScrollView(.horizontal, showsIndicators: false) {
@@ -35,11 +46,17 @@ struct BoardChipsView: View {
               }
               .disabled(index == boardStore.boards.count - 1)
             }
+            Divider()
+            Button(String(localized: "board.empty", table: "Sorap"), role: .destructive) {
+              // The panel closes on resign-key, so keep it open while the dialog is up.
+              appState.isEditingItem = true
+              pendingAction = .empty(board)
+            }
+            .disabled(itemCount(in: board) == 0)
             if !board.isFavorites {
               Button(String(localized: "board.delete", table: "Sorap"), role: .destructive) {
-                // The panel closes on resign-key, so keep it open while the dialog is up.
                 appState.isEditingItem = true
-                pendingDeletion = board
+                pendingAction = .delete(board)
               }
             }
           }
@@ -60,34 +77,56 @@ struct BoardChipsView: View {
       .padding(.vertical, 2)
     }
     .confirmationDialog(
-      deletionTitle,
+      dialogTitle,
       isPresented: Binding(
-        get: { pendingDeletion != nil },
-        set: { if !$0 { dismissDeletionDialog() } }
+        get: { pendingAction != nil },
+        set: { if !$0 { dismissDialog() } }
       ),
       titleVisibility: .visible,
-      presenting: pendingDeletion
-    ) { board in
-      Button(String(localized: "item.delete", table: "Sorap"), role: .destructive) {
-        // A failed delete leaves the board and its items untouched.
-        try? appState.history.deleteBoard(board)
-        dismissDeletionDialog()
+      presenting: pendingAction
+    ) { action in
+      switch action {
+      case .delete(let board):
+        Button(String(localized: "item.delete", table: "Sorap"), role: .destructive) {
+          // A failed delete leaves the board and its items untouched.
+          try? appState.history.deleteBoard(board)
+          dismissDialog()
+        }
+      case .empty(let board):
+        Button(String(localized: "board.empty.confirm", table: "Sorap"), role: .destructive) {
+          appState.history.emptyBoard(board)
+          dismissDialog()
+        }
       }
       Button(String(localized: "common.cancel", table: "Sorap"), role: .cancel) {
-        dismissDeletionDialog()
+        dismissDialog()
       }
-    } message: { board in
-      let count = appState.history.boardItems.filter { $0.item.board == board }.count
-      Text(String(localized: "board.delete.message \(count)", table: "Sorap"))
+    } message: { action in
+      let count = itemCount(in: action.board)
+      switch action {
+      case .delete: Text(String(localized: "board.delete.message \(count)", table: "Sorap"))
+      case .empty: Text(String(localized: "board.empty.message \(count)", table: "Sorap"))
+      }
     }
   }
 
-  private var deletionTitle: String {
-    String(format: String(localized: "board.delete.title", table: "Sorap"), pendingDeletion?.name ?? "")
+  private var dialogTitle: String {
+    switch pendingAction {
+    case .delete(let board):
+      String(format: String(localized: "board.delete.title", table: "Sorap"), board.name)
+    case .empty(let board):
+      String(format: String(localized: "board.empty.title", table: "Sorap"), board.name)
+    case nil:
+      ""
+    }
   }
 
-  private func dismissDeletionDialog() {
-    pendingDeletion = nil
+  private func itemCount(in board: Board) -> Int {
+    appState.history.boardItems.filter { $0.item.board == board }.count
+  }
+
+  private func dismissDialog() {
+    pendingAction = nil
     appState.isEditingItem = false
   }
 

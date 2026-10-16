@@ -43,22 +43,6 @@ class Footer: ItemsContainer {
         }
       },
       FooterItem(
-        title: "clear_all",
-        shortcuts: [KeyShortcut(key: .delete, modifierFlags: [.command, .option, .shift])],
-        help: "clear_all_tooltip",
-        confirmation: .init(
-          message: "clear_alert_message",
-          comment: "clear_alert_comment",
-          confirm: "clear_alert_confirm",
-          cancel: "clear_alert_cancel"
-        ),
-        suppressConfirmation: suppressClearAlert
-      ) {
-        Task { @MainActor in
-          AppState.shared.history.clearAll()
-        }
-      },
-      FooterItem(
         title: "preferences",
         shortcuts: [KeyShortcut(key: .comma)]
       ) {

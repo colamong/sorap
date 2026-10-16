@@ -21,7 +21,6 @@ enum KeyChord: CaseIterable {
   static var previewModifiers: NSEvent.ModifierFlags? { KeyboardShortcuts.Shortcut(name: .togglePreview)?.modifiers }
 
   case clearHistory
-  case clearHistoryAll
   case clearSearch
   case deleteCurrentItem
   case deleteOneCharFromSearch
@@ -76,8 +75,6 @@ enum KeyChord: CaseIterable {
     switch (key, modifierFlags) {
     case (.delete, [.command, .option]):
       self = .clearHistory
-    case (.delete, [.command, .option, .shift]):
-      self = .clearHistoryAll
     case (.u, [.control]):
       self = .clearSearch
     case (KeyChord.deleteKey, KeyChord.deleteModifiers):

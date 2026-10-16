@@ -310,6 +310,8 @@ class History: ItemsContainer { // swiftlint:disable:this type_body_length
     }
   }
 
+  /// Wipes everything, boards' items included. Not reachable from the UI — boards are storage,
+  /// so only tests use this as a clean slate.
   @MainActor
   func clearAll() {
     withLogging("Clearing all history") {
@@ -615,6 +617,15 @@ class History: ItemsContainer { // swiftlint:disable:this type_body_length
       scope = .history
     }
     try BoardStore.shared.remove(board)
+  }
+
+  /// Deletes every item in the board, contents included. The board itself stays.
+  @MainActor
+  func emptyBoard(_ board: Board) {
+    // One by one: bulk deletion fails on items that still hold a board relationship.
+    for item in boardItems.filter({ $0.item.board == board }) {
+      delete(item)
+    }
   }
 
   @discardableResult
