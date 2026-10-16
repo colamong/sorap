@@ -17,6 +17,7 @@ struct ConfirmationView<Content: View>: View {
           }
           .accessibilityIdentifier("confirmation-confirm")
           Button(confirmation.cancel, role: .cancel) {}
+            .keyboardShortcut(.defaultAction)
         }
         .dialogSuppressionToggle(isSuppressed: suppressConfirmation)
     } else {

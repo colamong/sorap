@@ -83,6 +83,7 @@ struct ContentView: View {
       Button(String(localized: "common.cancel", table: "Sorap"), role: .cancel) {
         appState.cancelEmptyBoard()
       }
+      .keyboardShortcut(.defaultAction)
     } message: { board in
       Text(String(localized: "board.empty.message \(appState.history.boardItemCount(in: board))", table: "Sorap"))
     }

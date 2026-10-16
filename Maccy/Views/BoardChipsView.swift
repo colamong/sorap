@@ -80,6 +80,7 @@ struct BoardChipsView: View {
       Button(String(localized: "common.cancel", table: "Sorap"), role: .cancel) {
         dismissDialog()
       }
+      .keyboardShortcut(.defaultAction)
     } message: { board in
       Text(String(localized: "board.delete.message \(appState.history.boardItemCount(in: board))", table: "Sorap"))
     }
