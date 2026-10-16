@@ -17,6 +17,11 @@ struct GeneralSettingsPane: View {
 
   @State private var updater = SoftwareUpdater()
 
+  // Changing the language only takes effect after a relaunch, so remember what is in effect now.
+  @State private var activeLanguage = AppLanguage.current()
+  @State private var language = AppLanguage.current()
+  @State private var languageChanged = false
+
   var body: some View {
     Settings.Container(contentWidth: 450) {
       Settings.Section(title: "", bottomDivider: true) {
@@ -30,6 +35,39 @@ struct GeneralSettingsPane: View {
           action: { updater.checkForUpdates() },
           label: { Text("CheckNow", tableName: "GeneralSettings") }
         )
+      }
+
+      Settings.Section(
+        bottomDivider: true,
+        label: { Text("settings.language", tableName: "Sorap") }
+      ) {
+        Picker("", selection: $language) {
+          ForEach(AppLanguage.allCases) { option in
+            if let endonym = option.endonym {
+              Text(endonym).tag(option)
+            } else {
+              Text("settings.language.system", tableName: "Sorap").tag(option)
+            }
+          }
+        }
+        .labelsHidden()
+        .accessibilityLabel(Text("settings.language", tableName: "Sorap"))
+        .frame(width: 180, alignment: .leading)
+        .onChange(of: language) { _, newValue in
+          newValue.apply()
+          languageChanged = newValue != activeLanguage
+        }
+
+        if languageChanged {
+          HStack {
+            Text("settings.language.restartNote", tableName: "Sorap")
+              .foregroundStyle(.secondary)
+            Button(
+              action: { relaunch() },
+              label: { Text("settings.language.restart", tableName: "Sorap") }
+            )
+          }
+        }
       }
 
       Settings.Section(label: { Text("Open", tableName: "GeneralSettings") }) {
@@ -111,6 +149,20 @@ struct GeneralSettingsPane: View {
           Link(destination: notificationsURL, label: {
             Text("NotificationsAndSounds", tableName: "GeneralSettings")
           })
+        }
+      }
+    }
+  }
+
+  private func relaunch() {
+    let configuration = NSWorkspace.OpenConfiguration()
+    configuration.createsNewApplicationInstance = true
+    NSWorkspace.shared.openApplication(at: Bundle.main.bundleURL, configuration: configuration) { _, error in
+      Task { @MainActor in
+        if let error {
+          NSAlert(error: error).runModal()
+        } else {
+          NSApp.terminate(nil)
         }
       }
     }

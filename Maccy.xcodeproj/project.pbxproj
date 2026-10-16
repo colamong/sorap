@@ -128,6 +128,8 @@
 		DA689FB02C1CD3B00009B887 /* StorageSettings.strings in Resources */ = {isa = PBXBuildFile; fileRef = DA689FAE2C1CD3B00009B887 /* StorageSettings.strings */; };
 		DA689FC42C1CF0F00009B887 /* AppearanceSettingsPane.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA689FC32C1CF0F00009B887 /* AppearanceSettingsPane.swift */; };
 		DA689FC62C1D14F10009B887 /* PopupPosition.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA689FC52C1D14F10009B887 /* PopupPosition.swift */; };
+		C0DE00000000000000000A02 /* AppLanguage.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0DE00000000000000000A01 /* AppLanguage.swift */; };
+		C0DE00000000000000000A04 /* AppLanguageTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0DE00000000000000000A03 /* AppLanguageTests.swift */; };
 		DA689FC82C1D15140009B887 /* PinsPosition.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA689FC72C1D15140009B887 /* PinsPosition.swift */; };
 		DA689FCA2C1D18890009B887 /* HighlightMatch.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA689FC92C1D18890009B887 /* HighlightMatch.swift */; };
 		DA689FCC2C1D1D510009B887 /* MenuIcon.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA689FCB2C1D1D510009B887 /* MenuIcon.swift */; };
@@ -449,6 +451,8 @@
 		DA689FC22C1CD41C0009B887 /* uk */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = uk; path = uk.lproj/StorageSettings.strings; sourceTree = "<group>"; };
 		DA689FC32C1CF0F00009B887 /* AppearanceSettingsPane.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppearanceSettingsPane.swift; sourceTree = "<group>"; };
 		DA689FC52C1D14F10009B887 /* PopupPosition.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopupPosition.swift; sourceTree = "<group>"; };
+		C0DE00000000000000000A01 /* AppLanguage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppLanguage.swift; sourceTree = "<group>"; };
+		C0DE00000000000000000A03 /* AppLanguageTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AppLanguageTests.swift; path = MaccyTests/AppLanguageTests.swift; sourceTree = SOURCE_ROOT; };
 		DA689FC72C1D15140009B887 /* PinsPosition.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PinsPosition.swift; sourceTree = "<group>"; };
 		DA689FC92C1D18890009B887 /* HighlightMatch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HighlightMatch.swift; sourceTree = "<group>"; };
 		DA689FCB2C1D1D510009B887 /* MenuIcon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuIcon.swift; sourceTree = "<group>"; };
@@ -897,6 +901,7 @@
 				DAEE38441E3DBEB100DD2966 /* Products */,
 				C2D16D1C2EE365D52E1EE446 /* Frameworks */,
 				46134E9CB93D70CC0EADB4E5 /* SorapIdentityTests.swift */,
+				C0DE00000000000000000A03 /* AppLanguageTests.swift */,
 				64474BF8897C64FE52B1CF63 /* ItemKindTests.swift */,
 				46D94D5C9AFAAB56D3D127A6 /* BoardStoreTests.swift */,
 				646042A893F852457D6EBA53 /* HistoryBoardTests.swift */,
@@ -947,6 +952,7 @@
 				2F0EC7802E773F1D003E2EA9 /* PasteStack.swift */,
 				DA689FC72C1D15140009B887 /* PinsPosition.swift */,
 				DA689FC52C1D14F10009B887 /* PopupPosition.swift */,
+				C0DE00000000000000000A01 /* AppLanguage.swift */,
 				DAC14123232367B200FCFA30 /* Search.swift */,
 				2F1A79BF2C6DFB7800C98EBD /* SearchVisibility.swift */,
 				2F0EC77C2E773314003E2EA9 /* Selection.swift */,
@@ -1193,6 +1199,7 @@
 				FFFC00000000000000000003 /* UnsafeForTitleLayoutTests.swift in Sources */,
 				DA360DB31E3DF137005C6F6B /* HistoryTests.swift in Sources */,
 				B0394FBCA6A8A4F997C10539 /* SorapIdentityTests.swift in Sources */,
+				C0DE00000000000000000A04 /* AppLanguageTests.swift in Sources */,
 				38784715A674F81774A30FC6 /* ItemKindTests.swift in Sources */,
 				C34C4162B0048D07E315DA97 /* BoardStoreTests.swift in Sources */,
 				88AF405784A76B58B31B5658 /* HistoryBoardTests.swift in Sources */,
@@ -1302,6 +1309,7 @@
 				2F1B61CF301BE55F000905F9 /* EnumeratedForEach.swift in Sources */,
 				DAA072DB2C41C5DD006DDFD2 /* FooterItem.swift in Sources */,
 				DA689FC62C1D14F10009B887 /* PopupPosition.swift in Sources */,
+				C0DE00000000000000000A02 /* AppLanguage.swift in Sources */,
 				DA49EE7528B59468002752E0 /* NSRect+Centered.swift in Sources */,
 				DA9C3C602C20E1890056795D /* IgnorePasteboardTypesSettingsView.swift in Sources */,
 				DA083A6E2C42E8E8004259A0 /* NSImage+Resized.swift in Sources */,

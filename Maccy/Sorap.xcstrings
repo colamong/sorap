@@ -51,6 +51,18 @@
         "one" : { "stringUnit" : { "state" : "translated", "value" : "Its %lld item moves back to History." } },
         "other" : { "stringUnit" : { "state" : "translated", "value" : "Its %lld items move back to History." } } } } },
       "ko" : { "stringUnit" : { "state" : "translated", "value" : "항목 %lld개는 기록으로 돌아갑니다." } } } },
+    "settings.language" : { "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Language" } },
+      "ko" : { "stringUnit" : { "state" : "translated", "value" : "언어" } } } },
+    "settings.language.system" : { "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "System default" } },
+      "ko" : { "stringUnit" : { "state" : "translated", "value" : "시스템 기본값" } } } },
+    "settings.language.restartNote" : { "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Takes effect after restart." } },
+      "ko" : { "stringUnit" : { "state" : "translated", "value" : "다시 시작하면 적용됩니다." } } } },
+    "settings.language.restart" : { "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Restart now" } },
+      "ko" : { "stringUnit" : { "state" : "translated", "value" : "지금 다시 시작" } } } },
     "settings.favorite" : { "localizations" : {
       "en" : { "stringUnit" : { "state" : "translated", "value" : "Favorite" } },
       "ko" : { "stringUnit" : { "state" : "translated", "value" : "즐겨찾기" } } } },
