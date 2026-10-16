@@ -26,9 +26,50 @@ final class ItemKindTests: XCTestCase {
     XCTAssertEqual(ItemKind.classify(hasImage: false, text: nil, fileURLs: [png]), .image)
   }
 
-  func testOtherFileIsOther() {
+  func testNonImageFileIsFile() {
     let pdf = URL(fileURLWithPath: "/tmp/a.pdf")
-    XCTAssertEqual(ItemKind.classify(hasImage: false, text: "/tmp/a.pdf", fileURLs: [pdf]), .other)
+    XCTAssertEqual(ItemKind.classify(hasImage: false, text: "/tmp/a.pdf", fileURLs: [pdf]), .file)
+  }
+
+  func testMixedImageAndNonImageFilesAreFile() {
+    let urls = [URL(fileURLWithPath: "/tmp/a.png"), URL(fileURLWithPath: "/tmp/a.pdf")]
+    XCTAssertEqual(ItemKind.classify(hasImage: false, text: nil, fileURLs: urls), .file)
+  }
+
+  func testAbsolutePathTextIsFile() {
+    XCTAssertEqual(ItemKind.classify(hasImage: false, text: "/Users/me/a.txt", fileURLs: []), .file)
+    XCTAssertEqual(ItemKind.classify(hasImage: false, text: "  /Users/me/My Docs/a.txt\n", fileURLs: []), .file)
+  }
+
+  func testHomePathTextIsFile() {
+    XCTAssertEqual(ItemKind.classify(hasImage: false, text: "~/Desktop/x", fileURLs: []), .file)
+  }
+
+  func testFileSchemeTextIsFile() {
+    XCTAssertEqual(ItemKind.classify(hasImage: false, text: "file:///tmp/a", fileURLs: []), .file)
+  }
+
+  /// A lone "/" is the root directory, a valid path, so it counts as a file path.
+  func testRootSlashIsFile() {
+    XCTAssertEqual(ItemKind.classify(hasImage: false, text: "/", fileURLs: []), .file)
+  }
+
+  func testPathInsideSentenceIsText() {
+    XCTAssertEqual(ItemKind.classify(hasImage: false, text: "see /tmp/a now", fileURLs: []), .text)
+  }
+
+  func testMultiLineTextWithPathIsText() {
+    XCTAssertEqual(ItemKind.classify(hasImage: false, text: "/tmp/a\n/tmp/b", fileURLs: []), .text)
+    XCTAssertEqual(ItemKind.classify(hasImage: false, text: "cd:\n/tmp/a", fileURLs: []), .text)
+  }
+
+  func testOverlongPathTextIsText() {
+    let long = "/" + String(repeating: "a", count: 1024)
+    XCTAssertEqual(ItemKind.classify(hasImage: false, text: long, fileURLs: []), .text)
+  }
+
+  func testFiltersOrder() {
+    XCTAssertEqual(ItemKind.filters, [.text, .link, .file, .image])
   }
 
   func testEmptyIsOther() {

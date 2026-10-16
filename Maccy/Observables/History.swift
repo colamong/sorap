@@ -584,7 +584,7 @@ class History: ItemsContainer { // swiftlint:disable:this type_body_length
     return index >= 0 && index < count ? index : nil
   }
 
-  /// nil (all) → text → link → image → nil; reversed when `forward` is false.
+  /// nil (all) → text → link → file → image → nil; reversed when `forward` is false.
   @MainActor
   func cycleKindFilter(forward: Bool) {
     let order: [ItemKind?] = [nil] + ItemKind.filters

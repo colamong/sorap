@@ -130,18 +130,18 @@ final class HistoryScopeTests: XCTestCase {
 
   func testCycleKindFilterForward() {
     var seen: [ItemKind?] = []
-    for _ in 0..<4 {
+    for _ in 0..<5 {
       history.cycleKindFilter(forward: true)
       seen.append(history.kindFilter)
     }
-    XCTAssertEqual(seen, [.text, .link, .image, nil])
+    XCTAssertEqual(seen, [.text, .link, .file, .image, nil])
   }
 
   func testCycleKindFilterBackwardFromAllGoesToImage() {
     history.cycleKindFilter(forward: false)
     XCTAssertEqual(history.kindFilter, .image)
     history.cycleKindFilter(forward: false)
-    XCTAssertEqual(history.kindFilter, .link)
+    XCTAssertEqual(history.kindFilter, .file)
   }
 
   func testIntentItemIndexBounds() {
