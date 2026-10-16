@@ -24,10 +24,11 @@ macOS 14 이상에서 동작합니다. 무료이고 소스가 공개돼 있습�
 
 - **보드** — 자주 쓰는 항목을 보드에 나눠 둡니다. 맨 앞의 `기록`은 복사한 내용이 쌓이는 기본 보기이고, 그다음에 고정된 `즐겨찾기` 보드가 오며, 보드는 얼마든지 더 만들 수 있습니다. 이름을 비워 두면 "새 보드"가 됩니다.
 - **별표** — 항목의 별을 누르면 `즐겨찾기`로 들어갑니다.
-- **우클릭 메뉴** — 이름 붙이기, 다른 보드로 옮기기, 이미지 저장, 삭제. 보드 칩을 우클릭하면 `보드 비우기`가 있고, 항상 확인을 거칩니다.
+- **우클릭 메뉴** — 이름 붙이기, 다른 보드로 옮기기, 경로 복사(복사한 파일), 이미지 저장, 삭제. 보드 칩을 우클릭하면 `보드 비우기`가 있고, 항상 확인을 거칩니다.
 - **지우기** — 아래쪽 버튼(`⌥⌘⌫`)은 지금 보고 있는 화면에 따라 달라집니다. `기록`에서는 `기록 모두 지우기…`이고, 보드에 담지 않은 항목만 지웁니다. 지우기 전에 확인을 묻고, `다시 묻지 않기`를 고르면 이후에는 묻지 않습니다(설정에서 다시 켤 수 있음). 보드 화면에서는 `“<이름>” 비우기…`로 바뀌어 그 보드를 비웁니다. 이때는 항상 확인을 묻고 항목 수를 보여 줍니다. 항목 하나는 우클릭 → `삭제` 또는 `⌥⌫`로 지웁니다.
 - **스니펫** — 보드 안의 "+ 새 항목"으로 글을 직접 써 둘 수 있습니다.
-- **종류 필터** — 전체·텍스트·링크·이미지 중에서 고릅니다. 이미지는 선명한 썸네일 격자로 보이고, Finder에서 복사한 이미지 파일은 파일 아이콘으로 보입니다.
+- **종류 필터** — 전체·텍스트·링크·파일·이미지 중에서 고릅니다. 이미지는 선명한 썸네일 격자로 보이고, Finder에서 복사한 이미지 파일은 파일 아이콘으로 보입니다. 이미지가 아닌 파일과, Finder의 `⌥⌘C`로 복사한 경로 텍스트는 파일로 분류됩니다.
+- **경로 복사** — 복사한 파일을 우클릭하고 `경로 복사`를 누르면 경로가 텍스트로 복사됩니다. 파일이 여러 개면 한 줄에 하나씩 담깁니다.
 - **이미지 저장** — 우클릭 메뉴로 저장하거나, 격자의 썸네일을 Finder로 끌어다 놓습니다.
 - **검색** — 이름을 붙인 항목도 원래 내용으로 찾을 수 있습니다.
 - **로컬 저장** — 모든 데이터는 이 Mac에만 저장됩니다.
@@ -125,10 +126,11 @@ On a Korean Mac it shows up as **서랍** ("drawer"). It runs on macOS 14 or lat
 
 - **Boards** — The first chip is the built-in History view, followed by the fixed Favorites board; add as many boards as you like. A board left unnamed is called "New board".
 - **Star** an item to move it into Favorites.
-- **Right-click** an item to name it, move it to another board, save an image, or delete it. Right-click a board chip for **Empty Board**, which always asks first.
+- **Right-click** an item to name it, move it to another board, copy a file's path, save an image, or delete it. Right-click a board chip for **Empty Board**, which always asks first.
 - **Clearing** — the bottom button (`⌥⌘⌫`) follows the view you are in. In **History** it is **Clear History…** and removes only items not saved in a board. It asks for confirmation first; choose "don't ask again" to skip it, and turn it back on in Settings. In a board it becomes **Empty “&lt;name&gt;”…** and empties that board. That always asks first and shows the item count. To delete a single item, right-click → **Delete** or press `⌥⌫`.
 - **Snippets** — write your own items with "+ New item" inside a board.
-- **Kind filter** — All, Text, Links, or Images. Images show as a sharp thumbnail grid, and image files copied from Finder show their file icon.
+- **Kind filter** — All, Text, Links, Files, or Images. Images show as a sharp thumbnail grid, and image files copied from Finder show their file icon. Non-image files, and paths copied with Finder's `⌥⌘C`, are classified under Files.
+- **Copy Path** — right-click a copied file and choose **Copy Path** to put its path on the clipboard as text. Several files are copied one per line.
 - **Save images** from the context menu, or drag a grid tile to Finder.
 - **Search** also matches the original content of renamed items.
 - Everything is stored locally on your Mac.
