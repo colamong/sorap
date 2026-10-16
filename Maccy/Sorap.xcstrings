@@ -206,7 +206,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "New item…"
+            "value" : "New Item…"
           }
         },
         "ko" : {
@@ -286,7 +286,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Move to"
+            "value" : "Move To"
           }
         },
         "ko" : {
@@ -446,7 +446,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "New board…"
+            "value" : "New Board…"
           }
         },
         "ko" : {
@@ -486,7 +486,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Edit board…"
+            "value" : "Edit Board…"
           }
         },
         "ko" : {
@@ -526,7 +526,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Delete board…"
+            "value" : "Delete Board…"
           }
         },
         "ko" : {
@@ -970,7 +970,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "System default"
+            "value" : "System Default"
           }
         },
         "ko" : {
@@ -1050,7 +1050,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Restart now"
+            "value" : "Restart Now"
           }
         },
         "ko" : {
@@ -1170,7 +1170,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Move left"
+            "value" : "Move Left"
           }
         },
         "ko" : {
@@ -1210,7 +1210,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Move right"
+            "value" : "Move Right"
           }
         },
         "ko" : {
@@ -1410,7 +1410,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Add to favorites"
+            "value" : "Add to Favorites"
           }
         },
         "ko" : {
@@ -1450,7 +1450,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Remove from favorites"
+            "value" : "Remove from Favorites"
           }
         },
         "ko" : {
