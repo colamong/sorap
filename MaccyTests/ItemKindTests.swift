@@ -47,6 +47,11 @@ final class ItemKindTests: XCTestCase {
 
   func testFileSchemeTextIsFile() {
     XCTAssertEqual(ItemKind.classify(hasImage: false, text: "file:///tmp/a", fileURLs: []), .file)
+    XCTAssertEqual(ItemKind.classify(hasImage: false, text: "File:///tmp/a", fileURLs: []), .file)
+  }
+
+  func testMultilineFileSchemeTextIsNotFile() {
+    XCTAssertNotEqual(ItemKind.classify(hasImage: false, text: "file://x is a scheme\nmore text", fileURLs: []), .file)
   }
 
   func testMultiSegmentPathsAreFile() {

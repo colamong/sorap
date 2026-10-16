@@ -46,7 +46,7 @@ enum ItemKind: String, CaseIterable, Identifiable {
 
     let trimmed = (text ?? "").trimmingCharacters(in: .whitespacesAndNewlines)
     if trimmed.isEmpty { return .other }
-    if trimmed.hasPrefix("file://") { return .file }
+    if trimmed.lowercased().hasPrefix("file://"), !trimmed.contains("\n") { return .file }
     if isSingleLink(trimmed) { return .link }
     if isSinglePath(trimmed) { return .file }
     return .text
