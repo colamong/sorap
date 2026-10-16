@@ -5,7 +5,7 @@ struct Clear: AppIntent, CustomIntentMigratedAppIntent {
   static let intentClassName = "ClearIntent"
 
   static let title: LocalizedStringResource = "Clear Clipboard History"
-  static let description = IntentDescription("Clears all Sorap clipboard history except for pinned items.")
+  static let description = IntentDescription("Clears Sorap clipboard history. Items saved in boards are kept.")
 
   static var parameterSummary: some ParameterSummary {
     Summary("Clear Clipboard History")
