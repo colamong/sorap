@@ -5,7 +5,7 @@
 "quit_tooltip" = "어플리케이션을 종료합니다.";
 "clear" = "지우기";
 "clear_all" = "모두 지우기";
-"about" = "관하여";
+"about" = "Sorap에 관하여";
 "quit" = "종료";
 "preferences" = "설정…";
 "clear_alert_message" = "기록을 지우시겠습니까?";

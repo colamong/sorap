@@ -5,7 +5,7 @@
 "quit_tooltip" = "Quit application.";
 "clear" = "Clear";
 "clear_all" = "Clear all";
-"about" = "About";
+"about" = "About Sorap";
 "quit" = "Quit";
 "preferences" = "Preferences…";
 "clear_alert_message" = "Are you sure you want to clear the history?";

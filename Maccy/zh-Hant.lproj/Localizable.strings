@@ -5,7 +5,7 @@
 "quit_tooltip" = "退出應用程式。";
 "clear" = "清除";
 "clear_all" = "全部清除";
-"about" = "關於";
+"about" = "關於 Sorap";
 "quit" = "結束";
 "preferences" = "偏好設定…";
 "clear_alert_message" = "確定要清除歷史記錄嗎？";
