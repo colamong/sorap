@@ -38,20 +38,22 @@
 	<true/>
 	<key>SUFeedURL</key>
 	<string>https://raw.githubusercontent.com/colamong/sorap/master/appcast.xml</string>
+	<key>SUPublicEDKey</key>
+	<string>TWGu1r34kOe5T5w3dujp7XML3/0Ip/FzeY3We0RX0es=</string>
 	<key>UTExportedTypeDeclarations</key>
 	<array>
-	<dict>
-		<key>UTTypeIdentifier</key>
-		<string>io.github.colamong.sorap.pin-reorder</string>
-		<key>UTTypeTagSpecification</key>
-		<dict/>
-		<key>UTTypeDescription</key>
-		<string>Sorap Pin Reorder Type</string>
-		<key>UTTypeConformsTo</key>
-		<array>
-		<string>public.data</string>
-		</array>
-	</dict>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.data</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>Sorap Pin Reorder Type</string>
+			<key>UTTypeIdentifier</key>
+			<string>io.github.colamong.sorap.pin-reorder</string>
+			<key>UTTypeTagSpecification</key>
+			<dict/>
+		</dict>
 	</array>
 </dict>
 </plist>
