@@ -79,8 +79,10 @@ SPARKLE_AUTH="$(authority "$SPARKLE")"
 echo "app authority:     ${APP_AUTH:-<none>}"
 echo "Sparkle authority: ${SPARKLE_AUTH:-<none>}"
 
-if [ "$APP_AUTH" != "$IDENTITY" ] || [ "$SPARKLE_AUTH" != "$IDENTITY" ]; then
-  echo "==> Signer mismatch; re-signing Sparkle.framework and the app with '$IDENTITY'"
+# Always re-sign: Xcode may sign only the top-level framework and leave Sparkle's nested
+# XPC services and helpers with their original (ad-hoc) signatures.
+{
+  echo "==> Signing Sparkle.framework (nested code first) and the app with '$IDENTITY'"
   # Sign nested code deepest first (never --deep), keeping each item's own entitlements and flags.
   # `requirements` is deliberately not preserved: the old designated requirement names the old signer.
   PRESERVE="entitlements,flags,runtime"
@@ -95,7 +97,7 @@ if [ "$APP_AUTH" != "$IDENTITY" ] || [ "$SPARKLE_AUTH" != "$IDENTITY" ]; then
   codesign --verify --deep --strict "$APP" || die "codesign verification still fails after re-signing"
   [ "$(authority "$APP")" = "$IDENTITY" ] && [ "$(authority "$SPARKLE")" = "$IDENTITY" ] \
     || die "signer is still not '$IDENTITY' after re-signing"
-fi
+}
 
 FINAL_AUTH="$(authority "$APP")"
 echo "==> Final signer: Authority=${FINAL_AUTH:-<none>}"
