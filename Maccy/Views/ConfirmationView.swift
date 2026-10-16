@@ -10,7 +10,7 @@ struct ConfirmationView<Content: View>: View {
         .buttonAction {
           item.trigger()
         }
-        .confirmationDialog(confirmation.message, isPresented: $item.showConfirmation) {
+        .confirmationDialog(confirmation.message, isPresented: $item.showConfirmation, titleVisibility: .visible) {
           Text(confirmation.comment)
           Button(confirmation.confirm, role: .destructive) {
             item.action()
