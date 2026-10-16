@@ -1,170 +1,180 @@
-> [!WARNING]
-> **Beware of fake websites impersonating Maccy.** Malicious sites (such as `maccyapp.net` and `maccyapp.com`) distribute malware disguised as Maccy. [**maccy.app**](https://maccy.app) is the **only** official website.
+<img src="Screenshots/icon.png" width="128" alt="Sorap 아이콘">
 
-<img width="128px" src="https://maccy.app/img/maccy/Logo.png" alt="Logo" />
+# Sorap
 
-# [Maccy](https://maccy.app)
+복사한 것을 보드에 나눠 담아 두는 macOS 메뉴바 클립보드 앱입니다.
+한국어 Mac 에서는 이름이 **서랍**으로 보입니다.
 
-[![Downloads](https://img.shields.io/github/downloads/p0deje/Maccy/total.svg)](https://github.com/p0deje/Maccy/releases/latest)
-[![Build Status](https://img.shields.io/bitrise/716921b669780314/master?token=3pMiCb5dpFzlO-7jTYtO3Q)](https://app.bitrise.io/app/716921b669780314)
+macOS 14 이상에서 동작합니다. 무료이고 소스가 공개돼 있습니다.
 
-Maccy is a lightweight clipboard manager for macOS. It keeps the history of what you copy
-and lets you quickly navigate, search, and use previous clipboard contents.
+[English](#english)
 
-Maccy works on macOS Sonoma 14 or higher.
+## 스크린샷
 
-<!-- vim-markdown-toc GFM -->
+<p>
+  <img src="Screenshots/history-light.png" width="400" alt="기록 화면 (라이트 모드)">
+  <img src="Screenshots/history-dark.png" width="400" alt="기록 화면 (다크 모드)">
+</p>
+<p>
+  <img src="Screenshots/board-light.png" width="400" alt="SQL 보드">
+  <img src="Screenshots/images-light.png" width="400" alt="이미지 필터의 썸네일 격자">
+</p>
 
-* [Features](#features)
-* [Install](#install)
-* [Usage](#usage)
-* [Advanced](#advanced)
-  * [Ignore Copied Items](#ignore-copied-items)
-  * [Ignore Custom Copy Types](#ignore-custom-copy-types)
-  * [Speed up Clipboard Check Interval](#speed-up-clipboard-check-interval)
-* [FAQ](#faq)
-  * [Why doesn't it paste when I select an item in history?](#why-doesnt-it-paste-when-i-select-an-item-in-history)
-  * [When assigning a hotkey to open Maccy, it says that this hotkey is already used in some system setting.](#when-assigning-a-hotkey-to-open-maccy-it-says-that-this-hotkey-is-already-used-in-some-system-setting)
-  * [How to restore hidden footer?](#how-to-restore-hidden-footer)
-  * [How to ignore copies from Universal Clipboard?](#how-to-ignore-copies-from-universal-clipboard)
-  * [My keyboard shortcut stopped working in password fields. How do I fix this?](#my-keyboard-shortcut-stopped-working-in-password-fields-how-do-i-fix-this)
-* [Translations](#translations)
-* [Motivation](#motivation)
-* [License](#license)
+## 기능
 
-<!-- vim-markdown-toc -->
+- **보드** — 자주 쓰는 항목을 보드에 나눠 둡니다. `즐겨찾기` 보드가 늘 맨 앞에 있고, 보드는 얼마든지 더 만들 수 있습니다. 이름을 비워 두면 "새 보드"가 됩니다.
+- **별표** — 항목의 별을 누르면 `즐겨찾기`로 들어갑니다.
+- **우클릭 메뉴** — 이름 붙이기, 다른 보드로 옮기기, 이미지 저장, 삭제.
+- **스니펫** — 보드 안의 "+ 새 항목"으로 글을 직접 써 둘 수 있습니다.
+- **종류 필터** — 전체·텍스트·링크·이미지 중에서 고릅니다. 이미지는 썸네일 격자로 보입니다.
+- **이미지 저장** — 우클릭 메뉴로 저장하거나, 격자의 썸네일을 Finder 로 끌어다 놓습니다.
+- **검색** — 이름을 붙인 항목도 원래 내용으로 찾을 수 있습니다.
+- **로컬 저장** — 모든 데이터는 이 Mac 에만 저장됩니다.
 
-## Features
+## 단축키
 
-* Lightweight and fast
-* Keyboard-first
-* Secure and private
-* Native UI
-* Open source and free
+| 키 | 동작 |
+|---|---|
+| `⇧⌘C` | Sorap 열기 (설정에서 바꿀 수 있음) |
+| `⌘1`–`⌘9` | 해당 번호의 항목 붙여넣기 |
+| `⌥P` | 즐겨찾기에 넣기·빼기 (설정에서 바꿀 수 있음) |
+| `⌥⌫` | 항목 삭제 (설정에서 바꿀 수 있음) |
+| `⌘Y` | 미리보기 (설정에서 바꿀 수 있음) |
+| `Tab` | 다음 보드 |
+| `⌥←` / `⌥→` | 이전 보드 / 다음 보드 |
+| `⇧Tab` 또는 `⌘T` | 다음 종류 필터 |
+| `⇧⌘T` | 이전 종류 필터 |
+| `⌘,` | 설정 |
 
-## Install
+## 설치
 
-Download the latest version from the [releases](https://github.com/p0deje/Maccy/releases/latest) page, or use [Homebrew](https://brew.sh/):
-
-```sh
-brew install maccy
-```
-
-## Usage
-
-1. <kbd>SHIFT (⇧)</kbd> + <kbd>COMMAND (⌘)</kbd> + <kbd>C</kbd> to popup Maccy or click on its icon in the menu bar.
-2. Type what you want to find.
-3. To select the history item you wish to copy, press <kbd>ENTER</kbd>, or click the item, or use <kbd>COMMAND (⌘)</kbd> + `n` shortcut.
-4. To choose the history item and paste, press <kbd>OPTION (⌥)</kbd> + <kbd>ENTER</kbd>, or <kbd>OPTION (⌥)</kbd> + <kbd>CLICK</kbd> the item, or use <kbd>OPTION (⌥)</kbd> + `n` shortcut.
-5. To choose the history item and paste without formatting, press <kbd>OPTION (⌥)</kbd> + <kbd>SHIFT (⇧)</kbd> + <kbd>ENTER</kbd>, or <kbd>OPTION (⌥)</kbd> + <kbd>SHIFT (⇧)</kbd> + <kbd>CLICK</kbd> the item, or use <kbd>OPTION (⌥)</kbd> + <kbd>SHIFT (⇧)</kbd> + `n` shortcut.
-6. To delete the history item, press <kbd>OPTION (⌥)</kbd> + <kbd>DELETE (⌫)</kbd>.
-7. To see the full text of the history item, wait a couple of seconds for tooltip.
-8. To pin the history item so that it remains on top of the list, press <kbd>OPTION (⌥)</kbd> + <kbd>P</kbd>. The item will be moved to the top with a random but permanent keyboard shortcut. To unpin it, press <kbd>OPTION (⌥)</kbd> + <kbd>P</kbd> again.
-9. To clear all unpinned items, select _Clear_ in the menu, or press <kbd>OPTION (⌥)</kbd> + <kbd>COMMAND (⌘)</kbd> + <kbd>DELETE (⌫)</kbd>. To clear all items including pinned, select _Clear_ in the menu with  <kbd>OPTION (⌥)</kbd> pressed, or press <kbd>SHIFT (⇧)</kbd> + <kbd>OPTION (⌥)</kbd> + <kbd>COMMAND (⌘)</kbd> + <kbd>DELETE (⌫)</kbd>.
-10. To disable Maccy and ignore new copies, click on the menu icon with <kbd>OPTION (⌥)</kbd> pressed.
-11. To ignore only the next copy, click on the menu icon with <kbd>OPTION (⌥)</kbd> + <kbd>SHIFT (⇧)</kbd> pressed.
-12. To customize the behavior, check "Preferences…" window, or press <kbd>COMMAND (⌘)</kbd> + <kbd>,</kbd>.
-
-## Advanced
-
-### Ignore Copied Items
-
-You can tell Maccy to ignore all copied items:
+### Homebrew
 
 ```sh
-defaults write org.p0deje.Maccy ignoreEvents true # default is false
+brew install --cask colamong/tap/sorap
 ```
 
-This is useful if you have some workflow for copying sensitive data. You can set `ignoreEvents` to true, copy the data and set `ignoreEvents` back to false.
+### 직접 내려받기
 
-You can also click the menu icon with <kbd>OPTION (⌥)</kbd> pressed. To ignore only the next copy, click with <kbd>OPTION (⌥)</kbd> + <kbd>SHIFT (⇧)</kbd> pressed.
+[GitHub 릴리스](https://github.com/colamong/sorap/releases)에서 최신 zip 을 받아 압축을 풉니다.
+`Sorap.app` 을 `응용 프로그램` 폴더로 옮기면 끝입니다.
 
-### Ignore Custom Copy Types
+### 처음 실행할 때
 
-By default Maccy will ignore certain copy types that are considered to be confidential
-or temporary. The default list always include the following types:
+Sorap 은 Apple 공증을 받지 않았습니다. 그래서 처음 열면 "확인되지 않은 개발자" 경고가 뜹니다.
 
-* `org.nspasteboard.TransientType`
-* `org.nspasteboard.ConcealedType`
-* `org.nspasteboard.AutoGeneratedType`
+1. 경고 창을 닫습니다.
+2. **시스템 설정 → 개인정보 보호 및 보안**을 엽니다.
+3. 아래쪽 보안 항목에서 Sorap 옆의 **그래도 열기**를 누릅니다.
 
-Also, default configuration includes the following types but they can be removed
-or overwritten:
+한 번 열고 나면 다음부터는 경고가 뜨지 않습니다.
 
-* `com.agilebits.onepassword`
-* `com.typeit4me.clipping`
-* `de.petermaurer.TransientPasteboardType`
-* `Pasteboard generator type`
-* `net.antelle.keeweb`
+### 접근성 권한
 
-You can add additional custom types using settings.
-To find what custom types are used by an application, you can use
-free application [Pasteboard-Viewer](https://github.com/sindresorhus/Pasteboard-Viewer).
-Simply download the application, open it, copy something from the application you
-want to ignore and look for any custom types in the left sidebar. [Here is an example
-of using this approach to ignore Adobe InDesign](https://github.com/p0deje/Maccy/issues/125).
+고른 항목을 쓰던 앱에 바로 붙여넣으려면 Sorap 이 `⌘V` 입력을 대신 보내야 합니다.
+여기에 접근성 권한이 필요합니다. **시스템 설정 → 개인정보 보호 및 보안 → 손쉬운 사용**에서 Sorap 을 켜 주세요.
+권한이 없어도 복사는 됩니다.
 
-### Speed up Clipboard Check Interval
+## 언어
 
-By default, Maccy checks clipboard every 500 ms, which should be enough for most users. If you want
-to speed it up, you can change it with `defaults`:
+한국어, English, 日本語, 简体中文, 繁體中文, Español 을 지원합니다.
+Mac 의 언어와 상관없이 설정에서 앱 언어를 따로 고를 수 있습니다.
+
+## 데이터
+
+복사한 내용은 이 Mac 에만 저장됩니다. 저장 위치는 아래 폴더입니다.
+
+```
+~/Library/Containers/io.github.colamong.sorap
+```
+
+## 빌드
+
+Xcode 26 이상이 필요합니다. `Maccy.xcodeproj` 를 열고 `Maccy` 스킴을 실행합니다.
+Xcode 타깃 이름은 Maccy 에서 물려받은 그대로입니다. 만들어지는 앱은 `Sorap.app` 입니다.
+
+단위 테스트는 터미널에서 돌립니다.
 
 ```sh
-defaults write org.p0deje.Maccy clipboardCheckInterval 0.1 # 100 ms
+scripts/test.sh
 ```
 
-## FAQ
+## 감사의 말
 
-### Why doesn't it paste when I select an item in history?
+Sorap 은 Alex Rodionov 의 [Maccy](https://github.com/p0deje/Maccy) 를 포크해 만들었습니다.
+클립보드를 지켜보고, 저장하고, 붙여넣는 부분은 Maccy 의 코드입니다.
+좋은 앱을 MIT 라이선스로 공개해 준 Maccy 와 기여자들에게 감사드립니다.
 
-1. Make sure you have "Paste automatically" enabled in Preferences.
-2. Make sure "Maccy" is added to System Settings -> Privacy & Security -> Accessibility.
+## 라이선스
 
-### When assigning a hotkey to open Maccy, it says that this hotkey is already used in some system setting.
+[MIT](LICENSE). Maccy 의 저작권 표시와 Sorap 의 저작권 표시가 함께 들어 있습니다.
 
-1. Open System settings -> Keyboard -> Keyboard Shortcuts.
-2. Find where that hotkey is used. For example, "Convert text to simplified Chinese" is under Services -> Text.
-3. Disable that hotkey or remove assigned combination ([screenshot](https://github.com/p0deje/Maccy/assets/576152/446719e6-c3e5-4eb0-95fb-5a811066487f)).
-4. Restart Maccy.
-5. Assign hotkey in Maccy settings.
+---
 
-### How to restore hidden footer?
+## English
 
-1. Open Maccy window.
-2. Press <kbd>COMMAND (⌘)</kbd> + <kbd>,</kbd> to open preferences.
-3. Enable footer in Appearance section.
+Sorap is a macOS menu-bar clipboard manager that keeps your copies in boards.
+On a Korean Mac it shows up as **서랍** ("drawer"). It runs on macOS 14 or later and is free and open source.
 
-If for some reason it doesn't work, run the following command in Terminal.app:
+### Features
+
+- **Boards** — Favorites always comes first; add as many boards as you like. A board left unnamed is called "New board".
+- **Star** an item to move it into Favorites.
+- **Right-click** an item to name it, move it to another board, save an image, or delete it.
+- **Snippets** — write your own items with "+ New item" inside a board.
+- **Kind filter** — All, Text, Links, or Images. Images show as a thumbnail grid.
+- **Save images** from the context menu, or drag a grid tile to Finder.
+- **Search** also matches the original content of renamed items.
+- Everything is stored locally on your Mac.
+
+### Shortcuts
+
+| Key | Action |
+|---|---|
+| `⇧⌘C` | Open Sorap (configurable) |
+| `⌘1`–`⌘9` | Paste the item with that number |
+| `⌥P` | Add to / remove from Favorites (configurable) |
+| `⌥⌫` | Delete item (configurable) |
+| `⌘Y` | Preview (configurable) |
+| `Tab` | Next board |
+| `⌥←` / `⌥→` | Previous / next board |
+| `⇧Tab` or `⌘T` | Next kind filter |
+| `⇧⌘T` | Previous kind filter |
+| `⌘,` | Settings |
+
+### Install
 
 ```sh
-defaults write org.p0deje.Maccy showFooter 1
+brew install --cask colamong/tap/sorap
 ```
 
-### How to ignore copies from [Universal Clipboard](https://support.apple.com/en-us/102430)?
+Or download the latest zip from [GitHub Releases](https://github.com/colamong/sorap/releases) and move `Sorap.app` to Applications.
 
-1. Open Preferences -> Ignore -> Pasteboard Types.
-2. Add `com.apple.is-remote-clipboard`.
+Sorap is not notarized, so macOS warns about an unidentified developer on first launch.
+Close the warning, open **System Settings → Privacy & Security**, and click **Open Anyway** next to Sorap.
 
-### My keyboard shortcut stopped working in password fields. How do I fix this?
+To paste straight into the app you were using, Sorap sends `⌘V` for you. That needs Accessibility permission
+(**System Settings → Privacy & Security → Accessibility**). Copying works without it.
 
-If your shortcut produces a character (like `Option+C` → "ç"), macOS security may block it in password fields. Use [Karabiner-Elements](https://karabiner-elements.pqrs.org/) to remap your shortcut to a different combination like `Cmd+Shift+C`. [See detailed solution](docs/keyboard-shortcut-password-fields.md).
+### Languages
 
-## Translations
+Korean, English, Japanese, Simplified Chinese, Traditional Chinese, and Spanish.
+You can pick the app language in Settings, independent of the system language.
 
-The translations are hosted in [Weblate](https://hosted.weblate.org/engage/maccy/).
-You can use it to suggest changes in translations and localize the application to a new language.
+### Data
 
-[![Translation status](https://hosted.weblate.org/widget/maccy/multi-auto.svg)](https://hosted.weblate.org/engage/maccy/)
+Your clipboard history stays on your Mac, in `~/Library/Containers/io.github.colamong.sorap`.
 
-## Motivation
+### Build
 
-There are dozens of similar applications out there, so why build another?
-Over the past years since I moved from Linux to macOS, I struggled to find
-a clipboard manager that is as free and simple as [Parcellite](http://parcellite.sourceforge.net),
-but I couldn't. So I've decided to build one.
+Requires Xcode 26 or later. Open `Maccy.xcodeproj` and run the `Maccy` scheme. The target keeps Maccy's name; the product is `Sorap.app`.
+Run the unit tests with `scripts/test.sh`.
 
-Also, I wanted to learn Swift and get acquainted with macOS application development.
+### Thanks to Maccy
 
-## License
+Sorap is a fork of [Maccy](https://github.com/p0deje/Maccy) by Alex Rodionov.
+The clipboard monitoring, storage, and paste engine is Maccy's. Thank you to Maccy and its contributors for releasing it under the MIT license.
 
-[MIT](./LICENSE)
+### License
+
+[MIT](LICENSE), with both Maccy's and Sorap's copyright notices.
