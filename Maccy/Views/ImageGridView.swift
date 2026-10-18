@@ -22,9 +22,12 @@ struct ImageGridView: View {
             .background(RoundedRectangle(cornerRadius: 8).fill(.quaternary.opacity(0.5)))
             .overlay {
               if let image = item.gridThumbnailImage {
+                // scaledToFill overflows the cell and clipShape does not clip hit-testing,
+                // so a wide capture would take hover from its neighbours.
                 Image(nsImage: image)
                   .resizable()
                   .scaledToFill()
+                  .allowsHitTesting(false)
               } else if let fileURL = fileURLWithoutImage(item) {
                 // Finder-copied image files carry no image data; the icon works without file read access.
                 Image(nsImage: NSWorkspace.shared.icon(forFile: fileURL.path))
