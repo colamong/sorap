@@ -272,6 +272,32 @@ class HistoryItem {
       .compactMap { $0.value }
   }
 
+  nonisolated private static let englishRecognitionLanguage = "en-US"
+
+  /// Automatic language detection garbles lines that mix Korean and Latin text, so the user's own
+  /// languages go first, then English. Empty when only English is preferred, keeping automatic detection.
+  nonisolated static func recognitionLanguages(preferred: [String], supported: [String]) -> [String] {
+    func languageCode(_ identifier: String) -> String? { Locale(identifier: identifier).language.languageCode?.identifier }
+
+    var languages: [String] = []
+    for identifier in preferred {
+      let code = languageCode(identifier)
+      guard code != "en",
+            let match = supported.first(where: { $0 == identifier }) ?? supported.first(where: { languageCode($0) == code }),
+            !languages.contains(match)
+      else {
+        continue
+      }
+      languages.append(match)
+    }
+
+    guard !languages.isEmpty else { return [] }
+    if supported.contains(englishRecognitionLanguage) {
+      languages.append(englishRecognitionLanguage)
+    }
+    return languages
+  }
+
   /// Runs OCR on the global concurrent executor so the main thread stays free.
   @concurrent
   nonisolated static func recognizeText(imageData: Data?, fileURL: URL?) async -> String? {
@@ -282,7 +308,15 @@ class HistoryItem {
     let requestHandler = VNImageRequestHandler(data: data)
     let request = VNRecognizeTextRequest()
     request.recognitionLevel = .accurate
-    request.automaticallyDetectsLanguage = true
+    let languages = recognitionLanguages(
+      preferred: Locale.preferredLanguages,
+      supported: (try? request.supportedRecognitionLanguages()) ?? []
+    )
+    if languages.isEmpty {
+      request.automaticallyDetectsLanguage = true
+    } else {
+      request.recognitionLanguages = languages
+    }
 
     do {
       try requestHandler.perform([request])

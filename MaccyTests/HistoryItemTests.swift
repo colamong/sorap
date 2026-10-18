@@ -12,6 +12,22 @@ class HistoryItemTests: XCTestCase {
     )
   }
 
+  func testRecognitionLanguagesPutPreferredLanguageBeforeEnglish() {
+    let supported = ["en-US", "ko-KR", "ja-JP"]
+    XCTAssertEqual(HistoryItem.recognitionLanguages(preferred: ["ko-KR"], supported: supported), ["ko-KR", "en-US"])
+    XCTAssertEqual(HistoryItem.recognitionLanguages(preferred: ["ja"], supported: supported), ["ja-JP", "en-US"])
+    XCTAssertEqual(
+      HistoryItem.recognitionLanguages(preferred: ["ko-KR", "en-US"], supported: supported),
+      ["ko-KR", "en-US"]
+    )
+  }
+
+  func testRecognitionLanguagesAreEmptyWithoutNonEnglishPreference() {
+    let supported = ["en-US", "ko-KR"]
+    XCTAssertEqual(HistoryItem.recognitionLanguages(preferred: ["en-GB"], supported: supported), [])
+    XCTAssertEqual(HistoryItem.recognitionLanguages(preferred: ["xx-YY"], supported: supported), [])
+  }
+
   func testTitleForString() {
     let title = "foo"
     let item = historyItem(title)
