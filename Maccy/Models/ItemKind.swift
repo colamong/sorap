@@ -57,7 +57,7 @@ enum ItemKind: String, CaseIterable, Identifiable {
   /// A lone path such as Finder's ⌥⌘C produces. Spaces are allowed because paths contain them;
   /// a newline means prose or a list. An absolute path needs a second segment ("/Users/me"),
   /// so slash commands like "/compact" or "/help me" stay text.
-  private static func isSinglePath(_ string: String) -> Bool {
+  static func isSinglePath(_ string: String) -> Bool {
     guard !string.contains(where: \.isNewline), string.count <= maxPathLength else { return false }
     if string.hasPrefix("~/") { return true }
     guard string.hasPrefix("/") else { return false }

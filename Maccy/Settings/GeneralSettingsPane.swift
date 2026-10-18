@@ -10,6 +10,9 @@ struct GeneralSettingsPane: View {
   )
 
   @Default(.searchMode) private var searchMode
+  @Default(.captureLinkAction) private var captureLinkAction
+  @Default(.capturePathAction) private var capturePathAction
+  @Default(.captureSkipPrompt) private var captureSkipPrompt
 
   @State private var copyModifier = HistoryItemAction.copy.modifierFlags.description
   @State private var pasteModifier = HistoryItemAction.paste.modifierFlags.description
@@ -144,6 +147,25 @@ struct GeneralSettingsPane: View {
         .controlSize(.small)
       }
 
+      Settings.Section(
+        bottomDivider: true,
+        label: { Text("settings.capture", tableName: "Sorap") }
+      ) {
+        Defaults.Toggle(key: .capturePrompt) {
+          Text("settings.capture.prompt", tableName: "Sorap")
+        }
+        .fixedSize()
+
+        captureActionPicker("settings.capture.link", selection: $captureLinkAction)
+        captureActionPicker("settings.capture.path", selection: $capturePathAction)
+
+        Button(
+          action: { captureSkipPrompt = [] },
+          label: { Text("settings.capture.resetSkip", tableName: "Sorap") }
+        )
+        .disabled(captureSkipPrompt.isEmpty)
+      }
+
       Settings.Section(title: "") {
         if let notificationsURL = notificationsURL {
           Link(destination: notificationsURL, label: {
@@ -166,6 +188,16 @@ struct GeneralSettingsPane: View {
         }
       }
     }
+  }
+
+  private func captureActionPicker(_ label: LocalizedStringKey, selection: Binding<CaptureAction>) -> some View {
+    Picker(selection: selection) {
+      Text("settings.capture.open", tableName: "Sorap").tag(CaptureAction.open)
+      Text("settings.capture.copy", tableName: "Sorap").tag(CaptureAction.copy)
+    } label: {
+      Text(label, tableName: "Sorap")
+    }
+    .frame(width: 240, alignment: .leading)
   }
 
   private func refreshModifiers(_ sender: Sendable) {

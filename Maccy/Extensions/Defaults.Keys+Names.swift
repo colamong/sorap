@@ -26,6 +26,10 @@ nonisolated extension Defaults.Keys {
 
   static let clearOnQuit = Key<Bool>("clearOnQuit", default: false, suite: preferencesSuite)
   static let clearSystemClipboard = Key<Bool>("clearSystemClipboard", default: false, suite: preferencesSuite)
+  static let capturePrompt = Key<Bool>("capturePrompt", default: true, suite: preferencesSuite)
+  static let captureLinkAction = Key<CaptureAction>("captureLinkAction", default: .open, suite: preferencesSuite)
+  static let capturePathAction = Key<CaptureAction>("capturePathAction", default: .open, suite: preferencesSuite)
+  static let captureSkipPrompt = Key<Set<String>>("captureSkipPrompt", default: [], suite: preferencesSuite)
   static let clipboardCheckInterval = Key<Double>("clipboardCheckInterval", default: 0.5, suite: preferencesSuite)
   static let enabledPasteboardTypes = Key<Set<NSPasteboard.PasteboardType>>(
     "enabledPasteboardTypes", default: Set(StorageType.all.types), suite: preferencesSuite

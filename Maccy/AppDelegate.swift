@@ -51,6 +51,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     // Bridge FloatingPanel via AppDelegate.
     AppState.shared.appDelegate = self
 
+    // Runs before History.add, which may merge the item into an older duplicate.
+    Clipboard.shared.onNewCopy { CapturePrompt.handle($0) }
     Clipboard.shared.onNewCopy { History.shared.add($0) }
     Clipboard.shared.start()
 

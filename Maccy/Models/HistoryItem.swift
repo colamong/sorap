@@ -274,7 +274,7 @@ class HistoryItem {
 
   /// Runs OCR on the global concurrent executor so the main thread stays free.
   @concurrent
-  nonisolated private static func recognizeText(imageData: Data?, fileURL: URL?) async -> String? {
+  nonisolated static func recognizeText(imageData: Data?, fileURL: URL?) async -> String? {
     guard let data = imageData ?? fileURL.flatMap({ try? Data(contentsOf: $0) }) else {
       return nil
     }
