@@ -33,6 +33,16 @@ struct ItemContextMenu: ViewModifier {
           saveImage()
         }
       }
+      if item.item.imageData != nil, let target = CaptureTarget.detect(in: item.item.title) {
+        if target.kind != .text {
+          Button(CapturePrompt.title(of: .open, for: target.kind)) {
+            CapturePrompt.perform(.open, on: target)
+          }
+        }
+        Button(String(localized: "capture.copyText", table: "Sorap")) {
+          CapturePrompt.perform(.copy, on: .text(item.item.title))
+        }
+      }
       Divider()
       Button(String(localized: "item.delete", table: "Sorap"), role: .destructive) {
         appState.history.delete(item)
