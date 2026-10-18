@@ -283,6 +283,23 @@ class NavigationManager { // swiftlint:disable:this type_body_length
     }
   }
 
+  /// Steps whole rows in the image grid. A shorter last row catches a step down; the first row ignores a step up.
+  func highlightRow(offset: Int) {
+    let cells = history.unpinnedItems.filter(\.isVisible)
+    guard let lead = leadSelection, let index = cells.firstIndex(where: { $0.id == lead }) else {
+      offset < 0 ? highlightPrevious() : highlightNext()
+      return
+    }
+
+    let target = index + offset
+    if cells.indices.contains(target) {
+      selectFromKeyboardNavigation(item: cells[target])
+    } else if offset > 0, let last = cells.last,
+              index / ImageGridView.columnCount < (cells.count - 1) / ImageGridView.columnCount {
+      selectFromKeyboardNavigation(item: last)
+    }
+  }
+
   func highlightLast() {
     guard let lead = leadSelection else { return }
 

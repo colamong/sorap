@@ -19,6 +19,22 @@ class KeyChordTests: XCTestCase {
     XCTAssertEqual(KeyChord(.t, [.command]), .nextKindFilter)
   }
 
+  func testArrowsMoveByCellAndRowInImageGrid() {
+    History.shared.kindFilter = .image
+    defer { History.shared.kindFilter = nil }
+    XCTAssertEqual(KeyChord(.leftArrow, []), .moveToPrevious)
+    XCTAssertEqual(KeyChord(.rightArrow, []), .moveToNext)
+    XCTAssertEqual(KeyChord(.upArrow, []), .moveToPreviousRow)
+    XCTAssertEqual(KeyChord(.downArrow, []), .moveToNextRow)
+  }
+
+  func testPlainLeftRightAreLeftToSearchFieldInList() {
+    History.shared.kindFilter = nil
+    XCTAssertEqual(KeyChord(.leftArrow, []), .unknown)
+    XCTAssertEqual(KeyChord(.rightArrow, []), .unknown)
+    XCTAssertEqual(KeyChord(.downArrow, []), .moveToNext)
+  }
+
   func testShiftCommandTCyclesKindFilterBackward() {
     XCTAssertEqual(KeyChord(.t, [.command, .shift]), .previousKindFilter)
   }

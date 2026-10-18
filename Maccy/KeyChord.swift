@@ -17,6 +17,8 @@ enum KeyChord: CaseIterable {
   static var pinKey: Key? { Sauce.shared.key(shortcut: .pin) }
   static var pinModifiers: NSEvent.ModifierFlags? { KeyboardShortcuts.Shortcut(name: .pin)?.modifiers }
 
+  private static var isImageGrid: Bool { AppState.shared.history.kindFilter == .image }
+
   static var previewKey: Key? { Sauce.shared.key(shortcut: .togglePreview) }
   static var previewModifiers: NSEvent.ModifierFlags? { KeyboardShortcuts.Shortcut(name: .togglePreview)?.modifiers }
 
@@ -34,6 +36,8 @@ enum KeyChord: CaseIterable {
   case moveToLast
   case moveToPrevious
   case moveToFirst
+  case moveToNextRow
+  case moveToPreviousRow
   case extendToNext
   case extendToLast
   case extendToPrevious
@@ -83,6 +87,15 @@ enum KeyChord: CaseIterable {
       self = .deleteOneCharFromSearch
     case (.w, [.control]):
       self = .deleteLastWordFromSearch
+    // The image grid takes plain arrows: left/right step a cell, up/down step a row.
+    case (.leftArrow, []) where KeyChord.isImageGrid:
+      self = .moveToPrevious
+    case (.rightArrow, []) where KeyChord.isImageGrid:
+      self = .moveToNext
+    case (.upArrow, []) where KeyChord.isImageGrid:
+      self = .moveToPreviousRow
+    case (.downArrow, []) where KeyChord.isImageGrid:
+      self = .moveToNextRow
     case (.downArrow, [.shift]),
          (.n, [.control, .shift]):
       self = AppState.shared.multiSelectionEnabled ? .extendToNext : .moveToNext

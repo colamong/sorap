@@ -93,6 +93,20 @@ struct KeyHandlingView<Content: View>: View {
 
           appState.navigator.highlightPrevious()
           return .handled
+        case .moveToNextRow:
+          guard NSApp.characterPickerWindow == nil else {
+            return .ignored
+          }
+
+          appState.navigator.highlightRow(offset: ImageGridView.columnCount)
+          return .handled
+        case .moveToPreviousRow:
+          guard NSApp.characterPickerWindow == nil else {
+            return .ignored
+          }
+
+          appState.navigator.highlightRow(offset: -ImageGridView.columnCount)
+          return .handled
         case .moveToFirst:
           guard NSApp.characterPickerWindow == nil else {
             return .ignored

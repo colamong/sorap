@@ -5,7 +5,9 @@ struct ImageGridView: View {
   let items: [HistoryItemDecorator]
   @Environment(AppState.self) private var appState
 
-  private let columns = Array(repeating: GridItem(.flexible(), spacing: 6), count: 3)
+  static let columnCount = 3
+
+  private let columns = Array(repeating: GridItem(.flexible(), spacing: 6), count: columnCount)
 
   var body: some View {
     LazyVGrid(columns: columns, spacing: 6) {

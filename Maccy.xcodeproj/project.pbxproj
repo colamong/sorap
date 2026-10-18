@@ -49,6 +49,7 @@
 		2FF2E9502E7808470093D72C /* AppImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FF2E94F2E7808420093D72C /* AppImageView.swift */; };
 		313E07FD5DBFB4572C0A3A48 /* BoardEditorSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 158DFEF169CE09AA2B8F64A1 /* BoardEditorSheet.swift */; };
 		38784715A674F81774A30FC6 /* ItemKindTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64474BF8897C64FE52B1CF63 /* ItemKindTests.swift */; };
+		C0A7E0010000000000000008 /* ImageGridNavigationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0A7E0010000000000000007 /* ImageGridNavigationTests.swift */; };
 		C0A7E0010000000000000006 /* CaptureTargetTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0A7E0010000000000000005 /* CaptureTargetTests.swift */; };
 		42E9C329301B7F9C00B6B55B /* AppIcon.icon in Resources */ = {isa = PBXBuildFile; fileRef = 42E9C328301B7F9C00B6B55B /* AppIcon.icon */; };
 		4762D6972467226100B3A2BA /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 4762D6992467226100B3A2BA /* Localizable.strings */; };
@@ -262,6 +263,7 @@
 		4762D69A2467226400B3A2BA /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/Localizable.strings; sourceTree = "<group>"; };
 		57D74B68BC2726E2C9DDBE76 /* BoardStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = BoardStore.swift; path = Maccy/Observables/BoardStore.swift; sourceTree = SOURCE_ROOT; };
 		64474BF8897C64FE52B1CF63 /* ItemKindTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ItemKindTests.swift; path = MaccyTests/ItemKindTests.swift; sourceTree = SOURCE_ROOT; };
+		C0A7E0010000000000000007 /* ImageGridNavigationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ImageGridNavigationTests.swift; path = MaccyTests/ImageGridNavigationTests.swift; sourceTree = SOURCE_ROOT; };
 		C0A7E0010000000000000005 /* CaptureTargetTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = CaptureTargetTests.swift; path = MaccyTests/CaptureTargetTests.swift; sourceTree = SOURCE_ROOT; };
 		646042A893F852457D6EBA53 /* HistoryBoardTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = HistoryBoardTests.swift; path = MaccyTests/HistoryBoardTests.swift; sourceTree = SOURCE_ROOT; };
 		66A1C31D7114688E9782D1AC /* BoardChipsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoardChipsView.swift; sourceTree = "<group>"; };
@@ -693,6 +695,7 @@
 				46134E9CB93D70CC0EADB4E5 /* SorapIdentityTests.swift */,
 				C0DE00000000000000000A03 /* AppLanguageTests.swift */,
 				64474BF8897C64FE52B1CF63 /* ItemKindTests.swift */,
+				C0A7E0010000000000000007 /* ImageGridNavigationTests.swift */,
 				C0A7E0010000000000000005 /* CaptureTargetTests.swift */,
 				46D94D5C9AFAAB56D3D127A6 /* BoardStoreTests.swift */,
 				646042A893F852457D6EBA53 /* HistoryBoardTests.swift */,
@@ -964,6 +967,7 @@
 				B0394FBCA6A8A4F997C10539 /* SorapIdentityTests.swift in Sources */,
 				C0DE00000000000000000A04 /* AppLanguageTests.swift in Sources */,
 				38784715A674F81774A30FC6 /* ItemKindTests.swift in Sources */,
+				C0A7E0010000000000000008 /* ImageGridNavigationTests.swift in Sources */,
 				C0A7E0010000000000000006 /* CaptureTargetTests.swift in Sources */,
 				C34C4162B0048D07E315DA97 /* BoardStoreTests.swift in Sources */,
 				88AF405784A76B58B31B5658 /* HistoryBoardTests.swift in Sources */,
