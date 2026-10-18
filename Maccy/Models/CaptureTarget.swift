@@ -53,10 +53,21 @@ enum CaptureTarget: Equatable {
     text
       .components(separatedBy: .newlines)
       .lazy
-      .map { $0.trimmingCharacters(in: .whitespaces) }
+      .flatMap(pathCandidates)
       .filter(ItemKind.isSinglePath)
       .map { NSString(string: $0).expandingTildeInPath }
       .first(where: fileExists)
+  }
+
+  /// A path may follow a label on the same line ("설정 파일: /Users/me/a"), so every "/" or "~/"
+  /// that starts a word begins a candidate running to the end of the line.
+  private static func pathCandidates(in line: String) -> [String] {
+    line.indices
+      .filter { index in
+        (index == line.startIndex || line[line.index(before: index)].isWhitespace)
+          && (line[index...].hasPrefix("/") || line[index...].hasPrefix("~/"))
+      }
+      .map { String(line[$0...]).trimmingCharacters(in: .whitespaces) }
   }
 
   private static func firstWebLink(in text: String) -> URL? {
@@ -64,7 +75,14 @@ enum CaptureTarget: Equatable {
     let fullRange = NSRange(text.startIndex..., in: text)
     return linkDetector.matches(in: text, range: fullRange)
       .lazy
+      .filter { !isPathSegment($0, in: text) }
       .compactMap(\.url)
       .first { webSchemes.contains($0.scheme?.lowercased() ?? "") }
+  }
+
+  /// A bare domain right after "/" is part of a path, e.g. a wrapped ".../site/site.com/index.html".
+  private static func isPathSegment(_ match: NSTextCheckingResult, in text: String) -> Bool {
+    guard let range = Range(match.range, in: text), range.lowerBound > text.startIndex else { return false }
+    return text[text.index(before: range.lowerBound)] == "/" && !text[range].contains("://")
   }
 }

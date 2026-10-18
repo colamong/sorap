@@ -64,6 +64,19 @@ final class CaptureTargetTests: XCTestCase {
     )
   }
 
+  func testPathAfterLabelIsPath() {
+    let text = "설정 파일: /Users/me/LICENSE\n참고 링크: https://example.com/docs"
+    XCTAssertEqual(
+      CaptureTarget.detect(in: text, fileExists: { $0 == "/Users/me/LICENSE" }),
+      .path(URL(fileURLWithPath: "/Users/me/LICENSE"))
+    )
+  }
+
+  func testDomainInsideWrappedPathIsNotLink() {
+    let text = "/private/tmp/abc-\ndef/site/site.com/index.html"
+    XCTAssertEqual(CaptureTarget.detect(in: text, fileExists: noFiles), .text(text))
+  }
+
   func testValueIsWhatGetsCopied() {
     XCTAssertEqual(CaptureTarget.link(URL(string: "https://a.com")!).value, "https://a.com")
     XCTAssertEqual(CaptureTarget.path(URL(fileURLWithPath: "/tmp/a")).value, "/tmp/a")
