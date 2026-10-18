@@ -1685,42 +1685,42 @@
         }
       }
     },
-    "capture.open" : {
+    "capture.openLink" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Open"
+            "value" : "Open Link"
           }
         },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "열기"
+            "value" : "링크 열기"
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "開く"
+            "value" : "リンクを開く"
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "打开"
+            "value" : "打开链接"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "打開"
+            "value" : "打開連結"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Abrir"
+            "value" : "Abrir enlace"
           }
         }
       }

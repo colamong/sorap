@@ -49,7 +49,7 @@ enum CapturePrompt {
   static func title(of action: CaptureAction, for kind: CaptureTarget.Kind) -> String {
     switch (action, kind) {
     case (.open, .path): String(localized: "capture.showInFinder", table: "Sorap")
-    case (.open, _): String(localized: "capture.open", table: "Sorap")
+    case (.open, _): String(localized: "capture.openLink", table: "Sorap")
     case (.copy, .link): String(localized: "capture.copyLink", table: "Sorap")
     case (.copy, .path): String(localized: "item.copyPath", table: "Sorap")
     case (.copy, .text): String(localized: "capture.copyText", table: "Sorap")
