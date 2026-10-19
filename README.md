@@ -9,6 +9,10 @@ macOS 14 이상에서 동작합니다. 무료이고 소스가 공개돼 있습�
 
 [English](#english)
 
+<img src="Screenshots/capture-demo.gif" width="600" alt="링크가 걸리지 않은 글자를 캡쳐하자 Sorap이 링크를 읽고 열지 묻는다">
+
+클릭할 수 없는 링크도 캡쳐 한 번이면 열립니다. → [캡쳐 글자 바로 쓰기](#기능)
+
 ## 스크린샷
 
 <p>
@@ -124,6 +128,10 @@ Sorap은 Alex Rodionov의 [Maccy](https://github.com/p0deje/Maccy)를 포크해 
 ## English
 
 Sorap is a macOS menu-bar clipboard manager that keeps your copies in boards.
+
+<img src="Screenshots/capture-demo.gif" width="600" alt="Capturing a plain-text link: Sorap reads it and offers to open it">
+
+A link you can't click opens with one screenshot. → [Act on captured text](#features)
 On a Korean Mac it shows up as **서랍** ("drawer"). It runs on macOS 14 or later and is free and open source.
 
 ### Features
