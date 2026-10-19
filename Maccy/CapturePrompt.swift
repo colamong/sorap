@@ -87,6 +87,7 @@ enum CapturePrompt {
     alert.showsSuppressionButton = true
     alert.suppressionButton?.title = String(localized: "capture.dontAskAgain", table: "Sorap")
     alert.window.level = NSWindow.Level(rawValue: NSWindow.Level.statusBar.rawValue + 1)
+    centerOnScreenWithPointer(alert)
 
     // The capture happened in another app; hand focus back to it unless a browser or Finder takes over.
     let previousApp = NSWorkspace.shared.frontmostApplication
@@ -105,6 +106,16 @@ enum CapturePrompt {
       previousApp?.activate()
     }
     perform(action, on: target)
+  }
+
+  /// With several displays the alert would open on the main one, away from the capture just made.
+  private static func centerOnScreenWithPointer(_ alert: NSAlert) {
+    let pointer = NSEvent.mouseLocation
+    guard let screen = NSScreen.screens.first(where: { NSMouseInRect(pointer, $0.frame, false) }) else { return }
+    alert.layout()
+    let size = alert.window.frame.size
+    let visible = screen.visibleFrame
+    alert.window.setFrameOrigin(NSPoint(x: visible.midX - size.width / 2, y: visible.midY - size.height / 2))
   }
 
   /// The configured default comes first so Return picks it.
