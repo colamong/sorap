@@ -224,6 +224,34 @@ class HistoryTests: XCTestCase { // swiftlint:disable:this type_body_length
     try assertStorageCounts(items: 1, contents: 1)
   }
 
+  func testRemovingExpiredKeepsRecentPinnedAndFavoriteItems() {
+    let now = Date.now
+    let old = now.addingTimeInterval(-8 * 24 * 60 * 60)
+    let expired = history.add(historyItem("expired"))
+    let recent = history.add(historyItem("recent"))
+    let pinned = history.add(historyItem("pinned"))
+    let favorite = history.add(historyItem("favorite"))
+    history.togglePin(pinned)
+    history.toggleFavorite(favorite)
+    [expired, pinned, favorite].forEach { $0.item.lastCopiedAt = old }
+
+    history.removeExpired(olderThanDays: 7, now: now)
+
+    XCTAssertFalse(history.items.contains(expired))
+    XCTAssertTrue(history.items.contains(recent))
+    XCTAssertTrue(history.items.contains(pinned))
+    XCTAssertFalse(favorite.item.isDeleted)
+  }
+
+  func testRemovingExpiredIsOffAtZeroDays() {
+    let item = history.add(historyItem("old"))
+    item.item.lastCopiedAt = .distantPast
+
+    history.removeExpired(olderThanDays: 0, now: .now)
+
+    XCTAssertTrue(history.items.contains(item))
+  }
+
   func testClearingAll() throws {
     history.add(historyItem("foo"))
     let pinned = history.add(historyItem("bar"))

@@ -142,6 +142,20 @@ class History: ItemsContainer { // swiftlint:disable:this type_body_length
     }
 
     Task {
+      for await days in Defaults.updates(.historyRetentionDays, initial: false) {
+        removeExpired(olderThanDays: days)
+      }
+    }
+
+    // Items age while the app stays open, so expiry cannot wait for the next launch.
+    Task {
+      while !Task.isCancelled {
+        try? await Task.sleep(for: Self.expiryCheckInterval)
+        removeExpired(olderThanDays: Defaults[.historyRetentionDays])
+      }
+    }
+
+    Task {
       for await _ in Defaults.updates(.showSpecialSymbols, initial: false) {
         for item in items {
           updateTitle(item: item, title: item.item.generateTitle())
@@ -172,6 +186,7 @@ class History: ItemsContainer { // swiftlint:disable:this type_body_length
     filteredBoardItems = boardItems
 
     limitHistorySize(to: Defaults[.size])
+    removeExpired(olderThanDays: Defaults[.historyRetentionDays])
 
     updateShortcuts()
     // Ensure that panel size is proper *after* loading all items.
@@ -185,6 +200,17 @@ class History: ItemsContainer { // swiftlint:disable:this type_body_length
     if allUnpinnedItems.count >= maxSize {
       allUnpinnedItems[maxSize...].forEach(delete)
     }
+  }
+
+  private static let secondsPerDay: TimeInterval = 24 * 60 * 60
+  private static let expiryCheckInterval: Duration = .seconds(60 * 60)
+
+  /// Drops History items not copied within `days`. Pinned and board items stay; 0 keeps everything.
+  @MainActor
+  func removeExpired(olderThanDays days: Int, now: Date = .now) {
+    guard days > 0 else { return }
+    let cutoff = now.addingTimeInterval(-Double(days) * Self.secondsPerDay)
+    allUnpinnedItems.filter { $0.item.lastCopiedAt < cutoff }.forEach(delete)
   }
 
   @MainActor

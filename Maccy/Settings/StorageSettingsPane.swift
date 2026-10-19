@@ -58,6 +58,9 @@ struct StorageSettingsPane: View {
 
   @Default(.size) private var size
   @Default(.sortBy) private var sortBy
+  @Default(.historyRetentionDays) private var historyRetentionDays
+
+  private let retentionChoices = [0, 7, 30, 90]
 
   @State private var viewModel = ViewModel()
   @State private var storageSize = Storage.shared.size
@@ -109,6 +112,24 @@ struct StorageSettingsPane: View {
               storageSize = Storage.shared.size
             }
         }
+      }
+
+      Settings.Section(label: { Text("settings.retention", tableName: "Sorap") }) {
+        Picker("", selection: $historyRetentionDays) {
+          ForEach(retentionChoices, id: \.self) { days in
+            if days == 0 {
+              Text("settings.retention.off", tableName: "Sorap").tag(days)
+            } else {
+              Text("settings.retention.days \(days)", tableName: "Sorap").tag(days)
+            }
+          }
+        }
+        .labelsHidden()
+        .frame(width: 160, alignment: .leading)
+        .accessibilityLabel(Text("settings.retention", tableName: "Sorap"))
+        Text("settings.retention.note", tableName: "Sorap")
+          .controlSize(.small)
+          .foregroundStyle(.gray)
       }
 
       Settings.Section(label: { Text("SortBy", tableName: "StorageSettings") }) {

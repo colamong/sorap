@@ -35,6 +35,7 @@ nonisolated extension Defaults.Keys {
     "enabledPasteboardTypes", default: Set(StorageType.all.types), suite: preferencesSuite
   )
   static let highlightMatch = Key<HighlightMatch>("highlightMatch", default: .bold, suite: preferencesSuite)
+  static let historyRetentionDays = Key<Int>("historyRetentionDays", default: 0, suite: preferencesSuite)
   static let ignoreAllAppsExceptListed = Key<Bool>("ignoreAllAppsExceptListed", default: false, suite: preferencesSuite)
   static let ignoreEvents = Key<Bool>("ignoreEvents", default: false, suite: preferencesSuite)
   static let ignoreOnlyNextEvent = Key<Bool>("ignoreOnlyNextEvent", default: false, suite: preferencesSuite)
