@@ -25,7 +25,7 @@ enum CapturePrompt {
         text = await HistoryItem.recognizeText(imageData: imageData, fileURL: nil)
       }
       guard let text, let target = CaptureTarget.detect(in: text) else { return }
-      present(target)
+      present(target, links: target.kind == .link ? CaptureTarget.webLinks(in: text) : [])
     }
   }
 
@@ -71,7 +71,8 @@ enum CapturePrompt {
     }
   }
 
-  private static func present(_ target: CaptureTarget) {
+  /// `links` holds every link in the capture; with more than one the alert lets the user pick.
+  private static func present(_ target: CaptureTarget, links: [URL] = []) {
     let kind = target.kind
     if Defaults[.captureSkipPrompt].contains(kind.rawValue) {
       perform(defaultAction(for: kind), on: target)
@@ -79,9 +80,15 @@ enum CapturePrompt {
     }
 
     let actions = offeredActions(for: kind)
+    let chooser = links.count > 1 ? linkChooser(links) : nil
     let alert = NSAlert()
-    alert.messageText = message(for: kind)
-    alert.informativeText = target.value.shortened(to: maxShownCharacters)
+    if let chooser {
+      alert.messageText = String(localized: "capture.links.message", table: "Sorap")
+      alert.accessoryView = chooser
+    } else {
+      alert.messageText = message(for: kind)
+      alert.informativeText = target.value.shortened(to: maxShownCharacters)
+    }
     actions.forEach { alert.addButton(withTitle: title(of: $0, for: kind)) }
     alert.addButton(withTitle: String(localized: "capture.cancel", table: "Sorap"))
     alert.showsSuppressionButton = true
@@ -105,7 +112,15 @@ enum CapturePrompt {
     if action == .copy {
       previousApp?.activate()
     }
-    perform(action, on: target)
+    perform(action, on: chooser.map { .link(links[$0.indexOfSelectedItem]) } ?? target)
+  }
+
+  private static let chooserSize = NSSize(width: 240, height: 26)
+
+  private static func linkChooser(_ links: [URL]) -> NSPopUpButton {
+    let chooser = NSPopUpButton(frame: NSRect(origin: .zero, size: chooserSize), pullsDown: false)
+    chooser.addItems(withTitles: links.map(\.absoluteString))
+    return chooser
   }
 
   /// With several displays the alert would open on the main one, away from the capture just made.

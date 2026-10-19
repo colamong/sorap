@@ -77,6 +77,18 @@ final class CaptureTargetTests: XCTestCase {
     XCTAssertEqual(CaptureTarget.detect(in: text, fileExists: noFiles), .text(text))
   }
 
+  func testWebLinksListsEveryLinkOnceInOrder() {
+    let text = "문서 https://github.com/colamong 그리고 https://example.org/second\n다시 https://github.com/colamong"
+    XCTAssertEqual(
+      CaptureTarget.webLinks(in: text),
+      [URL(string: "https://github.com/colamong")!, URL(string: "https://example.org/second")!]
+    )
+  }
+
+  func testWebLinksSkipEmailAndPathSegments() {
+    XCTAssertEqual(CaptureTarget.webLinks(in: "me@example.com /Users/me/site.com/a"), [])
+  }
+
   func testValueIsWhatGetsCopied() {
     XCTAssertEqual(CaptureTarget.link(URL(string: "https://a.com")!).value, "https://a.com")
     XCTAssertEqual(CaptureTarget.path(URL(fileURLWithPath: "/tmp/a")).value, "/tmp/a")

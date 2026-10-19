@@ -42,7 +42,16 @@ struct ItemContextMenu: ViewModifier {
         }
       }
       if item.item.imageData != nil, let target = CaptureTarget.detect(in: item.item.title) {
-        if target.kind != .text {
+        let links = CaptureTarget.webLinks(in: item.item.title)
+        if target.kind == .link, links.count > 1 {
+          Menu(CapturePrompt.title(of: .open, for: .link)) {
+            ForEach(links, id: \.self) { url in
+              Button(url.absoluteString) {
+                CapturePrompt.perform(.open, on: .link(url))
+              }
+            }
+          }
+        } else if target.kind != .text {
           Button(CapturePrompt.title(of: .open, for: target.kind)) {
             CapturePrompt.perform(.open, on: target)
           }

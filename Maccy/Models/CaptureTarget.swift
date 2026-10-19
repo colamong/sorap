@@ -71,13 +71,18 @@ enum CaptureTarget: Equatable {
   }
 
   private static func firstWebLink(in text: String) -> URL? {
-    guard let linkDetector else { return nil }
+    webLinks(in: text).first
+  }
+
+  /// Every http(s) link in reading order, each once. A capture of notes or slides often holds several.
+  static func webLinks(in text: String) -> [URL] {
+    guard let linkDetector else { return [] }
     let fullRange = NSRange(text.startIndex..., in: text)
+    var seen = Set<URL>()
     return linkDetector.matches(in: text, range: fullRange)
-      .lazy
       .filter { !isPathSegment($0, in: text) }
       .compactMap(\.url)
-      .first { webSchemes.contains($0.scheme?.lowercased() ?? "") }
+      .filter { webSchemes.contains($0.scheme?.lowercased() ?? "") && seen.insert($0).inserted }
   }
 
   /// A bare domain right after "/" is part of a path, e.g. a wrapped ".../site/site.com/index.html".
