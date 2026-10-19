@@ -28,8 +28,28 @@ final class CaptureTargetTests: XCTestCase {
     )
   }
 
-  func testEmailIsNotLink() {
-    XCTAssertEqual(CaptureTarget.detect(in: "me@example.com", fileExists: noFiles), .text("me@example.com"))
+  func testEmailIsEmail() {
+    XCTAssertEqual(CaptureTarget.detect(in: "문의: me@example.com", fileExists: noFiles), .email("me@example.com"))
+  }
+
+  func testLinkWinsOverEmail() {
+    XCTAssertEqual(
+      CaptureTarget.detect(in: "me@example.com https://a.com", fileExists: noFiles),
+      .link(URL(string: "https://a.com")!)
+    )
+  }
+
+  func testKoreanPhoneNumbersArePhones() {
+    XCTAssertEqual(CaptureTarget.detect(in: "문의: 010-1234-5678", fileExists: noFiles), .phone("010-1234-5678"))
+    XCTAssertEqual(CaptureTarget.detect(in: "02-123-4567 로 전화", fileExists: noFiles), .phone("02-123-4567"))
+    XCTAssertEqual(CaptureTarget.detect(in: "+82 10 1234 5678", fileExists: noFiles), .phone("+82 10 1234 5678"))
+  }
+
+  func testOrderNumberIsNotPhone() {
+    XCTAssertEqual(
+      CaptureTarget.detect(in: "주문번호 2026-1019-0001", fileExists: noFiles),
+      .text("주문번호 2026-1019-0001")
+    )
   }
 
   func testExistingPathIsPath() {
@@ -93,5 +113,7 @@ final class CaptureTargetTests: XCTestCase {
     XCTAssertEqual(CaptureTarget.link(URL(string: "https://a.com")!).value, "https://a.com")
     XCTAssertEqual(CaptureTarget.path(URL(fileURLWithPath: "/tmp/a")).value, "/tmp/a")
     XCTAssertEqual(CaptureTarget.text("hi").value, "hi")
+    XCTAssertEqual(CaptureTarget.email("me@a.com").value, "me@a.com")
+    XCTAssertEqual(CaptureTarget.phone("010-1234-5678").value, "010-1234-5678")
   }
 }

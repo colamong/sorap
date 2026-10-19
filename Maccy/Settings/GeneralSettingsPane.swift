@@ -12,6 +12,8 @@ struct GeneralSettingsPane: View {
   @Default(.searchMode) private var searchMode
   @Default(.captureLinkAction) private var captureLinkAction
   @Default(.capturePathAction) private var capturePathAction
+  @Default(.captureEmailAction) private var captureEmailAction
+  @Default(.capturePhoneAction) private var capturePhoneAction
   @Default(.captureSkipPrompt) private var captureSkipPrompt
 
   @State private var copyModifier = HistoryItemAction.copy.modifierFlags.description
@@ -158,6 +160,8 @@ struct GeneralSettingsPane: View {
 
         captureActionPicker("settings.capture.link", selection: $captureLinkAction)
         captureActionPicker("settings.capture.path", selection: $capturePathAction)
+        captureActionPicker("settings.capture.email", selection: $captureEmailAction)
+        captureActionPicker("settings.capture.phone", selection: $capturePhoneAction)
 
         Button(
           action: { captureSkipPrompt = [] },

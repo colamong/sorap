@@ -44,10 +44,10 @@ enum CapturePrompt {
 
   static func perform(_ action: CaptureAction, on target: CaptureTarget) {
     switch (action, target) {
-    case (.open, .link(let url)):
-      NSWorkspace.shared.open(url)
     case (.open, .path(let url)):
       NSWorkspace.shared.activateFileViewerSelecting([url])
+    case (.open, _) where target.openURL != nil:
+      NSWorkspace.shared.open(target.openURL!)
     default:
       Clipboard.shared.copyInMaccy(target.value)
     }
@@ -57,6 +57,8 @@ enum CapturePrompt {
     switch kind {
     case .link: Defaults[.captureLinkAction]
     case .path: Defaults[.capturePathAction]
+    case .email: Defaults[.captureEmailAction]
+    case .phone: Defaults[.capturePhoneAction]
     case .text: .copy
     }
   }
@@ -64,9 +66,13 @@ enum CapturePrompt {
   static func title(of action: CaptureAction, for kind: CaptureTarget.Kind) -> String {
     switch (action, kind) {
     case (.open, .path): String(localized: "capture.showInFinder", table: "Sorap")
+    case (.open, .email): String(localized: "capture.writeEmail", table: "Sorap")
+    case (.open, .phone): String(localized: "capture.call", table: "Sorap")
     case (.open, _): String(localized: "capture.openLink", table: "Sorap")
     case (.copy, .link): String(localized: "capture.copyLink", table: "Sorap")
     case (.copy, .path): String(localized: "item.copyPath", table: "Sorap")
+    case (.copy, .email): String(localized: "capture.copyEmail", table: "Sorap")
+    case (.copy, .phone): String(localized: "capture.copyPhone", table: "Sorap")
     case (.copy, .text): String(localized: "capture.copyText", table: "Sorap")
     }
   }
@@ -144,6 +150,8 @@ enum CapturePrompt {
     switch kind {
     case .link: Defaults[.captureLinkAction] = action
     case .path: Defaults[.capturePathAction] = action
+    case .email: Defaults[.captureEmailAction] = action
+    case .phone: Defaults[.capturePhoneAction] = action
     case .text: break
     }
     Defaults[.captureSkipPrompt].insert(kind.rawValue)
@@ -153,6 +161,8 @@ enum CapturePrompt {
     switch kind {
     case .link: String(localized: "capture.link.message", table: "Sorap")
     case .path: String(localized: "capture.path.message", table: "Sorap")
+    case .email: String(localized: "capture.email.message", table: "Sorap")
+    case .phone: String(localized: "capture.phone.message", table: "Sorap")
     case .text: String(localized: "capture.text.message", table: "Sorap")
     }
   }

@@ -29,6 +29,9 @@ nonisolated extension Defaults.Keys {
   static let capturePrompt = Key<Bool>("capturePrompt", default: true, suite: preferencesSuite)
   static let captureLinkAction = Key<CaptureAction>("captureLinkAction", default: .open, suite: preferencesSuite)
   static let capturePathAction = Key<CaptureAction>("capturePathAction", default: .open, suite: preferencesSuite)
+  // Opening Mail or FaceTime straight after a screenshot surprises more than it helps, so these copy by default.
+  static let captureEmailAction = Key<CaptureAction>("captureEmailAction", default: .copy, suite: preferencesSuite)
+  static let capturePhoneAction = Key<CaptureAction>("capturePhoneAction", default: .copy, suite: preferencesSuite)
   static let captureSkipPrompt = Key<Set<String>>("captureSkipPrompt", default: [], suite: preferencesSuite)
   static let clipboardCheckInterval = Key<Double>("clipboardCheckInterval", default: 0.5, suite: preferencesSuite)
   static let enabledPasteboardTypes = Key<Set<NSPasteboard.PasteboardType>>(
