@@ -102,23 +102,56 @@ enum CapturePrompt {
     alert.window.level = NSWindow.Level(rawValue: NSWindow.Level.statusBar.rawValue + 1)
     centerOnScreenWithPointer(alert)
 
-    // The capture happened in another app; hand focus back to it unless a browser or Finder takes over.
-    let previousApp = NSWorkspace.shared.frontmostApplication
-    NSApp.activate(ignoringOtherApps: true)
-    let index = alert.runModal().rawValue - NSApplication.ModalResponse.alertFirstButtonReturn.rawValue
-    guard actions.indices.contains(index) else {
-      previousApp?.activate()
-      return
-    }
+    let responder = ButtonResponder { index in
+      dismiss()
+      guard actions.indices.contains(index) else { return }
 
-    let action = actions[index]
-    if alert.suppressionButton?.state == .on {
-      remember(action, for: kind)
+      let action = actions[index]
+      if alert.suppressionButton?.state == .on {
+        remember(action, for: kind)
+      }
+      perform(action, on: chooser.map { .link(links[$0.indexOfSelectedItem]) } ?? target)
     }
-    if action == .copy {
-      previousApp?.activate()
+    for (index, button) in alert.buttons.enumerated() {
+      button.tag = index
+      button.target = responder
+      button.action = #selector(ButtonResponder.press(_:))
     }
-    perform(action, on: chooser.map { .link(links[$0.indexOfSelectedItem]) } ?? target)
+    // runModal maps Escape to Cancel by itself; a modeless alert needs it spelled out.
+    alert.buttons.last?.keyEquivalent = escapeKey
+
+    show(alert, responder: responder)
+  }
+
+  private static let escapeKey = "\u{1b}"
+
+  /// The prompt on screen. A modal alert would stall Sorap's run loop (no history, no hotkey) until
+  /// answered, so the prompt stays modeless and this keeps it, and its button target, alive.
+  private static var shown: (alert: NSAlert, responder: ButtonResponder)?
+  private static var resignObserver: NSObjectProtocol?
+
+  /// macOS may refuse to bring a background app forward, which would leave Return and Escape going to
+  /// the app behind. Like Sorap's popup, the prompt is a non-activating panel that takes the keyboard itself.
+  private static func show(_ alert: NSAlert, responder: ButtonResponder) {
+    dismiss()  // A newer capture replaces an unanswered prompt.
+    shown = (alert, responder)
+    alert.window.styleMask.insert(.nonactivatingPanel)
+    alert.window.makeKeyAndOrderFront(nil)
+    // Clicking anywhere else means the prompt was ignored.
+    resignObserver = NotificationCenter.default.addObserver(
+      forName: NSWindow.didResignKeyNotification, object: alert.window, queue: .main
+    ) { _ in
+      MainActor.assumeIsolated { dismiss() }
+    }
+  }
+
+  private static func dismiss() {
+    if let resignObserver {
+      NotificationCenter.default.removeObserver(resignObserver)
+    }
+    resignObserver = nil
+    shown?.alert.window.orderOut(nil)
+    shown = nil
   }
 
   private static let chooserSize = NSSize(width: 240, height: 26)
@@ -165,5 +198,17 @@ enum CapturePrompt {
     case .phone: String(localized: "capture.phone.message", table: "Sorap")
     case .text: String(localized: "capture.text.message", table: "Sorap")
     }
+  }
+}
+
+private final class ButtonResponder: NSObject {
+  private let onPress: (Int) -> Void
+
+  init(_ onPress: @escaping (Int) -> Void) {
+    self.onPress = onPress
+  }
+
+  @objc func press(_ sender: NSButton) {
+    onPress(sender.tag)
   }
 }
