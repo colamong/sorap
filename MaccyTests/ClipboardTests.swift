@@ -244,6 +244,30 @@ class ClipboardTests: XCTestCase {
     XCTAssertEqual(pasteboard.data(forType: .png), png)
   }
 
+  func testExpiredTerminalImagesAreRemoved() throws {
+    let directory = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
+    defer { try? FileManager.default.removeItem(at: directory) }
+    try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
+    let now = Date.now
+    let old = directory.appendingPathComponent("sorap-old.png")
+    let fresh = directory.appendingPathComponent("sorap-fresh.png")
+    try Data([1]).write(to: old)
+    try Data([2]).write(to: fresh)
+    try FileManager.default.setAttributes(
+      [.modificationDate: now.addingTimeInterval(-25 * 60 * 60)], ofItemAtPath: old.path
+    )
+
+    clipboard.removeExpiredTerminalImages(in: directory, now: now)
+
+    XCTAssertFalse(FileManager.default.fileExists(atPath: old.path))
+    XCTAssertTrue(FileManager.default.fileExists(atPath: fresh.path))
+  }
+
+  func testRemovingExpiredTerminalImagesToleratesMissingDirectory() {
+    let missing = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
+    clipboard.removeExpiredTerminalImages(in: missing, now: .now)
+  }
+
   func testTerminalImagePathSkipsItemsWithText() {
     let item = HistoryItem()
     Storage.shared.context.insert(item)

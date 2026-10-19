@@ -50,6 +50,8 @@ class Clipboard {
     "com.github.wez.wezterm",
     "co.zeit.hyper"
   ]
+  /// Long enough to paste a path now and run the command later, short enough not to pile up.
+  private static let terminalImageLifetime: TimeInterval = 24 * 60 * 60
   private static let terminalImageDirectory = FileManager.default.temporaryDirectory
     .appendingPathComponent("Sorap", isDirectory: true)
   private var terminalIsFrontmost: Bool {
@@ -69,6 +71,7 @@ class Clipboard {
   }
 
   func start() {
+    removeExpiredTerminalImages(in: Self.terminalImageDirectory)
     timer = Timer.scheduledTimer(
       timeInterval: Defaults[.clipboardCheckInterval],
       target: self,
@@ -146,6 +149,7 @@ class Clipboard {
   @discardableResult
   func writeTerminalImagePath(for item: HistoryItem, in directory: URL) -> URL? {
     guard item.text == nil, item.fileURLs.isEmpty, let png = item.pngData() else { return nil }
+    removeExpiredTerminalImages(in: directory)
     let url = directory.appendingPathComponent("sorap-\(UUID().uuidString.prefix(8)).png")
     do {
       try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
@@ -159,6 +163,24 @@ class Clipboard {
     pasteboard.setString(url.absoluteString, forType: .fileURL)
     pasteboard.setString("", forType: .terminalImagePath)
     return url
+  }
+
+  func removeExpiredTerminalImages(in directory: URL, now: Date = .now) {
+    let fileManager = FileManager.default
+    guard fileManager.fileExists(atPath: directory.path) else { return }
+
+    let cutoff = now.addingTimeInterval(-Self.terminalImageLifetime)
+    do {
+      let files = try fileManager.contentsOfDirectory(at: directory, includingPropertiesForKeys: [.contentModificationDateKey])
+      for file in files {
+        let modified = try file.resourceValues(forKeys: [.contentModificationDateKey]).contentModificationDate
+        if let modified, modified < cutoff {
+          try fileManager.removeItem(at: file)
+        }
+      }
+    } catch {
+      print("Unable to remove old terminal images: \(error).")
+    }
   }
 
   // Based on https://github.com/Clipy/Clipy/blob/develop/Clipy/Sources/Services/PasteService.swift.
