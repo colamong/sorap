@@ -18,6 +18,9 @@ nonisolated extension NSPasteboard.PasteboardType: Defaults.Serializable {
   // Marks that copy was made from Maccy.
   static let fromMaccy = NSPasteboard.PasteboardType(rawValue: "io.github.colamong.sorap")
 
+  // Marks the temporary file path Sorap adds when an image is copied for a terminal.
+  static let terminalImagePath = NSPasteboard.PasteboardType(rawValue: "io.github.colamong.sorap.terminal-image-path")
+
   // Types that indicate Microsoft Word bookmarks (links).
   static let microsoftObjectLink = NSPasteboard.PasteboardType(rawValue: "com.microsoft.ObjectLink")
   static let microsoftLinkSource = NSPasteboard.PasteboardType(rawValue: "com.microsoft.Link-Source")

@@ -39,6 +39,23 @@ class Clipboard {
 
   private var sourceApp: NSRunningApplication? { NSWorkspace.shared.frontmostApplication }
 
+  /// Terminals paste text, not images, so an image copied while one is in front also carries a PNG file path.
+  private static let terminalBundleIdentifiers: Set<String> = [
+    "com.apple.Terminal",
+    "com.googlecode.iterm2",
+    "com.mitchellh.ghostty",
+    "dev.warp.Warp-Stable",
+    "net.kovidgoyal.kitty",
+    "org.alacritty",
+    "com.github.wez.wezterm",
+    "co.zeit.hyper"
+  ]
+  private static let terminalImageDirectory = FileManager.default.temporaryDirectory
+    .appendingPathComponent("Sorap", isDirectory: true)
+  private var terminalIsFrontmost: Bool {
+    sourceApp?.bundleIdentifier.map(Self.terminalBundleIdentifiers.contains) ?? false
+  }
+
   init() {
     changeCount = pasteboard.changeCount
   }
@@ -111,12 +128,37 @@ class Clipboard {
 
     pasteboard.setString("", forType: .fromMaccy)
     pasteboard.setString(item.application ?? "", forType: .source)
+    if terminalIsFrontmost {
+      writeTerminalImagePath(for: item, in: Self.terminalImageDirectory)
+    }
     sync()
 
     Task {
       Notifier.notify(body: item.title, sound: .knock)
       checkForChangesInPasteboard()
     }
+  }
+
+  /// Saves the item's image as a PNG and puts its path on the pasteboard next to the image data.
+  /// Only image-only items qualify: text or file paths already paste into a terminal as they are.
+  /// The name has no spaces so the path survives being pasted into a shell unquoted.
+  @MainActor
+  @discardableResult
+  func writeTerminalImagePath(for item: HistoryItem, in directory: URL) -> URL? {
+    guard item.text == nil, item.fileURLs.isEmpty, let png = item.pngData() else { return nil }
+    let url = directory.appendingPathComponent("sorap-\(UUID().uuidString.prefix(8)).png")
+    do {
+      try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
+      try png.write(to: url)
+    } catch {
+      print("Unable to save the image for the terminal: \(error).")
+      return nil
+    }
+
+    pasteboard.setString(url.path, forType: .string)
+    pasteboard.setString(url.absoluteString, forType: .fileURL)
+    pasteboard.setString("", forType: .terminalImagePath)
+    return url
   }
 
   // Based on https://github.com/Clipy/Clipy/blob/develop/Clipy/Sources/Services/PasteService.swift.
@@ -209,6 +251,11 @@ class Clipboard {
       types = types
         .subtracting(disabledTypes)
         .filter(isPersistable)
+
+      // The path Sorap added for a terminal points at a temporary file, not at what was copied.
+      if types.contains(.terminalImagePath) {
+        types.subtract([.string, .fileURL, .terminalImagePath])
+      }
 
       // Avoid reading Microsoft Word links from bookmarks and cross-references.
       // https://github.com/p0deje/Maccy/issues/613

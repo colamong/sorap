@@ -224,6 +224,54 @@ class ClipboardTests: XCTestCase {
     XCTAssertEqual(pasteboard.string(forType: .source), "com.foo.bar")
   }
 
+  func testTerminalImagePathGoesOnThePasteboard() throws {
+    let png = NSBitmapImageRep(data: image.tiffRepresentation!)!.representation(using: .png, properties: [:])!
+    let item = HistoryItem()
+    Storage.shared.context.insert(item)
+    item.contents = [HistoryItemContent(type: NSPasteboard.PasteboardType.png.rawValue, value: png)]
+    let directory = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
+    defer { try? FileManager.default.removeItem(at: directory) }
+
+    clipboard.copy(item)
+    let url = try XCTUnwrap(clipboard.writeTerminalImagePath(for: item, in: directory))
+    // copy() syncs before the path is added in the app; mirror that so later tests see no stray change.
+    clipboard.changeCount = pasteboard.changeCount
+
+    XCTAssertFalse(url.path.contains(" "))
+    XCTAssertEqual(try Data(contentsOf: url), item.pngData())
+    XCTAssertEqual(pasteboard.string(forType: .string), url.path)
+    XCTAssertEqual(pasteboard.string(forType: .fileURL), url.absoluteString)
+    XCTAssertEqual(pasteboard.data(forType: .png), png)
+  }
+
+  func testTerminalImagePathSkipsItemsWithText() {
+    let item = HistoryItem()
+    Storage.shared.context.insert(item)
+    item.contents = [
+      HistoryItemContent(type: stringType.rawValue, value: "foo".data(using: .utf8)!),
+      HistoryItemContent(type: tiffType.rawValue, value: image.tiffRepresentation!)
+    ]
+    XCTAssertNil(clipboard.writeTerminalImagePath(for: item, in: FileManager.default.temporaryDirectory))
+  }
+
+  func testTerminalImagePathIsNotStored() {
+    var stored: HistoryItem?
+    clipboard.onNewCopy { stored = $0 }
+    pasteboard.declareTypes([.png, .string, .fileURL, .terminalImagePath], owner: nil)
+    pasteboard.setData(image.tiffRepresentation!, forType: .png)
+    pasteboard.setString("/tmp/sorap-1.png", forType: .string)
+    pasteboard.setString("file:///tmp/sorap-1.png", forType: .fileURL)
+    pasteboard.setString("", forType: .terminalImagePath)
+
+    clipboard.checkForChangesInPasteboard()
+
+    let types = Set(stored?.contents.map(\.type) ?? [])
+    XCTAssertTrue(types.contains(NSPasteboard.PasteboardType.png.rawValue))
+    XCTAssertFalse(types.contains(NSPasteboard.PasteboardType.string.rawValue))
+    XCTAssertFalse(types.contains(NSPasteboard.PasteboardType.fileURL.rawValue))
+    XCTAssertFalse(types.contains(NSPasteboard.PasteboardType.terminalImagePath.rawValue))
+  }
+
   func testCopyString() {
     clipboard.copyInMaccy("foo")
     XCTAssertEqual(pasteboard.string(forType: .string), "foo")
