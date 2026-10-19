@@ -36,7 +36,7 @@ macOS 14 이상에서 동작합니다. 무료이고 소스가 공개돼 있습�
 - **터미널에 이미지 붙이기** — Terminal·iTerm2·Ghostty 같은 터미널이 앞에 있을 때 서랍에서 이미지를 고르면, 이미지를 임시 PNG 파일로 저장하고 그 경로가 붙여넣어집니다. 이미지를 파일 경로로 받는 CLI 도구에 캡쳐를 바로 넘길 수 있습니다.
 - **Markdown으로 복사** — 웹 페이지나 문서에서 복사한 서식 있는 글을 우클릭 → `Markdown으로 복사`로 바꿔 담습니다. 문단·목록·굵게·기울임·코드·링크를 옮깁니다.
 - **이미지 저장** — 우클릭 메뉴로 저장하거나, 격자의 썸네일을 Finder로 끌어다 놓습니다.
-- **캡쳐 글자 바로 쓰기** — 화면을 클립보드로 캡쳐하면(`⌃⇧⌘4`) 이미지 속 글자를 읽어 팝업으로 묻습니다. 링크면 `링크 열기`, 실제로 있는 파일 경로면 `Finder에서 보기`, 그 밖의 글자면 `글자 복사`를 고를 수 있습니다. QR 코드가 찍혀 있으면 주변 글자보다 QR 내용을 먼저 씁니다. 링크가 여러 개면 팝업에서 쓸 링크를 고릅니다. `다시 묻지 않기`를 고르면 그 종류는 이후 묻지 않고 바로 실행합니다. 설정 → 일반 → `캡쳐 이미지`에서 팝업을 끄거나, 링크·경로의 기본 동작(열기/복사)을 바꾸거나, `다시 묻지 않기`를 초기화합니다. 기록에 있던 이미지는 우클릭 메뉴에서 같은 동작을 고릅니다.
+- **캡쳐 글자 바로 쓰기** — 화면을 클립보드로 캡쳐하면(`⌃⇧⌘4`) 이미지 속 글자를 읽어 팝업으로 묻습니다. 링크면 `링크 열기`, 실제로 있는 파일 경로면 `Finder에서 보기`, 메일 주소면 `메일 쓰기`, 전화번호면 `전화 걸기`, 그 밖의 글자면 `글자 복사`를 고를 수 있습니다. QR 코드가 찍혀 있으면 주변 글자보다 QR 내용을 먼저 씁니다. 링크가 여러 개면 팝업에서 쓸 링크를 고릅니다. `다시 묻지 않기`를 고르면 그 종류는 이후 묻지 않고 바로 실행합니다. 설정 → 일반 → `캡쳐 이미지`에서 팝업을 끄거나, 링크·경로·메일 주소·전화번호의 기본 동작(열기/복사)을 바꾸거나, `다시 묻지 않기`를 초기화합니다. 기록에 있던 이미지는 우클릭 메뉴에서 같은 동작을 고릅니다.
 - **자동 정리** — 설정 → 저장 → `보관 기간`에서 7일·30일·90일을 고르면, 그보다 오래 복사하지 않은 기록을 지웁니다. 고정한 항목과 보드 항목은 지우지 않습니다. 기본값은 `계속`(지우지 않음)입니다.
 - **검색** — 이름을 붙인 항목도 원래 내용으로 찾을 수 있습니다.
 - **로컬 저장** — 모든 데이터는 이 Mac에만 저장됩니다.
@@ -147,7 +147,7 @@ On a Korean Mac it shows up as **서랍** ("drawer"). It runs on macOS 14 or lat
 - **Images into terminals** — pick an image while a terminal (Terminal, iTerm2, Ghostty and others) is in front, and Sorap saves it as a temporary PNG and pastes its path, ready for CLI tools that take image files.
 - **Copy as Markdown** — right-click rich text copied from a web page or document and choose **Copy as Markdown**. Paragraphs, lists, bold, italic, code and links carry over.
 - **Save images** from the context menu, or drag a grid tile to Finder.
-- **Act on captured text** — take a screenshot to the clipboard (`⌃⇧⌘4`) and Sorap reads its text and asks what to do: **Open Link** for a link, **Show in Finder** for a path that exists, **Copy Text** for anything else. A QR code in the capture wins over the text around it. With several links, the prompt lets you pick one. Choose "Don't ask again" to run that kind's action without asking from then on. Settings → General → **Captures** turns the prompt off, picks open or copy as the default for links and paths, and resets "Don't ask again". Older images offer the same actions in the context menu.
+- **Act on captured text** — take a screenshot to the clipboard (`⌃⇧⌘4`) and Sorap reads its text and asks what to do: **Open Link** for a link, **Show in Finder** for a path that exists, **Write Email** for an email address, **Call** for a phone number, **Copy Text** for anything else. A QR code in the capture wins over the text around it. With several links, the prompt lets you pick one. Choose "Don't ask again" to run that kind's action without asking from then on. Settings → General → **Captures** turns the prompt off, picks open or copy as the default for links, paths, email addresses and phone numbers, and resets "Don't ask again". Older images offer the same actions in the context menu.
 - **Auto cleanup** — pick 7, 30 or 90 days in Settings → Storage → **Keep history** to remove items not copied within that time. Pinned items and board items are never removed. The default is **Forever**.
 - **Search** also matches the original content of renamed items.
 - Everything is stored locally on your Mac.
