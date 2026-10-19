@@ -2,11 +2,12 @@ import Cocoa
 
 class About {
   private var links: NSMutableAttributedString {
-    let string = NSMutableAttributedString(string: "Website│GitHub│Support",
+    let string = NSMutableAttributedString(string: "Website│GitHub│Support│Sponsor",
                                            attributes: [NSAttributedString.Key.foregroundColor: NSColor.labelColor])
     string.addAttribute(.link, value: "https://github.com/colamong/sorap", range: NSRange(location: 0, length: 7))
     string.addAttribute(.link, value: "https://github.com/colamong/sorap", range: NSRange(location: 8, length: 6))
     string.addAttribute(.link, value: "https://github.com/colamong/sorap/issues", range: NSRange(location: 15, length: 7))
+    string.addAttribute(.link, value: "https://github.com/sponsors/colamong", range: NSRange(location: 23, length: 7))
     return string
   }
 

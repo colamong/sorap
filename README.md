@@ -120,6 +120,10 @@ Sorap은 Alex Rodionov의 [Maccy](https://github.com/p0deje/Maccy)를 포크해 
 클립보드를 지켜보고, 저장하고, 붙여넣는 부분은 Maccy의 코드입니다.
 좋은 앱을 MIT 라이선스로 공개해 준 Maccy와 기여자들에게 감사드립니다.
 
+## 후원
+
+Sorap이 쓸모 있었다면 [GitHub Sponsors](https://github.com/sponsors/colamong)로 개발을 응원할 수 있습니다. 메뉴의 `Sorap 정보` 창에도 `Sponsor` 링크가 있습니다.
+
 ## 라이선스
 
 [MIT](LICENSE). Maccy의 저작권 표시와 Sorap의 저작권 표시가 함께 들어 있습니다.
@@ -203,6 +207,10 @@ Run the unit tests with `scripts/test.sh`.
 
 Sorap is a fork of [Maccy](https://github.com/p0deje/Maccy) by Alex Rodionov.
 The clipboard monitoring, storage, and paste engine is Maccy's. Thank you to Maccy and its contributors for releasing it under the MIT license.
+
+### Sponsor
+
+If Sorap helps you, you can support its development on [GitHub Sponsors](https://github.com/sponsors/colamong). The About window has a **Sponsor** link too.
 
 ### License
 
