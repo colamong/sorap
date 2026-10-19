@@ -244,6 +244,24 @@ class ClipboardTests: XCTestCase {
     XCTAssertEqual(pasteboard.data(forType: .png), png)
   }
 
+  func testSameImageReusesItsTerminalFile() throws {
+    let item = HistoryItem()
+    Storage.shared.context.insert(item)
+    item.contents = [HistoryItemContent(type: tiffType.rawValue, value: image.tiffRepresentation!)]
+    let directory = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
+    defer { try? FileManager.default.removeItem(at: directory) }
+
+    let first = try XCTUnwrap(clipboard.writeTerminalImagePath(for: item, in: directory))
+    let stale = Date.now.addingTimeInterval(-30 * 60)
+    try FileManager.default.setAttributes([.modificationDate: stale], ofItemAtPath: first.path)
+    let second = try XCTUnwrap(clipboard.writeTerminalImagePath(for: item, in: directory))
+    clipboard.changeCount = pasteboard.changeCount
+
+    XCTAssertEqual(first, second)
+    let touched = try FileManager.default.attributesOfItem(atPath: second.path)[.modificationDate] as? Date
+    XCTAssertGreaterThan(try XCTUnwrap(touched), stale)
+  }
+
   func testExpiredTerminalImagesAreRemoved() throws {
     let directory = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
     defer { try? FileManager.default.removeItem(at: directory) }
@@ -254,7 +272,7 @@ class ClipboardTests: XCTestCase {
     try Data([1]).write(to: old)
     try Data([2]).write(to: fresh)
     try FileManager.default.setAttributes(
-      [.modificationDate: now.addingTimeInterval(-25 * 60 * 60)], ofItemAtPath: old.path
+      [.modificationDate: now.addingTimeInterval(-2 * 60 * 60)], ofItemAtPath: old.path
     )
 
     clipboard.removeExpiredTerminalImages(in: directory, now: now)

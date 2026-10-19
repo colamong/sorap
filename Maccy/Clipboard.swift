@@ -1,4 +1,5 @@
 import AppKit
+import CryptoKit
 import Defaults
 import Sauce
 
@@ -50,8 +51,10 @@ class Clipboard {
     "com.github.wez.wezterm",
     "co.zeit.hyper"
   ]
-  /// Long enough to paste a path now and run the command later, short enough not to pile up.
-  private static let terminalImageLifetime: TimeInterval = 24 * 60 * 60
+  /// Covers the gap between pasting a path and running the command. Pasting the same image again
+  /// reuses and refreshes its file, so the lifetime only needs to outlast that gap.
+  private static let terminalImageLifetime: TimeInterval = 60 * 60
+  private static let terminalImageNameLength = 16
   private static let terminalImageDirectory = FileManager.default.temporaryDirectory
     .appendingPathComponent("Sorap", isDirectory: true)
   private var terminalIsFrontmost: Bool {
@@ -144,16 +147,23 @@ class Clipboard {
 
   /// Saves the item's image as a PNG and puts its path on the pasteboard next to the image data.
   /// Only image-only items qualify: text or file paths already paste into a terminal as they are.
-  /// The name has no spaces so the path survives being pasted into a shell unquoted.
+  /// The name comes from the image's hash, so pasting the same image again finds its file and only
+  /// refreshes it. It has no spaces so the path survives being pasted into a shell unquoted.
   @MainActor
   @discardableResult
   func writeTerminalImagePath(for item: HistoryItem, in directory: URL) -> URL? {
-    guard item.text == nil, item.fileURLs.isEmpty, let png = item.pngData() else { return nil }
+    guard item.text == nil, item.fileURLs.isEmpty, let imageData = item.imageData else { return nil }
     removeExpiredTerminalImages(in: directory)
-    let url = directory.appendingPathComponent("sorap-\(UUID().uuidString.prefix(8)).png")
+    let hash = SHA256.hash(data: imageData).map { String(format: "%02x", $0) }.joined()
+    let url = directory.appendingPathComponent("sorap-\(hash.prefix(Self.terminalImageNameLength)).png")
     do {
-      try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
-      try png.write(to: url)
+      if FileManager.default.fileExists(atPath: url.path) {
+        try FileManager.default.setAttributes([.modificationDate: Date.now], ofItemAtPath: url.path)
+      } else {
+        guard let png = item.pngData() else { return nil }
+        try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
+        try png.write(to: url)
+      }
     } catch {
       print("Unable to save the image for the terminal: \(error).")
       return nil
