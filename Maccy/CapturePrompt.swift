@@ -1,5 +1,6 @@
 import AppKit
 import Defaults
+import Vision
 
 enum CaptureAction: String, CaseIterable, Identifiable, Defaults.Serializable {
   case open
@@ -18,13 +19,27 @@ enum CapturePrompt {
     guard Defaults[.capturePrompt], !item.fromMaccy, let imageData = item.imageData else { return }
 
     Task {
-      guard let text = await HistoryItem.recognizeText(imageData: imageData, fileURL: nil),
-            let target = CaptureTarget.detect(in: text)
-      else {
-        return
+      // A QR code says exactly what it means, so it wins over whatever text surrounds it.
+      var text = await readQRPayload(imageData: imageData)
+      if text == nil {
+        text = await HistoryItem.recognizeText(imageData: imageData, fileURL: nil)
       }
+      guard let text, let target = CaptureTarget.detect(in: text) else { return }
       present(target)
     }
+  }
+
+  @concurrent
+  nonisolated static func readQRPayload(imageData: Data) async -> String? {
+    let request = VNDetectBarcodesRequest()
+    request.symbologies = [.qr, .microQR]
+    do {
+      try VNImageRequestHandler(data: imageData).perform([request])
+    } catch {
+      print("Unable to detect QR codes: \(error).")
+      return nil
+    }
+    return request.results?.lazy.compactMap(\.payloadStringValue).first
   }
 
   static func perform(_ action: CaptureAction, on target: CaptureTarget) {
