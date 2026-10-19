@@ -28,6 +28,14 @@ struct ItemContextMenu: ViewModifier {
           Clipboard.shared.copyInMaccy(paths)
         }
       }
+      // Parsing HTML is slow, so the menu only checks for rich text and converts on click.
+      if item.item.htmlData != nil || item.item.rtfData != nil {
+        Button(String(localized: "item.copyMarkdown", table: "Sorap")) {
+          if let richText = item.item.html ?? item.item.rtf {
+            Clipboard.shared.copyInMaccy(MarkdownConverter.markdown(from: richText))
+          }
+        }
+      }
       if item.item.imageData != nil {
         Button(String(localized: "item.saveImage", table: "Sorap")) {
           saveImage()
