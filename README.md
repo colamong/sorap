@@ -122,7 +122,12 @@ Sorap은 Alex Rodionov의 [Maccy](https://github.com/p0deje/Maccy)를 포크해 
 
 ## 후원
 
-Sorap이 쓸모 있었다면 [GitHub Sponsors](https://github.com/sponsors/colamong)로 개발을 응원할 수 있습니다. 메뉴의 `Sorap 정보` 창에도 `Sponsor` 링크가 있습니다.
+Sorap이 쓸모 있었다면 개발을 응원해 주세요.
+
+- **[카카오페이](https://qr.kakaopay.com/Ej8VWiQ4o)** — GitHub 계정 없이 바로 보낼 수 있습니다.
+- **[GitHub Sponsors](https://github.com/sponsors/colamong)** — 매달 후원도 할 수 있습니다.
+
+메뉴의 `Sorap 정보` 창에도 두 링크가 있습니다.
 
 ## 라이선스
 
